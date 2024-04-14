@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CommonUtils &mdash; MetronomeStatic 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ClangUtils" href="clang_utils.html" />
+    <link rel="prev" title="API Reference" href="_index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MetronomeStatic
+              <img src="../_static/sky-cloud.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#user-installation">User Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#developer-installation">Developer Installation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/_index.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/clang_utils.html">Clang Utils</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/clang_utils.html#loading-source-code-printing-ast">Loading Source Code &amp; Printing AST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/clang_utils.html#querying-code-attributes">Querying Code Attributes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../tutorial/clang_utils.html#queries-for-variables">Queries for Variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../tutorial/clang_utils.html#parsing-expressions">Parsing Expressions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="_index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">CommonUtils</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tips-before-reading">Tips Before Reading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#members-list">Members List</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.utils.BaseCommand"><code class="docutils literal notranslate"><span class="pre">BaseCommand</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.utils.Server"><code class="docutils literal notranslate"><span class="pre">Server</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.utils.SkyFrozenGenerator"><code class="docutils literal notranslate"><span class="pre">SkyFrozenGenerator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.utils.SkyGenerator"><code class="docutils literal notranslate"><span class="pre">SkyGenerator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.utils.StateMachine"><code class="docutils literal notranslate"><span class="pre">StateMachine</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.utils.Status"><code class="docutils literal notranslate"><span class="pre">Status</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.utils.Transition"><code class="docutils literal notranslate"><span class="pre">Transition</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.utils.Trigger"><code class="docutils literal notranslate"><span class="pre">Trigger</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.utils.abspath_from_current_file"><code class="docutils literal notranslate"><span class="pre">abspath_from_current_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.utils.compose"><code class="docutils literal notranslate"><span class="pre">compose()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="clang_utils.html">ClangUtils</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clang_utils.html#tips-before-reading">Tips Before Reading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clang_utils.html#members-list">Members List</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.ClassDefModel"><code class="docutils literal notranslate"><span class="pre">ClassDefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.DefModel"><code class="docutils literal notranslate"><span class="pre">DefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.FieldDefModel"><code class="docutils literal notranslate"><span class="pre">FieldDefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.FunctionDefModel"><code class="docutils literal notranslate"><span class="pre">FunctionDefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.StructDefModel"><code class="docutils literal notranslate"><span class="pre">StructDefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.TraversalContext"><code class="docutils literal notranslate"><span class="pre">TraversalContext</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.TypeDefModel"><code class="docutils literal notranslate"><span class="pre">TypeDefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.TypeWrapper"><code class="docutils literal notranslate"><span class="pre">TypeWrapper</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.UnaryOpPos"><code class="docutils literal notranslate"><span class="pre">UnaryOpPos</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.UnionDefModel"><code class="docutils literal notranslate"><span class="pre">UnionDefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.all_globals"><code class="docutils literal notranslate"><span class="pre">all_globals()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.beautified_print_ast"><code class="docutils literal notranslate"><span class="pre">beautified_print_ast()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.build_call_graph"><code class="docutils literal notranslate"><span class="pre">build_call_graph()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.extract_ast"><code class="docutils literal notranslate"><span class="pre">extract_ast()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.get_compound_assignment_operator"><code class="docutils literal notranslate"><span class="pre">get_compound_assignment_operator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.get_func_decl"><code class="docutils literal notranslate"><span class="pre">get_func_decl()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.get_func_decl_all"><code class="docutils literal notranslate"><span class="pre">get_func_decl_all()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.get_global_ref_names"><code class="docutils literal notranslate"><span class="pre">get_global_ref_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.get_global_refs"><code class="docutils literal notranslate"><span class="pre">get_global_refs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.get_local_var_defs"><code class="docutils literal notranslate"><span class="pre">get_local_var_defs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.get_param_decls"><code class="docutils literal notranslate"><span class="pre">get_param_decls()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.get_var_refs"><code class="docutils literal notranslate"><span class="pre">get_var_refs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.is_function_definition"><code class="docutils literal notranslate"><span class="pre">is_function_definition()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.iter_ast"><code class="docutils literal notranslate"><span class="pre">iter_ast()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.iter_ast_from_file"><code class="docutils literal notranslate"><span class="pre">iter_ast_from_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.iter_files"><code class="docutils literal notranslate"><span class="pre">iter_files()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.parse_file"><code class="docutils literal notranslate"><span class="pre">parse_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.program_model_unparse"><code class="docutils literal notranslate"><span class="pre">program_model_unparse()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.split_binary_operator"><code class="docutils literal notranslate"><span class="pre">split_binary_operator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.split_unary_operator"><code class="docutils literal notranslate"><span class="pre">split_unary_operator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.traversal"><code class="docutils literal notranslate"><span class="pre">traversal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.traversal_with_callback"><code class="docutils literal notranslate"><span class="pre">traversal_with_callback()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#start-may-10-2023">Start (May. 10, 2023)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MetronomeStatic</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="_index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">CommonUtils</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/common_utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="commonutils">
+<h1>CommonUtils<a class="headerlink" href="#commonutils" title="Link to this heading"></a></h1>
+<section id="tips-before-reading">
+<h2>Tips Before Reading<a class="headerlink" href="#tips-before-reading" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Functions or Classes in this page should be imported by:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">MetronomeStatic</span> <span class="kn">import</span> <span class="o">&lt;</span><span class="s2">&quot;Members Listed In This Page&quot;</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="members-list">
+<h2>Members List<a class="headerlink" href="#members-list" title="Link to this heading"></a></h2>
+<dl class="py class" id="module-MetronomeStatic.utils">
+<span id="apidoc-commonutils"></span><dt class="sig sig-object py" id="MetronomeStatic.utils.BaseCommand">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BaseCommand</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.utils.BaseCommand" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">JsonObject</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.Server">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Server</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">C</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'0.0.0.0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8090</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_folder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.MetronomeStatic'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.utils.Server" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">C</span></code>]</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.Server.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">C</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'0.0.0.0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8090</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_folder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.MetronomeStatic'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#MetronomeStatic.utils.Server.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyFrozenGenerator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SkyFrozenGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.utils.SkyFrozenGenerator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.utils.SkyGenerator" title="MetronomeStatic.utils.functional.SkyGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">SkyGenerator</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">VARTYPE</span></code>]</p>
+<p><code class="docutils literal notranslate"><span class="pre">SkyFrozenGenerator</span></code> is like <code class="docutils literal notranslate"><span class="pre">SkyGenerator</span></code>, but it will start from the same
+head object when applying <code class="docutils literal notranslate"><span class="pre">iter(g)</span></code> on it for multiple times.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyFrozenGenerator.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.utils.SkyFrozenGenerator.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyFrozenGenerator.relsort">
+<span class="sig-name descname"><span class="pre">relsort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#MetronomeStatic.utils.SkyFrozenGenerator" title="MetronomeStatic.utils.functional.SkyFrozenGenerator"><span class="pre">SkyFrozenGenerator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.utils.SkyFrozenGenerator.relsort" title="Link to this definition"></a></dt>
+<dd><p>Sort by relative comparisons</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyFrozenGenerator.show_progress">
+<span class="sig-name descname"><span class="pre">show_progress</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#MetronomeStatic.utils.SkyGenerator" title="MetronomeStatic.utils.functional.SkyGenerator"><span class="pre">SkyGenerator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.utils.SkyFrozenGenerator.show_progress" title="Link to this definition"></a></dt>
+<dd><p>Show the progress of this iterator, without interfering the computation flow.</p>
+<p>For frozen generator, this will show a tqdm progress bar with percentage.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyFrozenGenerator.sort">
+<span class="sig-name descname"><span class="pre">sort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#MetronomeStatic.utils.SkyFrozenGenerator" title="MetronomeStatic.utils.functional.SkyFrozenGenerator"><span class="pre">SkyFrozenGenerator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.utils.SkyFrozenGenerator.sort" title="Link to this definition"></a></dt>
+<dd><p>Sort by key</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyGenerator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SkyGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.utils.SkyGenerator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">VARTYPE</span></code>]</p>
+<p>A generator supporting some common functional-programming operations</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyGenerator.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.utils.SkyGenerator.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyGenerator.attributes">
+<span class="sig-name descname"><span class="pre">attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#MetronomeStatic.utils.SkyGenerator" title="MetronomeStatic.utils.functional.SkyGenerator"><span class="pre">SkyGenerator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.utils.SkyGenerator.attributes" title="Link to this definition"></a></dt>
+<dd><p>Get attribute from each elements, returning a new generator containing
+attribute values.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyGenerator.cast">
+<span class="sig-name descname"><span class="pre">cast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE2</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#MetronomeStatic.utils.SkyGenerator" title="MetronomeStatic.utils.functional.SkyGenerator"><span class="pre">SkyGenerator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE2</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.utils.SkyGenerator.cast" title="Link to this definition"></a></dt>
+<dd><p>Cast returning type for each element of this iterator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyGenerator.exhaust">
+<span class="sig-name descname"><span class="pre">exhaust</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#MetronomeStatic.utils.SkyGenerator.exhaust" title="Link to this definition"></a></dt>
+<dd><p>Go through this generator until it is exhausted, returning <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyGenerator.extra_job">
+<span class="sig-name descname"><span class="pre">extra_job</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#MetronomeStatic.utils.SkyGenerator" title="MetronomeStatic.utils.functional.SkyGenerator"><span class="pre">SkyGenerator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.utils.SkyGenerator.extra_job" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Inserting function call <code class="docutils literal notranslate"><span class="pre">func(elem)</span></code> in the middle of the calculation process of a functional</dt><dd><p>program, which does not affect the calculation process.</p>
+</dd>
+<dt>For example, the result of <code class="docutils literal notranslate"><span class="pre">g.execute(print).map(lambda</span> <span class="pre">item:</span> <span class="pre">item.value)</span></code></dt><dd><p>is the same as <code class="docutils literal notranslate"><span class="pre">g.map(lambda</span> <span class="pre">item:</span> <span class="pre">item.value)</span></code>,
+but the former has extra printouts for each element.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyGenerator.f">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">f</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#MetronomeStatic.utils.SkyFrozenGenerator" title="MetronomeStatic.utils.functional.SkyFrozenGenerator"><span class="pre">SkyFrozenGenerator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#MetronomeStatic.utils.SkyGenerator.f" title="Link to this definition"></a></dt>
+<dd><p>Shortcut property for <code class="docutils literal notranslate"><span class="pre">freeze()</span></code> method</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyGenerator.filter">
+<span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#MetronomeStatic.utils.SkyGenerator" title="MetronomeStatic.utils.functional.SkyGenerator"><span class="pre">SkyGenerator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.utils.SkyGenerator.filter" title="Link to this definition"></a></dt>
+<dd><p>Filter elements that function <code class="docutils literal notranslate"><span class="pre">condition</span></code> returns <code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyGenerator.freeze">
+<span class="sig-name descname"><span class="pre">freeze</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#MetronomeStatic.utils.SkyFrozenGenerator" title="MetronomeStatic.utils.functional.SkyFrozenGenerator"><span class="pre">SkyFrozenGenerator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.utils.SkyGenerator.freeze" title="Link to this definition"></a></dt>
+<dd><p>Convert the current iterator to a <code class="docutils literal notranslate"><span class="pre">SkyFrozenGenerator</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyGenerator.head">
+<span class="sig-name descname"><span class="pre">head</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">VARTYPE</span></span></span><a class="headerlink" href="#MetronomeStatic.utils.SkyGenerator.head" title="Link to this definition"></a></dt>
+<dd><p>Get the first element of this generator</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyGenerator.indexed_extra_job">
+<span class="sig-name descname"><span class="pre">indexed_extra_job</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#MetronomeStatic.utils.SkyGenerator" title="MetronomeStatic.utils.functional.SkyGenerator"><span class="pre">SkyGenerator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.utils.SkyGenerator.indexed_extra_job" title="Link to this definition"></a></dt>
+<dd><p>Like <code class="docutils literal notranslate"><span class="pre">extra_job</span></code>, but with index.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyGenerator.indexed_filter">
+<span class="sig-name descname"><span class="pre">indexed_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#MetronomeStatic.utils.SkyGenerator" title="MetronomeStatic.utils.functional.SkyGenerator"><span class="pre">SkyGenerator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.utils.SkyGenerator.indexed_filter" title="Link to this definition"></a></dt>
+<dd><p>Filter elements that function <code class="docutils literal notranslate"><span class="pre">condition</span></code> returns <code class="docutils literal notranslate"><span class="pre">True</span></code> with index</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyGenerator.indexed_map">
+<span class="sig-name descname"><span class="pre">indexed_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">VARTYPE2</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#MetronomeStatic.utils.SkyGenerator" title="MetronomeStatic.utils.functional.SkyGenerator"><span class="pre">SkyGenerator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE2</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.utils.SkyGenerator.indexed_map" title="Link to this definition"></a></dt>
+<dd><p>Map function <code class="docutils literal notranslate"><span class="pre">func</span></code> to each element</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyGenerator.l">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">l</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#MetronomeStatic.utils.SkyGenerator.l" title="Link to this definition"></a></dt>
+<dd><p>Shortcut property for <code class="docutils literal notranslate"><span class="pre">to_list()</span></code> method</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyGenerator.map">
+<span class="sig-name descname"><span class="pre">map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">VARTYPE2</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#MetronomeStatic.utils.SkyGenerator" title="MetronomeStatic.utils.functional.SkyGenerator"><span class="pre">SkyGenerator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE2</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.utils.SkyGenerator.map" title="Link to this definition"></a></dt>
+<dd><p>Map function <code class="docutils literal notranslate"><span class="pre">func</span></code> to each element</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyGenerator.parallel_map">
+<span class="sig-name descname"><span class="pre">parallel_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">VARTYPE2</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">star</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_code</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#MetronomeStatic.utils.SkyGenerator" title="MetronomeStatic.utils.functional.SkyGenerator"><span class="pre">SkyGenerator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE2</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.utils.SkyGenerator.parallel_map" title="Link to this definition"></a></dt>
+<dd><p>Map with <code class="docutils literal notranslate"><span class="pre">ipyparallel</span></code>.</p>
+<p>Members in this package will be automatically imported.</p>
+<p>To use members from other packages, please inject the initialization
+code by <code class="docutils literal notranslate"><span class="pre">init_code</span></code> parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Init_code<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Code to be executed <code class="docutils literal notranslate"><span class="pre">before</span></code> parallel execution.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyGenerator.reduce">
+<span class="sig-name descname"><span class="pre">reduce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE2</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">VARTYPE2</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">VARTYPE2</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">VARTYPE2</span></span></span><a class="headerlink" href="#MetronomeStatic.utils.SkyGenerator.reduce" title="Link to this definition"></a></dt>
+<dd><p>Perform reduce on this generator.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyGenerator.s">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">s</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#MetronomeStatic.utils.SkyGenerator.s" title="Link to this definition"></a></dt>
+<dd><p>Shortcut property for <code class="docutils literal notranslate"><span class="pre">to_set()</span></code> method</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyGenerator.show_progress">
+<span class="sig-name descname"><span class="pre">show_progress</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#MetronomeStatic.utils.SkyGenerator" title="MetronomeStatic.utils.functional.SkyGenerator"><span class="pre">SkyGenerator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.utils.SkyGenerator.show_progress" title="Link to this definition"></a></dt>
+<dd><p>Show the progress of this iterator, without interfering the computation flow.</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">SkyGenerator</span></code>, as the total number is not determined, a counter-only
+tqdm progress indicator will be shown like <code class="docutils literal notranslate"><span class="pre">20it</span> <span class="pre">[00:02,</span>&#160; <span class="pre">9.01it/s]</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyGenerator.slice">
+<span class="sig-name descname"><span class="pre">slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#MetronomeStatic.utils.SkyGenerator" title="MetronomeStatic.utils.functional.SkyGenerator"><span class="pre">SkyGenerator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.utils.SkyGenerator.slice" title="Link to this definition"></a></dt>
+<dd><p>Select an interval of elements inside this generator, returning a new Generator.</p>
+<p>Like many other similar operations, the interval is close-left and open-right: <code class="docutils literal notranslate"><span class="pre">[start,</span> <span class="pre">stop)</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyGenerator.star_filter">
+<span class="sig-name descname"><span class="pre">star_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#MetronomeStatic.utils.SkyGenerator" title="MetronomeStatic.utils.functional.SkyGenerator"><span class="pre">SkyGenerator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.utils.SkyGenerator.star_filter" title="Link to this definition"></a></dt>
+<dd><p>Filter elements that function <code class="docutils literal notranslate"><span class="pre">condition</span></code> returns <code class="docutils literal notranslate"><span class="pre">True</span></code>.
+Each element will be unpacked by <code class="docutils literal notranslate"><span class="pre">*elem</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyGenerator.star_map">
+<span class="sig-name descname"><span class="pre">star_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">VARTYPE2</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#MetronomeStatic.utils.SkyGenerator" title="MetronomeStatic.utils.functional.SkyGenerator"><span class="pre">SkyGenerator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE2</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.utils.SkyGenerator.star_map" title="Link to this definition"></a></dt>
+<dd><p>Map function <code class="docutils literal notranslate"><span class="pre">func</span></code> to each element with unpacking them by <code class="docutils literal notranslate"><span class="pre">*elem</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyGenerator.to_list">
+<span class="sig-name descname"><span class="pre">to_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.utils.SkyGenerator.to_list" title="Link to this definition"></a></dt>
+<dd><p>Convert this generator to list</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.SkyGenerator.to_set">
+<span class="sig-name descname"><span class="pre">to_set</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">VARTYPE</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.utils.SkyGenerator.to_set" title="Link to this definition"></a></dt>
+<dd><p>Convert this generator to set</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.StateMachine">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">StateMachine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transitions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#MetronomeStatic.utils.Transition" title="MetronomeStatic.utils.service.states.Transition"><span class="pre">Transition</span></a><span class="p"><span class="pre">[</span></span><span class="pre">S</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">S</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.utils.StateMachine" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">S</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
+<p>状态机类，用于处理状态转换。</p>
+<dl class="simple">
+<dt>参数：</dt><dd><p>transitions (List[Transition[S, T]]): 状态转换列表，包含源状态、触发器和目标状态等信息。
+initial (S): 初始状态。</p>
+</dd>
+<dt>属性：</dt><dd><p>state (S): 当前状态。
+transitions (Dict[S, dict[T, Transition[S, T]]]): 状态转移字典，键为源状态，值为一个字典，其中键为触发器，值为对应的转换对象。</p>
+</dd>
+</dl>
+<p>初始化状态机。</p>
+<dl class="simple">
+<dt>参数：</dt><dd><p>transitions (List[Transition[S, T]]): 状态转换列表，包含源状态、触发器和目标状态等信息。
+initial (S): 初始状态。</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.StateMachine.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transitions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#MetronomeStatic.utils.Transition" title="MetronomeStatic.utils.service.states.Transition"><span class="pre">Transition</span></a><span class="p"><span class="pre">[</span></span><span class="pre">S</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">S</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.utils.StateMachine.__init__" title="Link to this definition"></a></dt>
+<dd><p>初始化状态机。</p>
+<dl class="simple">
+<dt>参数：</dt><dd><p>transitions (List[Transition[S, T]]): 状态转换列表，包含源状态、触发器和目标状态等信息。
+initial (S): 初始状态。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.StateMachine.process">
+<span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trigger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">TransitionStatus</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.utils.StateMachine.process" title="Link to this definition"></a></dt>
+<dd><p>处理状态转换。</p>
+<dl class="simple">
+<dt>参数：</dt><dd><p>trigger (T): 触发器。</p>
+</dd>
+</dl>
+<p>如果触发器不在当前状态的转移列表中，直接返回
+如果存在before_transition回调函数且返回False，则返回。
+打印状态转移信息，更新当前状态，如果存在after_transition回调函数，调用之。</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class enum">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.Status">
+<em class="property"><span class="pre">enum</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.utils.Status" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Member Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+</dl>
+<p>Valid values are as follows:</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.Status.READY">
+<span class="sig-name descname"><span class="pre">READY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Status.READY:</span> <span class="pre">'ready'&gt;</span></em><a class="headerlink" href="#MetronomeStatic.utils.Status.READY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.Status.RUNNING">
+<span class="sig-name descname"><span class="pre">RUNNING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Status.RUNNING:</span> <span class="pre">'running'&gt;</span></em><a class="headerlink" href="#MetronomeStatic.utils.Status.RUNNING" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.Status.FINISHED">
+<span class="sig-name descname"><span class="pre">FINISHED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Status.FINISHED:</span> <span class="pre">'finished'&gt;</span></em><a class="headerlink" href="#MetronomeStatic.utils.Status.FINISHED" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.Status.FAILED">
+<span class="sig-name descname"><span class="pre">FAILED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Status.FAILED:</span> <span class="pre">'failed'&gt;</span></em><a class="headerlink" href="#MetronomeStatic.utils.Status.FAILED" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.Status.STOPPED">
+<span class="sig-name descname"><span class="pre">STOPPED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Status.STOPPED:</span> <span class="pre">'stopped'&gt;</span></em><a class="headerlink" href="#MetronomeStatic.utils.Status.STOPPED" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.Transition">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Transition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trigger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">before_transition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_transition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.utils.Transition" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">S</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.Transition.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trigger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">before_transition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_transition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.utils.Transition.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class enum">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.Trigger">
+<em class="property"><span class="pre">enum</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Trigger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.utils.Trigger" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Member Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+</dl>
+<p>Valid values are as follows:</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.Trigger.START">
+<span class="sig-name descname"><span class="pre">START</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Trigger.START:</span> <span class="pre">'start'&gt;</span></em><a class="headerlink" href="#MetronomeStatic.utils.Trigger.START" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.Trigger.STOP">
+<span class="sig-name descname"><span class="pre">STOP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Trigger.STOP:</span> <span class="pre">'stop'&gt;</span></em><a class="headerlink" href="#MetronomeStatic.utils.Trigger.STOP" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.abspath_from_current_file">
+<span class="sig-name descname"><span class="pre">abspath_from_current_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rel_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#MetronomeStatic.utils.abspath_from_current_file" title="Link to this definition"></a></dt>
+<dd><p>Convert the relative path to absolute path.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.utils.compose">
+<span class="sig-name descname"><span class="pre">compose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f_outer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">other_funcs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.utils.compose" title="Link to this definition"></a></dt>
+<dd><p>Compose functions (from right to left)</p>
+<p>When function returns a tuple, the tuple will be automatically unpacked.
+To avoid this, just return a list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Just a type annotation for the return-type of composed function.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="_index.html" class="btn btn-neutral float-left" title="API Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="clang_utils.html" class="btn btn-neutral float-right" title="ClangUtils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022-2023, SkyGroup.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
