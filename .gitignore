@@ -6,6 +6,7 @@ __pycache__/
 *.dot
 *.exe
 out
+out1.json
 /test
 # C extensions
 *.so

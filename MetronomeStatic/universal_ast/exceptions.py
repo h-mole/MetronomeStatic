@@ -9,3 +9,7 @@ class FunctionReturn(Exception):
 class GoToLabel(Exception):
     def __init__(self, label: str) -> None:
         self.label = label
+
+
+class OnBreakStatement(Exception):
+    pass

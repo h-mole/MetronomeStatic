@@ -36,7 +36,7 @@ from ..clang_utils.code_attributes import (
     traversal_with_callback,
 )
 from ..utils.functional import SkyGenerator
-from .exceptions import FunctionReturn
+from .exceptions import FunctionReturn, OnBreakStatement
 from .models import (
     DATA_TYPE,
     ArrayValue,
@@ -69,65 +69,40 @@ class LabelDesc(TypedDict):
     index: int
 
 
-def get_labels(c: Cursor) -> Dict[str, LabelDesc]:
-    assert c.kind == CursorKind.FUNCTION_DECL
-    labels: Dict[str, LabelDesc] = {}
+class NotImplementedItem:
+    def __init__(self, tag) -> None:
+        self.tag = tag
 
-    def _handle_traversal(ctx: TraversalContext):
-        if ctx.current_node.kind == CursorKind.LABEL_STMT:
-            label_parent: Cursor = ctx.hierarchy[-2]
-            assert label_parent.kind == CursorKind.COMPOUND_STMT
-            for i, child in enumerate(label_parent.get_children()):
-                if child.spelling == ctx.current_node.spelling:
-                    labels[ctx.current_node.spelling] = {
-                        "parent_offset": label_parent.location.offset,
-                        "label": ctx.current_node.spelling,
-                        "index": i,
-                    }
-                    return
-
-    traversal_with_callback(c, _handle_traversal)
-    return labels
+    def __repr__(self) -> str:
+        return f"<NotimplementedItem {self.tag}>"
 
 
 class ClangASTConverter:
     def __init__(
         self,
-        initial_params: Optional[Dict[str, Any]] = None,
-        initial_locals: Optional[Dict[str, Any]] = None,
-        initial_globals: Optional[Dict[str, Any]] = None,
-        types: Optional[Dict[str, Optional[DATA_TYPE]]] = None,
-        program_info: Optional[ProgramInfo] = None,
     ) -> None:
-        self.initial_params = {} if initial_params is None else initial_params
-        self.initial_locals = {} if initial_locals is None else initial_locals
-        self.initial_globals = {} if initial_globals is None else initial_globals
-        self.variables: Dict[str, Variable] = {}
-        self._program_info = (
-            program_info if program_info is not None else ProgramInfo({})
-        )
-        self.types = {} if types is None else types
-        for k, v in self.initial_params.items():
-            self.variables[k] = deepcopy(v)
-        for k, v in self.initial_globals.items():
-            self.variables[k] = deepcopy(v)
-        for k, v in self.initial_locals.items():
-            self.variables[k] = deepcopy(v)
+
         self._handlers_map = {
+            # TRANSLATIONS
+            CursorKind.TRANSLATION_UNIT: lambda c: nodes.CompilationUnit(
+                self.eval_children(c)
+            ),
             # DECLARATIONS
+            CursorKind.STRUCT_DECL: lambda c: NotImplementedItem("structdecl"),
+            CursorKind.TYPEDEF_DECL: lambda c: NotImplementedItem("typedefdecl"),
             CursorKind.DECL_STMT: self.eval_children,
             CursorKind.VAR_DECL: self._handle_var_decl,
             CursorKind.PARM_DECL: lambda c: None,
-            CursorKind.FUNCTION_DECL: self.eval_children,
+            CursorKind.FUNCTION_DECL: self._handle_function_decl,
             # EXPRESSIONS
-            CursorKind.DECL_REF_EXPR: lambda c: self.get_variable(c).value,
+            CursorKind.DECL_REF_EXPR: lambda c: nodes.Name(c.spelling),
             CursorKind.MEMBER_REF_EXPR: self._handle_member_ref_expr,
             CursorKind.ARRAY_SUBSCRIPT_EXPR: self._handle_array_subscript_expr,
             CursorKind.UNEXPOSED_EXPR: lambda c: self.eval_children(c)[0],
             CursorKind.INIT_LIST_EXPR: self._handle_init_list_expr,
             CursorKind.CALL_EXPR: self._handle_call_expr,
             # TYPES
-            CursorKind.TYPE_REF: lambda c: None,
+            CursorKind.TYPE_REF: lambda c: nodes.Type(c.spelling),
             # LITERALS
             CursorKind.INTEGER_LITERAL: lambda c: int(
                 ensure_not_none(extract_literal_value(c))
@@ -137,48 +112,27 @@ class ClangASTConverter:
             CursorKind.UNARY_OPERATOR: self._handle_unary_operator,
             CursorKind.COMPOUND_ASSIGNMENT_OPERATOR: self._handle_compound_assignment_operator,
             # STATEMENTS
-            CursorKind.COMPOUND_STMT: self.eval_children,
+            CursorKind.COMPOUND_STMT: lambda c: nodes.Block(self.eval_children(c)),
             CursorKind.IF_STMT: self._handle_if_stmt,
             CursorKind.FOR_STMT: self._handle_for_stmt,
             CursorKind.GOTO_STMT: self._handle_goto_stmt,
             CursorKind.LABEL_STMT: self._handle_label_stmt,
-            # CursorKind.WHILE_STMT: self._handle_while_stmt,
+            CursorKind.WHILE_STMT: self._handle_while_stmt,
+            CursorKind.SWITCH_STMT: self._handle_switch_stmt,
             # CursorKind.DO_STMT: self._handle_do_stmt,
-            # CursorKind.BREAK_STMT: lambda c: None,
-            # CursorKind.CONTINUE_STMT: lambda c: None,
+            CursorKind.BREAK_STMT: lambda c: nodes.Break(
+                self.eval_single_cursor(next(c.get_children()))
+                if len(list(c.get_children())) > 0
+                else None
+            ),
+            CursorKind.CONTINUE_STMT: lambda c: nodes.Continue(
+                self.eval_single_cursor(next(c.get_children()))
+                if len(list(c.get_children())) > 0
+                else None
+            ),
             # CursorKind.GOTO_STMT: lambda c: None,
             # CursorKind.CASE_STMT: lambda c: None,
             CursorKind.RETURN_STMT: self._handle_return_stmt,
-        }
-        self._methods_unary_op: Dict[
-            Tuple[str, UnaryOpPos], Callable[[Cursor], Variable]
-        ] = {
-            ("*", UnaryOpPos.BEFORE): self._calc_dereference_expression,
-            ("&", UnaryOpPos.BEFORE): self._calc_reference_expression,
-            ("++", UnaryOpPos.AFTER): lambda c: self._calc_add_add_expression(
-                c, UnaryOpPos.AFTER
-            ),
-            ("++", UnaryOpPos.BEFORE): lambda c: self._calc_add_add_expression(
-                c, UnaryOpPos.BEFORE
-            ),
-            ("-", UnaryOpPos.BEFORE): lambda c: Variable(
-                self.eval_single_cursor(c) * -1
-            ),
-        }
-        self._methods_binary_op: Dict[
-            str, Callable[[ConcreteValueType, ConcreteValueType], ConcreteValueType]
-        ] = {
-            "+": lambda a, b: a + b,
-            "-": lambda a, b: a - b,
-            "*": lambda a, b: a * b,
-            "/": lambda a, b: a / b,
-            "%": lambda a, b: a % b,
-            "==": lambda a, b: int(a == b),
-            "!=": lambda a, b: int(a != b),
-            "<": lambda a, b: int(a < b),
-            ">": lambda a, b: int(a > b),
-            ">=": lambda a, b: int(a >= b),
-            "&&": lambda a, b: a & b,
         }
 
         # Return value of execution
@@ -210,12 +164,23 @@ class ClangASTConverter:
         return children_values
 
     def eval(self, cursor: Cursor):
-        self._labels = get_labels(cursor)
         try:
             return self.eval_single_cursor(cursor)
         except FunctionReturn as e:
             self._ret_value = e.value
             return self._ret_value
+
+    def _handle_function_decl(self, cursor: Cursor) -> nodes.MethodDeclaration:
+        children_values = self.eval_children(cursor)
+        params_ast = (
+            (children_values[: len(children_values) - 1])
+            if len(children_values) > 1
+            else []
+        )
+        body_ast = children_values[-1]
+        return nodes.MethodDeclaration(
+            cursor.spelling, [], [], params_ast, "NotImplemented", body_ast
+        )
 
     def _handle_var_decl(self, cursor: Cursor) -> Optional[nodes.Assignment]:
         children_asts = (
@@ -291,31 +256,66 @@ class ClangASTConverter:
             raise NotImplementedError(len(children))
 
     def _handle_goto_stmt(self, cursor: Cursor):
-        raise NotImplementedError
+
+        return nodes.GoToStatement(next(cursor.get_children()).spelling)
 
     def _handle_label_stmt(self, cursor: Cursor):
-        raise NotImplementedError
+        return nodes.Label(
+            cursor.spelling, self.eval_single_cursor(next(cursor.get_children()))
+        )
+
+    def _handle_while_stmt(self, cursor: Cursor):
+        cond_ast, body_ast = self.eval_children(cursor)
+        return nodes.While(cond_ast, body_ast)
+
+    def _handle_switch_stmt(self, cursor: Cursor) -> nodes.Switch:
+        condition_cursor, switch_body_cursor = cursor.get_children()
+        assert switch_body_cursor.kind == CursorKind.COMPOUND_STMT
+        switch_body_item_cursor: Cursor
+        switch_cases: List[nodes.SwitchCase] = []
+        default_procedure = None
+        # Get switch items from body cursor
+        for switch_body_item_cursor in switch_body_cursor.get_children():
+            if switch_body_item_cursor.kind == CursorKind.CASE_STMT:
+                case_cond, body = self.eval_children(switch_body_item_cursor)
+                switch_cases.append(nodes.SwitchCase(case_cond, body))
+            elif switch_body_item_cursor.kind == CursorKind.DEFAULT_STMT:
+                body = self.eval_children(switch_body_item_cursor)[0]
+                switch_cases.append(nodes.SwitchCase(nodes.DefaultStatement(), body))
+            elif switch_body_item_cursor.kind in (CursorKind.BREAK_STMT,):
+                if not isinstance(switch_cases[-1].body, nodes.Block):
+                    switch_cases[-1].body = nodes.Block([switch_cases[-1].body])
+                if switch_body_item_cursor.kind == CursorKind.BREAK_STMT:
+                    switch_cases[-1].body.statements.append(
+                        self.eval_single_cursor(switch_body_item_cursor)
+                    )
+                # elif switch_body_item_cursor.kind == CursorKind.DEFAULT_STMT:
+
+            else:
+                raise NotImplementedError
+        return nodes.Switch(self.eval_single_cursor(condition_cursor), switch_cases)
 
     def _handle_for_stmt(self, cursor: Cursor):
-        stmt1_ast, cond_expr_ast, stmt2_ast, body_ast = split_for_loop_conditions(
-            cursor
+        stmt1_cursor, cond_expr_cursor, stmt2_cursor, body_cursor = (
+            split_for_loop_conditions(cursor)
         )
-        if stmt1_ast is not None:
-            self.eval_single_cursor(stmt1_ast)
-        while (cond_expr_ast is None) or (self.eval_single_cursor(cond_expr_ast) != 0):
-            if body_ast is not None:
-                self.eval_single_cursor(body_ast)
-            if stmt2_ast is not None:
-                self.eval_single_cursor(stmt2_ast)
+        if stmt1_cursor is not None:
+            stmt1_ast = self.eval_single_cursor(stmt1_cursor)
+        if stmt2_cursor is not None:
+            stmt2_ast = self.eval_single_cursor(stmt2_cursor)
+        if cond_expr_cursor is not None:
+            cond_ast = self.eval_single_cursor(cond_expr_cursor)
+        if body_cursor is not None:
+            body_ast = self.eval_single_cursor(body_cursor)
+        return nodes.For(stmt1_ast, cond_ast, stmt2_ast, body_ast)
 
-    def _handle_return_stmt(self, cursor: Cursor):
+    def _handle_return_stmt(self, cursor: Cursor) -> nodes.Return:
         children_values = self.eval_children(cursor)
         if len(children_values) > 0:
             val = children_values[0]
-            self._ret_value = val
-            raise FunctionReturn(val)
+            return nodes.Return(val)
         else:
-            return None
+            return nodes.Return()
 
     def get_func(self, c: Cursor) -> Tuple[Cursor, FunctionDefModel]:
         if c.kind == CursorKind.DECL_REF_EXPR:
@@ -332,20 +332,3 @@ class ClangASTConverter:
             return True
         else:
             return False
-
-    def assign_value_to_target(self, target: Variable, value: Any):
-        if isinstance(target.value, ArrayValue):
-            for i, v in enumerate(target.value.values):
-                self.assign_value_to_target(v, value[i].value)
-        elif isinstance(target.value, StructValue):
-            for i, item in enumerate(target.value.attributes.items()):
-                k, v = item
-                self.assign_value_to_target(v, value[i].value)
-        elif isinstance(target.value, PointerValue):
-            assert isinstance(value, PointerValue), value
-            target.value.pointee = value.pointee
-            # raise NotImplementedError
-        elif self.is_concrete_value(target.value):
-            target.value = value
-        else:
-            raise NotImplementedError(target.value)

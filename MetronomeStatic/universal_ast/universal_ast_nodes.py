@@ -2,7 +2,7 @@
 This file is copied from plyj package.
 """
 
-from typing import List, Optional
+from typing import Generator, List, Optional, Union
 
 
 class SourceElement(object):
@@ -48,25 +48,31 @@ class SourceElement(object):
                         field.accept(visitor)
         getattr(visitor, "leave_" + class_name)(self)
 
+    def walk_preorder(self) -> Generator["SourceElement", None, None]:
+        for f in self._fields:
+            field = getattr(self, f)
+            if field:
+                if isinstance(field, list):
+                    for elem in field:
+                        if isinstance(elem, SourceElement):
+                            yield from elem.walk_preorder()
+                elif isinstance(field, SourceElement):
+                    yield from field.walk_preorder()
+
 
 class CompilationUnit(SourceElement):
 
     def __init__(
-        self, package_declaration=None, import_declarations=None, type_declarations=None
+        self,
+        children: List[SourceElement],
     ):
         super(CompilationUnit, self).__init__()
         self._fields = [
-            "package_declaration",
-            "import_declarations",
-            "type_declarations",
+            "children",
+            # "import_declarations",
+            # "type_declarations",
         ]
-        if import_declarations is None:
-            import_declarations = []
-        if type_declarations is None:
-            type_declarations = []
-        self.package_declaration = package_declaration
-        self.import_declarations = import_declarations
-        self.type_declarations = type_declarations
+        self.children = children
 
 
 class PackageDeclaration(SourceElement):
@@ -192,7 +198,7 @@ class MethodDeclaration(SourceElement):
         type_parameters=None,
         parameters=None,
         return_type="void",
-        body=None,
+        body: Optional["Block"] = None,
         abstract=False,
         extended_dims=0,
         throws=None,
@@ -614,7 +620,7 @@ class FuncCall(Expression):
 
 class IfThenElse(Statement):
 
-    def __init__(self, predicate, if_true=None, if_false=None):
+    def __init__(self, predicate, if_true, if_false=None):
         super(IfThenElse, self).__init__()
         self._fields = ["predicate", "if_true", "if_false"]
         self.predicate = predicate
@@ -624,7 +630,7 @@ class IfThenElse(Statement):
 
 class While(Statement):
 
-    def __init__(self, predicate, body=None):
+    def __init__(self, predicate, body: Block):
         super(While, self).__init__()
         self._fields = ["predicate", "body"]
         self.predicate = predicate
@@ -667,21 +673,35 @@ class Assert(Statement):
 
 class Switch(Statement):
 
-    def __init__(self, expression, switch_cases):
+    def __init__(self, expression, switch_cases: List["SwitchCase"]):
         super(Switch, self).__init__()
         self._fields = ["expression", "switch_cases"]
         self.expression = expression
         self.switch_cases = switch_cases
 
+    def get_default_case(self) -> Optional["SwitchCase"]:
+        for case in self.switch_cases:
+            if isinstance(case.case, DefaultStatement):
+                return case
+        return None
+
+
+class DefaultStatement(SourceElement):
+    def __init__(self):
+        super().__init__()
+        self._fields = []
+
 
 class SwitchCase(SourceElement):
 
-    def __init__(self, cases, body=None):
+    def __init__(
+        self,
+        case: Union[SourceElement, DefaultStatement],
+        body: Union[Block, SourceElement],
+    ):
         super(SwitchCase, self).__init__()
-        self._fields = ["cases", "body"]
-        if body is None:
-            body = []
-        self.cases = cases
+        self._fields = ["case", "body"]
+        self.case = case
         self.body = body
 
 
@@ -910,3 +930,39 @@ class DereferenceExpr(Expression):
         super(DereferenceExpr, self).__init__()
         self._fields = ["ref"]
         self.ref = ref
+
+
+class Label(SourceElement):
+
+    def __init__(self, name: str, stmt: Optional[SourceElement] = None):
+        super(Label, self).__init__()
+        self._fields = ["name", "statement"]
+        self.name = name
+        self.statement = stmt
+
+
+class GoToStatement(SourceElement):
+    def __init__(self, label: str):
+        super(GoToStatement, self).__init__()
+        self._fields = ["label"]
+        self.label = label
+
+
+class Visitor(object):
+
+    def __init__(self, verbose=False):
+        self.verbose = verbose
+
+    def __getattr__(self, name):
+        if not (name.startswith("visit_") or name.startswith("leave_")):
+            raise AttributeError(
+                "name must start with visit_ or leave_ but was {}".format(name)
+            )
+
+        def f(element):
+            if self.verbose:
+                msg = "unimplemented call to {}; ignoring ({})"
+                print(msg.format(name, element))
+            return True
+
+        return f

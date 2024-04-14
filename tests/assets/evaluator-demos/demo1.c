@@ -33,5 +33,23 @@ int use_config(S s)
             a += 2;
             sub_arr[0].sub_value += g_Config;
         }
+        else
+        {
+            a += 3;
+            // return 0;
+        }
     }
+    // For loop
+    for (int i = 0; i < 10; i++)
+    {
+        a += 1;
+    }
+    a = -10;
+    // While loop
+    while (a < 0)
+    {
+        a += 1;
+    }
+
+    return a;
 }
