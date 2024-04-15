@@ -99,6 +99,8 @@ class ClangASTConverter:
             CursorKind.MEMBER_REF_EXPR: self._handle_member_ref_expr,
             CursorKind.ARRAY_SUBSCRIPT_EXPR: self._handle_array_subscript_expr,
             CursorKind.UNEXPOSED_EXPR: lambda c: self.eval_children(c)[0],
+            CursorKind.CSTYLE_CAST_EXPR: self._handle_cstyle_cast_expr,
+            CursorKind.PAREN_EXPR: lambda c: self.eval_children(c)[0],
             CursorKind.INIT_LIST_EXPR: self._handle_init_list_expr,
             CursorKind.CALL_EXPR: self._handle_call_expr,
             # TYPES
@@ -119,7 +121,7 @@ class ClangASTConverter:
             CursorKind.LABEL_STMT: self._handle_label_stmt,
             CursorKind.WHILE_STMT: self._handle_while_stmt,
             CursorKind.SWITCH_STMT: self._handle_switch_stmt,
-            # CursorKind.DO_STMT: self._handle_do_stmt,
+            CursorKind.DO_STMT: self._handle_do_stmt,
             CursorKind.BREAK_STMT: lambda c: nodes.Break(
                 self.eval_single_cursor(next(c.get_children()))
                 if len(list(c.get_children())) > 0
@@ -163,7 +165,7 @@ class ClangASTConverter:
             children_values.append(self.eval_single_cursor(child))
         return children_values
 
-    def eval(self, cursor: Cursor):
+    def eval(self, cursor: Cursor) -> nodes.SourceElement:
         try:
             return self.eval_single_cursor(cursor)
         except FunctionReturn as e:
@@ -180,6 +182,11 @@ class ClangASTConverter:
         body_ast = children_values[-1]
         return nodes.MethodDeclaration(
             cursor.spelling, [], [], params_ast, "NotImplemented", body_ast
+        )
+
+    def _handle_cstyle_cast_expr(self, cursor: Cursor) -> nodes.Cast:
+        return nodes.Cast(
+            cursor.type.spelling, self.eval_single_cursor(next(cursor.get_children()))
         )
 
     def _handle_var_decl(self, cursor: Cursor) -> Optional[nodes.Assignment]:
@@ -294,6 +301,10 @@ class ClangASTConverter:
             else:
                 raise NotImplementedError
         return nodes.Switch(self.eval_single_cursor(condition_cursor), switch_cases)
+
+    def _handle_do_stmt(self, cursor: Cursor):
+        body_ast, pred_ast = self.eval_children(cursor)
+        return nodes.DoWhile(pred_ast, body_ast)
 
     def _handle_for_stmt(self, cursor: Cursor):
         stmt1_cursor, cond_expr_cursor, stmt2_cursor, body_cursor = (

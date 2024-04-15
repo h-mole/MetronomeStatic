@@ -155,10 +155,12 @@ class CFGBuilder:
             nodes.Return: self.build_on_return,
             nodes.For: self.build_on_for,
             nodes.While: self.build_on_while,
+            nodes.DoWhile: self.build_on_do_while,
             nodes.GoToStatement: self.build_on_goto,
             nodes.Break: self.build_on_break,
             nodes.Continue: self.build_on_continue,
             nodes.Switch: self.build_on_switch,
+            nodes.Block: self.build_on_block_or_stmt
         }
         if isinstance(node, nodes.Block):
             for i, statement in enumerate(node.statements):
@@ -287,6 +289,34 @@ class CFGBuilder:
 
         # Handle probable break
         self.add_loop_control_edges(block_end_loop, block_loop_head)
+
+        self.block = block_end_loop
+        return False
+
+    def build_on_do_while(self, node: nodes.DoWhile) -> bool:
+        # save the last block
+        block_before_do_while = self.block
+
+        # create the block after for loop structure
+        block_end_loop = self.new_block()
+        block_end_loop.tag_on_empty = "END_DO_WHILE"
+
+        if node.predicate is not None:
+            block_loop_predicate = self.new_block(node.predicate, kind="conditional")
+        else:
+            block_loop_predicate = self.new_block()
+
+        block_do_while_body_start = self.block = self.new_block()
+        block_before_do_while.next_blocks.append(block_do_while_body_start)
+        self.build_on_block_or_stmt(node.body)
+
+        self.block.next_blocks.append(block_loop_predicate)
+
+        block_loop_predicate.next_blocks.append(block_end_loop)
+        block_loop_predicate.next_blocks.append(block_do_while_body_start)
+        
+        # Handle probable break
+        self.add_loop_control_edges(block_end_loop, block_do_while_body_start)
 
         self.block = block_end_loop
         return False

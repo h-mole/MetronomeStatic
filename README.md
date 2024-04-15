@@ -19,75 +19,17 @@ If you would like to run it in jupyter, please install jupyter by the commands b
 pip install jupyterlab ipywidgets
 ```
 
+## Architecture
+
+```mermaid
+graph TD
+    C/C++ -->|LibClang| ClangAST
+    ClangAST -->|Conversion| UAST[Universal AST]
+    UAST -->|Conversion| CFG
+```
+
 ## Interfaces
 
 ### Clang
 
 Clang interface included some useful functionalities.
-
-## Microservice By MessageQueue
-
-### Task dispatch procedure
-
-- `TaskQueue` and `ResultQueue` are `queue.Queue`s in the server program.
-- `Get Task` and `Push Result` procedures are performed by RESTFUL API.
-
-```mermaid
-sequenceDiagram
-
-participant s as Server
-participant tmq as TaskQueue
-participant rmq as ResultQueue
-participant t1 as Tool1
-participant t2 as Tool2
-
-s ->> tmq: Put task 
-tmq ->> t1: Get task
-t1 ->> t1: handle task
-tmq ->> s: Count remaining tasks
-tmq ->> t2: Get task
-t2 ->> t2: handle task
-tmq ->> s: Count remaining tasks
-t2 ->> rmq: Push result
-t1 ->> rmq: Push result
-rmq ->> s: Listen to result messages
-```
-
-### Status pushing procedure
-
-- A background task running in each tool and pushing the status of tools to scheduler by
-`Websocket` every second.
-
-### Autocompletion Request
-
-```mermaid
-sequenceDiagram
-
-participant s as Server
-participant q as TmpQueue
-participant st as WSRecvThread
-participant t as Tool
-
-s -x q: Create Tmp Queue
-s ->>+ t: WS Request No.145
-activate s
-s -->> s: Blocking get() from TmpQueue
-t -->> t: Compute the autocompletion items
-
-t -->>- st: WS Reply No.145
-activate st
-st ->> st: Match WS Req/Rep by No.
-st -->>+ q: Put reply
-deactivate st
-q -->>- s: q.get() resolved and got the reply
-deactivate s
-s --x q: destroy the TmpQueue
-```
-
-## In-Repo Third Party Dependencies
-
-### [PyC-CFG](https://github.com/shramos/pyc-cfg)
-
-Pyc-cfg is a pure python control flow graph builder for almost all Ansi C programming language.
-
-As the original version only suitable for Python2, I copied its code and made it compatible for python 3.
