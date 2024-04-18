@@ -1,0 +1,37 @@
+{
+    "kindText": "CursorKind.FUNCTION_DECL",
+    ...
+    "spelling": "main",
+    "children": [
+        {
+            ...
+            "children": [
+                {
+                    ...
+                    "children": [
+                        {
+                            "kindText": "CursorKind.VAR_DECL",
+                            ...
+                            "spelling": "b"
+                        },
+                        {
+                            "kindText": "CursorKind.VAR_DECL",
+                            ...
+                            "spelling": "c"
+                        }
+                    ]
+                },
+                ...
+                    "kindText": "CursorKind.BINARY_OPERATOR",
+                    "position": [
+                        6,
+                        12
+                    ],
+                ...
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,21 @@
+digraph "wrong" {  
+"11" [label = <(METHOD,wrong)<SUB>4</SUB>> ]
+"25" [label = <(METHOD_RETURN,int)<SUB>4</SUB>> ]
+"14" [label = <(insert,maps.insert(&quot;version&quot;, version.get_value()))<SUB>7</SUB>> ]
+"23" [label = <(RETURN,return 0;,return 0;)<SUB>8</SUB>> ]
+"14" [label = <(insert,maps.insert(&quot;version&quot;, version.get_value()))<SUB>7</SUB>> ]
+"14" [label = <(insert,maps.insert(&quot;version&quot;, version.get_value()))<SUB>7</SUB>> ]
+"14" [label = <(insert,maps.insert(&quot;version&quot;, version.get_value()))<SUB>7</SUB>> ]
+"24" [label = <(LITERAL,0,return 0;)<SUB>8</SUB>> ]
+"19" [label = <(get_value,version.get_value())<SUB>7</SUB>> ]
+  "23" -> "25"  [ label = "&lt;RET&gt;"] 
+  "14" -> "25"  [ label = "maps.insert"] 
+  "19" -> "25"  [ label = "version.get_value"] 
+  "14" -> "25"  [ label = "version.get_value()"] 
+  "14" -> "25"  [ label = "maps.insert(&quot;version&quot;, version.get_value())"] 
+  "24" -> "23"  [ label = "0"] 
+  "11" -> "23" 
+  "11" -> "14" 
+  "19" -> "14"  [ label = "version.get_value"] 
+  "11" -> "24" 
+}

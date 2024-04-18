@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClangUtils &mdash; MetronomeStatic 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=2389946f"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="MelodieGenerator" href="melodie_generator.html" />
+    <link rel="prev" title="CommonUtils" href="common_utils.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MetronomeStatic
+              <img src="../_static/sky-cloud.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#user-installation">User Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#developer-installation">Developer Installation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/_index.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/clang_utils.html">Clang Utils</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/clang_utils.html#loading-source-code-printing-ast">Loading Source Code &amp; Printing AST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/clang_utils.html#querying-the-ast-interactively">Querying The AST Interactively</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/clang_utils.html#querying-code-attributes">Querying Code Attributes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../tutorial/clang_utils.html#queries-for-variables">Queries for Variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../tutorial/clang_utils.html#parsing-expressions">Parsing Expressions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="_index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="common_utils.html">CommonUtils</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="common_utils.html#tips-before-reading">Tips Before Reading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="common_utils.html#members-list">Members List</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="common_utils.html#MetronomeStatic.utils.MelodieFrozenGenerator"><code class="docutils literal notranslate"><span class="pre">MelodieFrozenGenerator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common_utils.html#MetronomeStatic.utils.MelodieGenerator"><code class="docutils literal notranslate"><span class="pre">MelodieGenerator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common_utils.html#MetronomeStatic.utils.abspath_from_current_file"><code class="docutils literal notranslate"><span class="pre">abspath_from_current_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common_utils.html#MetronomeStatic.utils.compose"><code class="docutils literal notranslate"><span class="pre">compose()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common_utils.html#MetronomeStatic.utils.file_to_dataurl"><code class="docutils literal notranslate"><span class="pre">file_to_dataurl()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common_utils.html#MetronomeStatic.utils.parse_dataurl"><code class="docutils literal notranslate"><span class="pre">parse_dataurl()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ClangUtils</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tips-before-reading">Tips Before Reading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#members-list">Members List</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.ClassDefModel"><code class="docutils literal notranslate"><span class="pre">ClassDefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.DefModel"><code class="docutils literal notranslate"><span class="pre">DefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.FieldDefModel"><code class="docutils literal notranslate"><span class="pre">FieldDefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.FunctionDefModel"><code class="docutils literal notranslate"><span class="pre">FunctionDefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.ParamDefModel"><code class="docutils literal notranslate"><span class="pre">ParamDefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.StructDefModel"><code class="docutils literal notranslate"><span class="pre">StructDefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.TraversalContext"><code class="docutils literal notranslate"><span class="pre">TraversalContext</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.TypeDefModel"><code class="docutils literal notranslate"><span class="pre">TypeDefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.TypeWrapper"><code class="docutils literal notranslate"><span class="pre">TypeWrapper</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.UnaryOpPos"><code class="docutils literal notranslate"><span class="pre">UnaryOpPos</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.UnionDefModel"><code class="docutils literal notranslate"><span class="pre">UnionDefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.VarDefModel"><code class="docutils literal notranslate"><span class="pre">VarDefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.all_globals"><code class="docutils literal notranslate"><span class="pre">all_globals()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.beautified_print_ast"><code class="docutils literal notranslate"><span class="pre">beautified_print_ast()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.build_call_graph"><code class="docutils literal notranslate"><span class="pre">build_call_graph()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.extract_ast"><code class="docutils literal notranslate"><span class="pre">extract_ast()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.get_compound_assignment_operator"><code class="docutils literal notranslate"><span class="pre">get_compound_assignment_operator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.get_func_decl"><code class="docutils literal notranslate"><span class="pre">get_func_decl()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.get_func_decl_all"><code class="docutils literal notranslate"><span class="pre">get_func_decl_all()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.get_global_ref_names"><code class="docutils literal notranslate"><span class="pre">get_global_ref_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.get_global_refs"><code class="docutils literal notranslate"><span class="pre">get_global_refs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.get_local_var_defs"><code class="docutils literal notranslate"><span class="pre">get_local_var_defs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.get_param_decls"><code class="docutils literal notranslate"><span class="pre">get_param_decls()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.get_var_refs"><code class="docutils literal notranslate"><span class="pre">get_var_refs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.is_function_definition"><code class="docutils literal notranslate"><span class="pre">is_function_definition()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.iter_ast"><code class="docutils literal notranslate"><span class="pre">iter_ast()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.iter_ast_from_file"><code class="docutils literal notranslate"><span class="pre">iter_ast_from_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.iter_files"><code class="docutils literal notranslate"><span class="pre">iter_files()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.parse_file"><code class="docutils literal notranslate"><span class="pre">parse_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.program_model_unparse"><code class="docutils literal notranslate"><span class="pre">program_model_unparse()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.split_binary_operator"><code class="docutils literal notranslate"><span class="pre">split_binary_operator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.split_compound_assignment"><code class="docutils literal notranslate"><span class="pre">split_compound_assignment()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.split_for_loop_conditions"><code class="docutils literal notranslate"><span class="pre">split_for_loop_conditions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.split_unary_operator"><code class="docutils literal notranslate"><span class="pre">split_unary_operator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.traversal"><code class="docutils literal notranslate"><span class="pre">traversal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.traversal_with_callback"><code class="docutils literal notranslate"><span class="pre">traversal_with_callback()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="melodie_generator.html">MelodieGenerator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="melodie_generator.html#members-list">Members List</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="melodie_generator.html#MelodieFuncFlow.functional.MelodieFrozenGenerator"><code class="docutils literal notranslate"><span class="pre">MelodieFrozenGenerator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator"><code class="docutils literal notranslate"><span class="pre">MelodieGenerator</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#start-may-10-2023">Start (May. 10, 2023)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MetronomeStatic</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="_index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">ClangUtils</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/clang_utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="clangutils">
+<h1>ClangUtils<a class="headerlink" href="#clangutils" title="Permalink to this heading"></a></h1>
+<section id="tips-before-reading">
+<h2>Tips Before Reading<a class="headerlink" href="#tips-before-reading" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Functions or Classes in this page should be imported by:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">MetronomeStatic.clang_utils</span> <span class="kn">import</span> <span class="o">&lt;</span><span class="s2">&quot;Members Listed In This Page&quot;</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="members-list">
+<h2>Members List<a class="headerlink" href="#members-list" title="Permalink to this heading"></a></h2>
+<span class="target" id="module-MetronomeStatic.clang_utils.code_attributes"><span id="apidoc-clangutils"></span></span><p>Extract code properties from code, such as structs,
+members of structs, and so on</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.ClassDefModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ClassDefModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spelling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.ClassDefModel" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.DefModel" title="MetronomeStatic.clang_utils.code_attributes.extract_data_structure.DefModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">DefModel</span></code></a></p>
+<p>The model defining class information</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.ClassDefModel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spelling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.ClassDefModel.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.ClassDefModel.iter_fields">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">iter_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator" title="MelodieFuncFlow.functional.MelodieGenerator"><span class="pre">MelodieGenerator</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.FieldDefModel" title="MetronomeStatic.clang_utils.code_attributes.extract_data_structure.FieldDefModel"><span class="pre">FieldDefModel</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.ClassDefModel.iter_fields" title="Permalink to this definition"></a></dt>
+<dd><p>Iterate each field in class</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.ClassDefModel.iter_methods">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">iter_methods</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator" title="MelodieFuncFlow.functional.MelodieGenerator"><span class="pre">MelodieGenerator</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.FunctionDefModel" title="MetronomeStatic.clang_utils.code_attributes.extract_data_structure.FunctionDefModel"><span class="pre">FunctionDefModel</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.ClassDefModel.iter_methods" title="Permalink to this definition"></a></dt>
+<dd><p>Iterate each method in class</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.DefModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DefModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spelling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.DefModel" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ReprUtil</span></code></p>
+<p>Base class of function/class/struct… definitions</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.DefModel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spelling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.DefModel.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.FieldDefModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FieldDefModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spelling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_value_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.FieldDefModel" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.DefModel" title="MetronomeStatic.clang_utils.code_attributes.extract_data_structure.DefModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">DefModel</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.FieldDefModel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spelling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_value_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.FieldDefModel.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.FunctionDefModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FunctionDefModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spelling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.FunctionDefModel" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.DefModel" title="MetronomeStatic.clang_utils.code_attributes.extract_data_structure.DefModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">DefModel</span></code></a></p>
+<p>Model of function definition</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.FunctionDefModel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spelling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.FunctionDefModel.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.FunctionDefModel.iter_callings">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">iter_callings</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator" title="MelodieFuncFlow.functional.MelodieGenerator"><span class="pre">MelodieGenerator</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.ParamDefModel" title="MetronomeStatic.clang_utils.code_attributes.extract_data_structure.ParamDefModel"><span class="pre">ParamDefModel</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.FunctionDefModel.iter_callings" title="Permalink to this definition"></a></dt>
+<dd><p>Iterate all callings inside this definition</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.FunctionDefModel.iter_params">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">iter_params</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator" title="MelodieFuncFlow.functional.MelodieGenerator"><span class="pre">MelodieGenerator</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.ParamDefModel" title="MetronomeStatic.clang_utils.code_attributes.extract_data_structure.ParamDefModel"><span class="pre">ParamDefModel</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.FunctionDefModel.iter_params" title="Permalink to this definition"></a></dt>
+<dd><p>Iterate each parameters</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.ParamDefModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ParamDefModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spelling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.ParamDefModel" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.DefModel" title="MetronomeStatic.clang_utils.code_attributes.extract_data_structure.DefModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">DefModel</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.ParamDefModel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spelling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.ParamDefModel.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.StructDefModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">StructDefModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spelling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.StructDefModel" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.DefModel" title="MetronomeStatic.clang_utils.code_attributes.extract_data_structure.DefModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">DefModel</span></code></a></p>
+<p>The model indicating a structure definition</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.StructDefModel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spelling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.StructDefModel.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.StructDefModel.iter_fields">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">iter_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator" title="MelodieFuncFlow.functional.MelodieGenerator"><span class="pre">MelodieGenerator</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.FieldDefModel" title="MetronomeStatic.clang_utils.code_attributes.extract_data_structure.FieldDefModel"><span class="pre">FieldDefModel</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.UnionDefModel" title="MetronomeStatic.clang_utils.code_attributes.extract_data_structure.UnionDefModel"><span class="pre">UnionDefModel</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.StructDefModel" title="MetronomeStatic.clang_utils.code_attributes.extract_data_structure.StructDefModel"><span class="pre">StructDefModel</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.StructDefModel.iter_fields" title="Permalink to this definition"></a></dt>
+<dd><p>Iterate fields of this struct</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.TraversalContext">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TraversalContext</span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.TraversalContext" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Used when traversing the Clang AST with recording the AST hierarchy information.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.TraversalContext.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.TraversalContext.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.TraversalContext.current_node">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_node</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Cursor</span></em><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.TraversalContext.current_node" title="Permalink to this definition"></a></dt>
+<dd><p>Current node in the Clang AST</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.TraversalContext.find_by_kind">
+<span class="sig-name descname"><span class="pre">find_by_kind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CursorKind</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.TraversalContext.find_by_kind" title="Permalink to this definition"></a></dt>
+<dd><p>Search the AST hierarchy, get the AST node of the same kind.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.TraversalContext.find_by_kind_td">
+<span class="sig-name descname"><span class="pre">find_by_kind_td</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CursorKind</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.TraversalContext.find_by_kind_td" title="Permalink to this definition"></a></dt>
+<dd><p>Perform top-down search by AST node kind in the hierarchy.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.TraversalContext.nearest_statement">
+<span class="sig-name descname"><span class="pre">nearest_statement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Cursor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Cursor</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.TraversalContext.nearest_statement" title="Permalink to this definition"></a></dt>
+<dd><p>Find nearest Compound Statement</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.TypeDefModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TypeDefModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spelling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.TypeDefModel" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.DefModel" title="MetronomeStatic.clang_utils.code_attributes.extract_data_structure.DefModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">DefModel</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.TypeDefModel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spelling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.TypeDefModel.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.TypeWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TypeWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.TypeWrapper" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ReprUtil</span></code></p>
+<p>The wrapper over data type</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.TypeWrapper.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.TypeWrapper.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.TypeWrapper.kind">
+<span class="sig-name descname"><span class="pre">kind</span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.TypeWrapper.kind" title="Permalink to this definition"></a></dt>
+<dd><p>A string, not CursorKind</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.TypeWrapper.spelling">
+<span class="sig-name descname"><span class="pre">spelling</span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.TypeWrapper.spelling" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class enum">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.UnaryOpPos">
+<em class="property"><span class="pre">enum</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">UnaryOpPos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.UnaryOpPos" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>A Enum standing for the positional relationship of unary operator
+and its target expression</p>
+<ul class="simple">
+<li><p>BEFORE: Operator is before the expression, such as <code class="docutils literal notranslate"><span class="pre">*p</span></code>, <code class="docutils literal notranslate"><span class="pre">++i</span></code></p></li>
+<li><p>AFTER: Operator is after the expression, such as <code class="docutils literal notranslate"><span class="pre">p++</span></code></p></li>
+</ul>
+<p>Valid values are as follows:</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.UnaryOpPos.BEFORE">
+<span class="sig-name descname"><span class="pre">BEFORE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;UnaryOpPos.BEFORE:</span> <span class="pre">'before'&gt;</span></em><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.UnaryOpPos.BEFORE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.UnaryOpPos.AFTER">
+<span class="sig-name descname"><span class="pre">AFTER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;UnaryOpPos.AFTER:</span> <span class="pre">'after'&gt;</span></em><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.UnaryOpPos.AFTER" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.UnionDefModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">UnionDefModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spelling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.UnionDefModel" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.DefModel" title="MetronomeStatic.clang_utils.code_attributes.extract_data_structure.DefModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">DefModel</span></code></a></p>
+<p>Definition model of Union</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.UnionDefModel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spelling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.UnionDefModel.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.UnionDefModel.iter_children">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">iter_children</span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.UnionDefModel.iter_children" title="Permalink to this definition"></a></dt>
+<dd><p>Iterate child fields inside this union</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.VarDefModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">VarDefModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spelling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.VarDefModel" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.DefModel" title="MetronomeStatic.clang_utils.code_attributes.extract_data_structure.DefModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">DefModel</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.VarDefModel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spelling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.VarDefModel.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.all_globals">
+<span class="sig-name descname"><span class="pre">all_globals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cursor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><span class="pre">Cursor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.all_globals" title="Permalink to this definition"></a></dt>
+<dd><p>Extract all globals from a translation unit.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.beautified_print_ast">
+<span class="sig-name descname"><span class="pre">beautified_print_ast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.beautified_print_ast" title="Permalink to this definition"></a></dt>
+<dd><p>Print Clang-AST with indented-JSON format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> – <ul class="simple">
+<li><p>If <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code>, print to stdout;</p></li>
+<li><p>If provided a valid filename, write the JSON to the file.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.build_call_graph">
+<span class="sig-name descname"><span class="pre">build_call_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">calls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DiGraph</span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.build_call_graph" title="Permalink to this definition"></a></dt>
+<dd><p>Build call graph from call relationship dictionary</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.extract_ast">
+<span class="sig-name descname"><span class="pre">extract_ast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_kind_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.extract_ast" title="Permalink to this definition"></a></dt>
+<dd><p>Convert a Clang-AST node to a JSON-Serializable Dict</p>
+<dl class="field-list simple">
+<dt class="field-odd">With_id<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If the dumped dict contains ID of AST node</p>
+</dd>
+<dt class="field-even">With_type<span class="colon">:</span></dt>
+<dd class="field-even"><p>If the dumped dict contains the data type of AST node</p>
+</dd>
+<dt class="field-odd">With_id<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If the dumped dict contains Position of AST node</p>
+</dd>
+<dt class="field-even">With_kind_value<span class="colon">:</span></dt>
+<dd class="field-even"><p>If the dumped dict contains value of AST node</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.get_compound_assignment_operator">
+<span class="sig-name descname"><span class="pre">get_compound_assignment_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cursor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.get_compound_assignment_operator" title="Permalink to this definition"></a></dt>
+<dd><p>get the symbol of COMPOUND_ASSIGNMENT_OPERATOR</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.get_func_decl">
+<span class="sig-name descname"><span class="pre">get_func_decl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Cursor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.get_func_decl" title="Permalink to this definition"></a></dt>
+<dd><p>Get the function named <cite>func_name</cite> from Clang AST. If not exist, return None.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.get_func_decl_all">
+<span class="sig-name descname"><span class="pre">get_func_decl_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator" title="MelodieFuncFlow.functional.MelodieGenerator"><span class="pre">MelodieGenerator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Cursor</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.get_func_decl_all" title="Permalink to this definition"></a></dt>
+<dd><p>Get all function definitions from Clang AST.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Definition_only<span class="colon">:</span></dt>
+<dd class="field-odd"><p>False by default. If true, this function will return functions with definitions
+only. Otherwise, this function will return both defined and declared functions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.get_global_ref_names">
+<span class="sig-name descname"><span class="pre">get_global_ref_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cursor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.get_global_ref_names" title="Permalink to this definition"></a></dt>
+<dd><p>Get all global variables referenced in one function</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.get_global_refs">
+<span class="sig-name descname"><span class="pre">get_global_refs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cursor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><span class="pre">Cursor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.get_global_refs" title="Permalink to this definition"></a></dt>
+<dd><p>Get all global variables referenced in one function</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.get_local_var_defs">
+<span class="sig-name descname"><span class="pre">get_local_var_defs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cursor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><span class="pre">Cursor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.get_local_var_defs" title="Permalink to this definition"></a></dt>
+<dd><p>Get all local variable definitions from a function
+except variables from parameters</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.get_param_decls">
+<span class="sig-name descname"><span class="pre">get_param_decls</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cursor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><span class="pre">Cursor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.get_param_decls" title="Permalink to this definition"></a></dt>
+<dd><p>Extract parameter declarations from function definition</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.get_var_refs">
+<span class="sig-name descname"><span class="pre">get_var_refs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_funcs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><span class="pre">Cursor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.get_var_refs" title="Permalink to this definition"></a></dt>
+<dd><p>Get all variables referenced from one function body</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.is_function_definition">
+<span class="sig-name descname"><span class="pre">is_function_definition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cursor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.is_function_definition" title="Permalink to this definition"></a></dt>
+<dd><p>Tell if this <code class="docutils literal notranslate"><span class="pre">FUNCTION_DECL</span></code> is definition (or only a declaration).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.iter_ast">
+<span class="sig-name descname"><span class="pre">iter_ast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cursor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator" title="MelodieFuncFlow.functional.MelodieGenerator"><span class="pre">MelodieGenerator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Cursor</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.iter_ast" title="Permalink to this definition"></a></dt>
+<dd><p>Iterate through all AST nodes</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.iter_ast_from_file">
+<span class="sig-name descname"><span class="pre">iter_ast_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator" title="MelodieFuncFlow.functional.MelodieGenerator"><span class="pre">MelodieGenerator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Cursor</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.iter_ast_from_file" title="Permalink to this definition"></a></dt>
+<dd><p>Iterate through all AST nodes in file</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.iter_files">
+<span class="sig-name descname"><span class="pre">iter_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filetypes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abspath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator" title="MelodieFuncFlow.functional.MelodieGenerator"><span class="pre">MelodieGenerator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.iter_files" title="Permalink to this definition"></a></dt>
+<dd><p>Iterate all files inside the folder.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.parse_file">
+<span class="sig-name descname"><span class="pre">parse_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">TranslationUnit</span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.parse_file" title="Permalink to this definition"></a></dt>
+<dd><p>Open a c/cpp file, and return the corresponding translation unit</p>
+<dl class="field-list simple">
+<dt class="field-odd">File<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Name of file</p>
+</dd>
+<dt class="field-even">Args<span class="colon">:</span></dt>
+<dd class="field-even"><p>Arguments to be passed into clang compiler, such as
+<code class="docutils literal notranslate"><span class="pre">['-xc++',</span> <span class="pre">'-std=c++11']</span></code> to analyse C++ 11 file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.program_model_unparse">
+<span class="sig-name descname"><span class="pre">program_model_unparse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ReprUtil</span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.program_model_unparse" title="Permalink to this definition"></a></dt>
+<dd><p>Unparse program model data and return the corresponding type.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.split_binary_operator">
+<span class="sig-name descname"><span class="pre">split_binary_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cursor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Cursor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Cursor</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.split_binary_operator" title="Permalink to this definition"></a></dt>
+<dd><p>Split binary operator.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">left</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">split_binary_operator</span><span class="p">(</span><span class="n">cursor</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt>The result:</dt><dd><ul class="simple">
+<li><p>left: a Cursor object</p></li>
+<li><p>right: a Cursor object</p></li>
+<li><p>op:  a str, “+”</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.split_compound_assignment">
+<span class="sig-name descname"><span class="pre">split_compound_assignment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cursor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cursor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Cursor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Cursor</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.split_compound_assignment" title="Permalink to this definition"></a></dt>
+<dd><p>Split compound assignment to l_value_ast, operator and r_value_ast</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.split_for_loop_conditions">
+<span class="sig-name descname"><span class="pre">split_for_loop_conditions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cursor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Cursor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Cursor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Cursor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Cursor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.split_for_loop_conditions" title="Permalink to this definition"></a></dt>
+<dd><p>Split for loop conditions to handle omitted conditions.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.split_unary_operator">
+<span class="sig-name descname"><span class="pre">split_unary_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cursor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Cursor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.UnaryOpPos" title="MetronomeStatic.clang_utils.code_attributes.utils.UnaryOpPos"><span class="pre">UnaryOpPos</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.split_unary_operator" title="Permalink to this definition"></a></dt>
+<dd><p>Split unary operator</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A tuple, (Unary Operator, operated expression, operator is before/after expression)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.traversal">
+<span class="sig-name descname"><span class="pre">traversal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cursor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator" title="MelodieFuncFlow.functional.MelodieGenerator"><span class="pre">MelodieGenerator</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.TraversalContext" title="MetronomeStatic.clang_utils.code_attributes.utils.TraversalContext"><span class="pre">TraversalContext</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.traversal" title="Permalink to this definition"></a></dt>
+<dd><p>Traverse the AST and for each node, returning a <code class="docutils literal notranslate"><span class="pre">TraversalContext</span></code>.</p>
+<p>Unlike <code class="docutils literal notranslate"><span class="pre">Cursor.walk_preorder()</span></code>, TraversalContext also contains hierarchical information
+in which block or branch the <code class="docutils literal notranslate"><span class="pre">Cursor</span></code> is.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MetronomeStatic.clang_utils.code_attributes.traversal_with_callback">
+<span class="sig-name descname"><span class="pre">traversal_with_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#MetronomeStatic.clang_utils.code_attributes.TraversalContext" title="MetronomeStatic.clang_utils.code_attributes.utils.TraversalContext"><span class="pre">TraversalContext</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.clang_utils.code_attributes.traversal_with_callback" title="Permalink to this definition"></a></dt>
+<dd><p>Traverse the AST and for each node call <cite>func</cite> with callback</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="common_utils.html" class="btn btn-neutral float-left" title="CommonUtils" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="melodie_generator.html" class="btn btn-neutral float-right" title="MelodieGenerator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022-2023, SkyGroup.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
