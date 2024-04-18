@@ -1,1 +1,0 @@
-CursorKind.FUNCTION_DECL main

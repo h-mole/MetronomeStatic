@@ -1,6 +1,0 @@
-BINARY_OP left: c  op: =  right: a + b
-BINARY_OP left: a  op: +  right: b
-BINARY_OP left: d  op: =  right: & a
-UNARY_OP op: &  expr: a  position: UnaryOpPos.BEFORE
-UNARY_OP op: ++  expr: d  position: UnaryOpPos.AFTER
-BINARY_OP left: c  op: *  right: d

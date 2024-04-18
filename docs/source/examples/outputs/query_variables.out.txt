@@ -1,5 +1,0 @@
-Global variables: {'a'}
-Local variables: {'c', 'b'}
-Param variables: {'d'}
-Referenced variables: {'c', 'a', 'b', 'd'}
-Used global variables: {'a'}

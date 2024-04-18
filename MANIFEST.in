@@ -1,4 +1,0 @@
-recursive-include MetronomeStatic/boost *.pyi *.pxd
-recursive-include MetronomeStatic *.txt
-include requirements.txt
-exclude MetronomeStatic/boost *.c
