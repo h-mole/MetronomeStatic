@@ -2,7 +2,7 @@
 Clang Utils
 ===========
 
-Submodule `clang_utils` takes advantage of Clang and its python binding 
+Submodule `clang_utils` is a low-level API taking advantage of Clang and its python binding 
 `libclang`, making it easier to extract program information from C/CPP source code.
 
 Example files are stored in ``docs/source/examples``.

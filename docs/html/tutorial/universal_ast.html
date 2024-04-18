@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tutorial &mdash; MetronomeStatic 0.1.0 documentation</title>
+  <title>Universal AST (UAST) &mdash; MetronomeStatic 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -22,8 +22,8 @@
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Clang Utils" href="clang_utils.html" />
-    <link rel="prev" title="Introduction" href="../introduction.html" /> 
+    <link rel="next" title="API Reference" href="../api/_index.html" />
+    <link rel="prev" title="Clang Utils" href="clang_utils.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -53,7 +53,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
+<li class="toctree-l1 current"><a class="reference internal" href="_index.html">Tutorial</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="clang_utils.html">Clang Utils</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="clang_utils.html#loading-source-code-printing-ast">Loading Source Code &amp; Printing AST</a></li>
 <li class="toctree-l3"><a class="reference internal" href="clang_utils.html#querying-the-ast-interactively">Querying The AST Interactively</a></li>
@@ -64,7 +64,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="universal_ast.html">Universal AST (UAST)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Universal AST (UAST)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/_index.html">API Reference</a><ul>
@@ -240,9 +240,10 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Tutorial</li>
+          <li class="breadcrumb-item"><a href="_index.html">Tutorial</a></li>
+      <li class="breadcrumb-item active">Universal AST (UAST)</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/tutorial/_index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/tutorial/universal_ast.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -250,19 +251,126 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="tutorial">
-<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this heading"></a></h1>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Content</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="clang_utils.html">Clang Utils</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="clang_utils.html#loading-source-code-printing-ast">Loading Source Code &amp; Printing AST</a></li>
-<li class="toctree-l2"><a class="reference internal" href="clang_utils.html#querying-the-ast-interactively">Querying The AST Interactively</a></li>
-<li class="toctree-l2"><a class="reference internal" href="clang_utils.html#querying-code-attributes">Querying Code Attributes</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="universal_ast.html">Universal AST (UAST)</a></li>
-</ul>
+  <section id="universal-ast-uast">
+<h1>Universal AST (UAST)<a class="headerlink" href="#universal-ast-uast" title="Permalink to this heading"></a></h1>
+<p>UAST is a universal representation of ASTs across different languages. The UAST from
+MetronomeStatic comes from the project <a class="reference external" href="https://github.com/musiKk/plyj">PLYJ</a>, and modified for
+representing C/C++ ASTs.</p>
+<p>The API document of UAST is
+<a class="reference internal" href="../api/universal_ast.html"><span class="doc">HERE</span></a>.</p>
+<p>Here is a C file, <code class="docutils literal notranslate"><span class="pre">assets/uast-demo.c</span></code>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">paramA</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">paramB</span><span class="p">)</span>
+<span class="linenos">2</span><span class="p">{</span>
+<span class="linenos">3</span><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">paramA</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="linenos">4</span><span class="w">    </span><span class="p">{</span>
+<span class="linenos">5</span><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<span class="linenos">6</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">7</span><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">paramA</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">paramB</span><span class="p">;</span>
+<span class="linenos">8</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>To convert this file to UAST, just code like <code class="docutils literal notranslate"><span class="pre">get_uast.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">json</span>
+<span class="linenos"> 2</span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../../..&quot;</span><span class="p">)</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="kn">from</span> <span class="nn">MetronomeStatic.clang_utils</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="linenos"> 7</span><span class="kn">from</span> <span class="nn">MetronomeStatic</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="n">path</span> <span class="o">=</span> <span class="n">abspath_from_current_file</span><span class="p">(</span><span class="s2">&quot;assets/uast-demo.c&quot;</span><span class="p">,</span> <span class="vm">__file__</span><span class="p">)</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">12</span><span class="sd">Code above is critical for running this example,</span>
+<span class="linenos">13</span><span class="sd">and not necessary when using in an interactive environment (IPython/Jupyter).</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="sd">↓↓ JUST FOCUS ON THE FOLLOWING CODE! ↓↓</span>
+<span class="linenos">16</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span><span class="n">evaluator</span> <span class="o">=</span> <span class="n">ClangASTConverter</span><span class="p">()</span>
+<span class="linenos">20</span><span class="n">cursor</span> <span class="o">=</span> <span class="n">get_func_decl</span><span class="p">(</span>
+<span class="linenos">21</span>    <span class="n">parse_file</span><span class="p">(</span>
+<span class="linenos">22</span>        <span class="n">path</span><span class="p">,</span>
+<span class="linenos">23</span>    <span class="p">)</span><span class="o">.</span><span class="n">cursor</span><span class="p">,</span>
+<span class="linenos">24</span>    <span class="s2">&quot;main&quot;</span><span class="p">,</span>
+<span class="linenos">25</span><span class="p">)</span>
+<span class="linenos">26</span><span class="k">assert</span> <span class="n">cursor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+<span class="linenos">27</span>
+<span class="linenos">28</span><span class="n">ret</span> <span class="o">=</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">cursor</span><span class="p">)</span>
+<span class="linenos">29</span>
+<span class="linenos">30</span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;./outputs/dumped-ast.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="linenos">31</span>    <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">ret</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The generated JSON representation of UAST is shown below:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="p">{</span>
+<span class="linenos"> 2</span><span class="w">  </span><span class="nt">&quot;_cls&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MethodDeclaration&quot;</span><span class="p">,</span>
+<span class="linenos"> 3</span><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
+<span class="linenos"> 4</span><span class="w">  </span><span class="nt">&quot;modifiers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="linenos"> 5</span><span class="w">  </span><span class="nt">&quot;type_parameters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="linenos"> 6</span><span class="w">  </span><span class="nt">&quot;parameters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos"> 7</span><span class="w">    </span><span class="kc">null</span><span class="p">,</span>
+<span class="linenos"> 8</span><span class="w">    </span><span class="kc">null</span>
+<span class="linenos"> 9</span><span class="w">  </span><span class="p">],</span>
+<span class="linenos">10</span><span class="w">  </span><span class="nt">&quot;return_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;NotImplemented&quot;</span><span class="p">,</span>
+<span class="linenos">11</span><span class="w">  </span><span class="nt">&quot;body&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">12</span><span class="w">    </span><span class="nt">&quot;_cls&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Block&quot;</span><span class="p">,</span>
+<span class="linenos">13</span><span class="w">    </span><span class="nt">&quot;statements&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos">14</span><span class="w">      </span><span class="p">{</span>
+<span class="linenos">15</span><span class="w">        </span><span class="nt">&quot;_cls&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;IfThenElse&quot;</span><span class="p">,</span>
+<span class="linenos">16</span><span class="w">        </span><span class="nt">&quot;predicate&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">17</span><span class="w">          </span><span class="nt">&quot;_cls&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BinaryExpression&quot;</span><span class="p">,</span>
+<span class="linenos">18</span><span class="w">          </span><span class="nt">&quot;operator&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;&quot;</span><span class="p">,</span>
+<span class="linenos">19</span><span class="w">          </span><span class="nt">&quot;lhs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">20</span><span class="w">            </span><span class="nt">&quot;_cls&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Name&quot;</span><span class="p">,</span>
+<span class="linenos">21</span><span class="w">            </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;paramA&quot;</span>
+<span class="linenos">22</span><span class="w">          </span><span class="p">},</span>
+<span class="linenos">23</span><span class="w">          </span><span class="nt">&quot;rhs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">24</span><span class="w">            </span><span class="nt">&quot;_cls&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Literal&quot;</span><span class="p">,</span>
+<span class="linenos">25</span><span class="w">            </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="linenos">26</span><span class="w">          </span><span class="p">}</span>
+<span class="linenos">27</span><span class="w">        </span><span class="p">},</span>
+<span class="linenos">28</span><span class="w">        </span><span class="nt">&quot;if_true&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">29</span><span class="w">          </span><span class="nt">&quot;_cls&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Block&quot;</span><span class="p">,</span>
+<span class="linenos">30</span><span class="w">          </span><span class="nt">&quot;statements&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos">31</span><span class="w">            </span><span class="p">{</span>
+<span class="linenos">32</span><span class="w">              </span><span class="nt">&quot;_cls&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Return&quot;</span><span class="p">,</span>
+<span class="linenos">33</span><span class="w">              </span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">34</span><span class="w">                </span><span class="nt">&quot;_cls&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Unary&quot;</span><span class="p">,</span>
+<span class="linenos">35</span><span class="w">                </span><span class="nt">&quot;sign&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;p-&quot;</span><span class="p">,</span>
+<span class="linenos">36</span><span class="w">                </span><span class="nt">&quot;expression&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">37</span><span class="w">                  </span><span class="nt">&quot;_cls&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Literal&quot;</span><span class="p">,</span>
+<span class="linenos">38</span><span class="w">                  </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="linenos">39</span><span class="w">                </span><span class="p">}</span>
+<span class="linenos">40</span><span class="w">              </span><span class="p">}</span>
+<span class="linenos">41</span><span class="w">            </span><span class="p">}</span>
+<span class="linenos">42</span><span class="w">          </span><span class="p">]</span>
+<span class="linenos">43</span><span class="w">        </span><span class="p">},</span>
+<span class="linenos">44</span><span class="w">        </span><span class="nt">&quot;if_false&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<span class="linenos">45</span><span class="w">      </span><span class="p">},</span>
+<span class="linenos">46</span><span class="w">      </span><span class="p">{</span>
+<span class="linenos">47</span><span class="w">        </span><span class="nt">&quot;_cls&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Return&quot;</span><span class="p">,</span>
+<span class="linenos">48</span><span class="w">        </span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">49</span><span class="w">          </span><span class="nt">&quot;_cls&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BinaryExpression&quot;</span><span class="p">,</span>
+<span class="linenos">50</span><span class="w">          </span><span class="nt">&quot;operator&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;+&quot;</span><span class="p">,</span>
+<span class="linenos">51</span><span class="w">          </span><span class="nt">&quot;lhs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">52</span><span class="w">            </span><span class="nt">&quot;_cls&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Name&quot;</span><span class="p">,</span>
+<span class="linenos">53</span><span class="w">            </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;paramA&quot;</span>
+<span class="linenos">54</span><span class="w">          </span><span class="p">},</span>
+<span class="linenos">55</span><span class="w">          </span><span class="nt">&quot;rhs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">56</span><span class="w">            </span><span class="nt">&quot;_cls&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Name&quot;</span><span class="p">,</span>
+<span class="linenos">57</span><span class="w">            </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;paramB&quot;</span>
+<span class="linenos">58</span><span class="w">          </span><span class="p">}</span>
+<span class="linenos">59</span><span class="w">        </span><span class="p">}</span>
+<span class="linenos">60</span><span class="w">      </span><span class="p">}</span>
+<span class="linenos">61</span><span class="w">    </span><span class="p">]</span>
+<span class="linenos">62</span><span class="w">  </span><span class="p">},</span>
+<span class="linenos">63</span><span class="w">  </span><span class="nt">&quot;abstract&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="linenos">64</span><span class="w">  </span><span class="nt">&quot;extended_dims&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="linenos">65</span><span class="w">  </span><span class="nt">&quot;throws&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<span class="linenos">66</span><span class="p">}</span>
+</pre></div>
 </div>
 </section>
 
@@ -270,8 +378,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="clang_utils.html" class="btn btn-neutral float-right" title="Clang Utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="clang_utils.html" class="btn btn-neutral float-left" title="Clang Utils" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api/_index.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

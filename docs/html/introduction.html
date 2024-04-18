@@ -18,6 +18,8 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=2389946f"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
         <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+        <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+        <script>mermaid.initialize({startOnLoad:true});</script>
     <script src="_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
@@ -64,9 +66,18 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/universal_ast.html">Universal AST (UAST)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/_index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/melodie_generator.html">MelodieGenerator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/melodie_generator.html#members-list">Members List</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieFrozenGenerator"><code class="docutils literal notranslate"><span class="pre">MelodieFrozenGenerator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator"><code class="docutils literal notranslate"><span class="pre">MelodieGenerator</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="api/common_utils.html">CommonUtils</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="api/common_utils.html#tips-before-reading">Tips Before Reading</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/common_utils.html#members-list">Members List</a><ul>
@@ -123,10 +134,86 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="api/melodie_generator.html">MelodieGenerator</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/melodie_generator.html#members-list">Members List</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieFrozenGenerator"><code class="docutils literal notranslate"><span class="pre">MelodieFrozenGenerator</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator"><code class="docutils literal notranslate"><span class="pre">MelodieGenerator</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/universal_ast.html">Universal AST</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/universal_ast.html#members-list">Members List</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Additive"><code class="docutils literal notranslate"><span class="pre">Additive</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.And"><code class="docutils literal notranslate"><span class="pre">And</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Annotation"><code class="docutils literal notranslate"><span class="pre">Annotation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.AnnotationDeclaration"><code class="docutils literal notranslate"><span class="pre">AnnotationDeclaration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.AnnotationMember"><code class="docutils literal notranslate"><span class="pre">AnnotationMember</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.AnnotationMethodDeclaration"><code class="docutils literal notranslate"><span class="pre">AnnotationMethodDeclaration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.ArrayAccess"><code class="docutils literal notranslate"><span class="pre">ArrayAccess</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.ArrayCreation"><code class="docutils literal notranslate"><span class="pre">ArrayCreation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.ArrayInitializer"><code class="docutils literal notranslate"><span class="pre">ArrayInitializer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Assert"><code class="docutils literal notranslate"><span class="pre">Assert</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Assignment"><code class="docutils literal notranslate"><span class="pre">Assignment</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression"><code class="docutils literal notranslate"><span class="pre">BinaryExpression</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Block"><code class="docutils literal notranslate"><span class="pre">Block</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Break"><code class="docutils literal notranslate"><span class="pre">Break</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Cast"><code class="docutils literal notranslate"><span class="pre">Cast</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Catch"><code class="docutils literal notranslate"><span class="pre">Catch</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.ClassDeclaration"><code class="docutils literal notranslate"><span class="pre">ClassDeclaration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.ClassInitializer"><code class="docutils literal notranslate"><span class="pre">ClassInitializer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.ClassLiteral"><code class="docutils literal notranslate"><span class="pre">ClassLiteral</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.CompilationUnit"><code class="docutils literal notranslate"><span class="pre">CompilationUnit</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Conditional"><code class="docutils literal notranslate"><span class="pre">Conditional</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.ConditionalAnd"><code class="docutils literal notranslate"><span class="pre">ConditionalAnd</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.ConditionalOr"><code class="docutils literal notranslate"><span class="pre">ConditionalOr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.ConstructorDeclaration"><code class="docutils literal notranslate"><span class="pre">ConstructorDeclaration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.ConstructorInvocation"><code class="docutils literal notranslate"><span class="pre">ConstructorInvocation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Continue"><code class="docutils literal notranslate"><span class="pre">Continue</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.DefaultStatement"><code class="docutils literal notranslate"><span class="pre">DefaultStatement</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.DereferenceExpr"><code class="docutils literal notranslate"><span class="pre">DereferenceExpr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.DoWhile"><code class="docutils literal notranslate"><span class="pre">DoWhile</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Empty"><code class="docutils literal notranslate"><span class="pre">Empty</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.EmptyDeclaration"><code class="docutils literal notranslate"><span class="pre">EmptyDeclaration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.EnumConstant"><code class="docutils literal notranslate"><span class="pre">EnumConstant</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.EnumDeclaration"><code class="docutils literal notranslate"><span class="pre">EnumDeclaration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Equality"><code class="docutils literal notranslate"><span class="pre">Equality</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Expression"><code class="docutils literal notranslate"><span class="pre">Expression</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.ExpressionStatement"><code class="docutils literal notranslate"><span class="pre">ExpressionStatement</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.FieldAccess"><code class="docutils literal notranslate"><span class="pre">FieldAccess</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.FieldDeclaration"><code class="docutils literal notranslate"><span class="pre">FieldDeclaration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.For"><code class="docutils literal notranslate"><span class="pre">For</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.ForEach"><code class="docutils literal notranslate"><span class="pre">ForEach</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.FormalParameter"><code class="docutils literal notranslate"><span class="pre">FormalParameter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.FuncCall"><code class="docutils literal notranslate"><span class="pre">FuncCall</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.GoToStatement"><code class="docutils literal notranslate"><span class="pre">GoToStatement</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.IfThenElse"><code class="docutils literal notranslate"><span class="pre">IfThenElse</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.ImportDeclaration"><code class="docutils literal notranslate"><span class="pre">ImportDeclaration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.InstanceCreation"><code class="docutils literal notranslate"><span class="pre">InstanceCreation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.InstanceOf"><code class="docutils literal notranslate"><span class="pre">InstanceOf</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.InterfaceDeclaration"><code class="docutils literal notranslate"><span class="pre">InterfaceDeclaration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Label"><code class="docutils literal notranslate"><span class="pre">Label</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Literal"><code class="docutils literal notranslate"><span class="pre">Literal</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.MethodDeclaration"><code class="docutils literal notranslate"><span class="pre">MethodDeclaration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Multiplicative"><code class="docutils literal notranslate"><span class="pre">Multiplicative</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Name"><code class="docutils literal notranslate"><span class="pre">Name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Or"><code class="docutils literal notranslate"><span class="pre">Or</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.PackageDeclaration"><code class="docutils literal notranslate"><span class="pre">PackageDeclaration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.ReferenceExpr"><code class="docutils literal notranslate"><span class="pre">ReferenceExpr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Relational"><code class="docutils literal notranslate"><span class="pre">Relational</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Resource"><code class="docutils literal notranslate"><span class="pre">Resource</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Return"><code class="docutils literal notranslate"><span class="pre">Return</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Shift"><code class="docutils literal notranslate"><span class="pre">Shift</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="docutils literal notranslate"><span class="pre">SourceElement</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Statement"><code class="docutils literal notranslate"><span class="pre">Statement</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Switch"><code class="docutils literal notranslate"><span class="pre">Switch</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.SwitchCase"><code class="docutils literal notranslate"><span class="pre">SwitchCase</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Synchronized"><code class="docutils literal notranslate"><span class="pre">Synchronized</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Throw"><code class="docutils literal notranslate"><span class="pre">Throw</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Throws"><code class="docutils literal notranslate"><span class="pre">Throws</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Try"><code class="docutils literal notranslate"><span class="pre">Try</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Type"><code class="docutils literal notranslate"><span class="pre">Type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.TypeParameter"><code class="docutils literal notranslate"><span class="pre">TypeParameter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Unary"><code class="docutils literal notranslate"><span class="pre">Unary</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Variable"><code class="docutils literal notranslate"><span class="pre">Variable</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.VariableDeclaration"><code class="docutils literal notranslate"><span class="pre">VariableDeclaration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.VariableDeclarator"><code class="docutils literal notranslate"><span class="pre">VariableDeclarator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.While"><code class="docutils literal notranslate"><span class="pre">While</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Wildcard"><code class="docutils literal notranslate"><span class="pre">Wildcard</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.WildcardBound"><code class="docutils literal notranslate"><span class="pre">WildcardBound</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/universal_ast.html#MetronomeStatic.universal_ast.universal_ast_nodes.Xor"><code class="docutils literal notranslate"><span class="pre">Xor</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -167,8 +254,38 @@
              
   <section id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h1>
-<p>To be continued…
-Please visit <a class="reference external" href="./tutorial/_index.html">Tutorial</a> for details</p>
+<p>MetronomeStatic is a Python package for static code analysis.
+It acts as an interface over a set of common static-analysis packages such as Clang and Joern.</p>
+<p>Here is the map of the functionalities of MetronomeStatic. Now only a LibClang-based
+C/C++ AST is supported, and Python AST is planned to be extended further.</p>
+<div class="mermaid">
+            graph TD
+    C/C++ --&gt;|LibClang| ClangAST
+    Python[&quot;Python (Implement later...)&quot;] --&gt; PythonAST[Python AST] --&gt; UAST
+
+    ClangAST --&gt;|Conversion| UAST
+
+    subgraph `MetronomeStatic Package Functionalities`
+
+        UAST[Universal AST]
+        CommonUtils[&quot;Common Utils&quot;]
+
+        UAST --&gt;|Control Flow Building| CFG
+        UAST --&gt;|Data Dependency Building| DDG[&quot;DDG: To be developed...&quot;]
+
+    end
+
+    ClangAST --&gt; |Interface| CommonUtils
+        </div><p>In the graph above, AST stands for Abstract Syntax Tree, a tree-like structure that
+represents the program structure in a certain language. UAST stands for Universal AST, a universal
+representation of Abstract Syntax Tree(AST)s across different languages.</p>
+<p>Take the route from node C/C++ in the graph above as an example. C/C++ code are converted to
+Clang Abstract Syntax Tree (Clang AST) by <cite>LibClang</cite>, and then the Clang AST could be
+converted to the Universal AST defined in MetronomeStatic. After that, the Universal AST
+could be used to build Control Flow Graph (CFG) and Data Dependency Graph (DDG).</p>
+<p>As UAST could represent ASTs of different languages, the CFG-building and DDG-building
+processes are language-agnostic, needing few rework when adding a new language.</p>
+<p>Please visit <a class="reference external" href="./tutorial/_index.html">Tutorial</a> for details</p>
 </section>
 
 

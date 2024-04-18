@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Universal AST &mdash; MetronomeStatic 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=2389946f"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Change Log" href="../changelog.html" />
+    <link rel="prev" title="ClangUtils" href="clang_utils.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MetronomeStatic
+              <img src="../_static/sky-cloud.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#user-installation">User Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#developer-installation">Developer Installation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/_index.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/clang_utils.html">Clang Utils</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/clang_utils.html#loading-source-code-printing-ast">Loading Source Code &amp; Printing AST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/clang_utils.html#querying-the-ast-interactively">Querying The AST Interactively</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/clang_utils.html#querying-code-attributes">Querying Code Attributes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../tutorial/clang_utils.html#queries-for-variables">Queries for Variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../tutorial/clang_utils.html#parsing-expressions">Parsing Expressions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/universal_ast.html">Universal AST (UAST)</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="_index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="melodie_generator.html">MelodieGenerator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="melodie_generator.html#members-list">Members List</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="melodie_generator.html#MelodieFuncFlow.functional.MelodieFrozenGenerator"><code class="docutils literal notranslate"><span class="pre">MelodieFrozenGenerator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator"><code class="docutils literal notranslate"><span class="pre">MelodieGenerator</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="common_utils.html">CommonUtils</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="common_utils.html#tips-before-reading">Tips Before Reading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="common_utils.html#members-list">Members List</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="common_utils.html#MetronomeStatic.utils.MelodieFrozenGenerator"><code class="docutils literal notranslate"><span class="pre">MelodieFrozenGenerator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common_utils.html#MetronomeStatic.utils.MelodieGenerator"><code class="docutils literal notranslate"><span class="pre">MelodieGenerator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common_utils.html#MetronomeStatic.utils.abspath_from_current_file"><code class="docutils literal notranslate"><span class="pre">abspath_from_current_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common_utils.html#MetronomeStatic.utils.compose"><code class="docutils literal notranslate"><span class="pre">compose()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common_utils.html#MetronomeStatic.utils.file_to_dataurl"><code class="docutils literal notranslate"><span class="pre">file_to_dataurl()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common_utils.html#MetronomeStatic.utils.parse_dataurl"><code class="docutils literal notranslate"><span class="pre">parse_dataurl()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="clang_utils.html">ClangUtils</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clang_utils.html#tips-before-reading">Tips Before Reading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clang_utils.html#members-list">Members List</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.ClassDefModel"><code class="docutils literal notranslate"><span class="pre">ClassDefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.DefModel"><code class="docutils literal notranslate"><span class="pre">DefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.FieldDefModel"><code class="docutils literal notranslate"><span class="pre">FieldDefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.FunctionDefModel"><code class="docutils literal notranslate"><span class="pre">FunctionDefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.ParamDefModel"><code class="docutils literal notranslate"><span class="pre">ParamDefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.StructDefModel"><code class="docutils literal notranslate"><span class="pre">StructDefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.TraversalContext"><code class="docutils literal notranslate"><span class="pre">TraversalContext</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.TypeDefModel"><code class="docutils literal notranslate"><span class="pre">TypeDefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.TypeWrapper"><code class="docutils literal notranslate"><span class="pre">TypeWrapper</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.UnaryOpPos"><code class="docutils literal notranslate"><span class="pre">UnaryOpPos</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.UnionDefModel"><code class="docutils literal notranslate"><span class="pre">UnionDefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.VarDefModel"><code class="docutils literal notranslate"><span class="pre">VarDefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.all_globals"><code class="docutils literal notranslate"><span class="pre">all_globals()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.beautified_print_ast"><code class="docutils literal notranslate"><span class="pre">beautified_print_ast()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.build_call_graph"><code class="docutils literal notranslate"><span class="pre">build_call_graph()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.extract_ast"><code class="docutils literal notranslate"><span class="pre">extract_ast()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.get_compound_assignment_operator"><code class="docutils literal notranslate"><span class="pre">get_compound_assignment_operator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.get_func_decl"><code class="docutils literal notranslate"><span class="pre">get_func_decl()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.get_func_decl_all"><code class="docutils literal notranslate"><span class="pre">get_func_decl_all()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.get_global_ref_names"><code class="docutils literal notranslate"><span class="pre">get_global_ref_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.get_global_refs"><code class="docutils literal notranslate"><span class="pre">get_global_refs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.get_local_var_defs"><code class="docutils literal notranslate"><span class="pre">get_local_var_defs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.get_param_decls"><code class="docutils literal notranslate"><span class="pre">get_param_decls()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.get_var_refs"><code class="docutils literal notranslate"><span class="pre">get_var_refs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.is_function_definition"><code class="docutils literal notranslate"><span class="pre">is_function_definition()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.iter_ast"><code class="docutils literal notranslate"><span class="pre">iter_ast()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.iter_ast_from_file"><code class="docutils literal notranslate"><span class="pre">iter_ast_from_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.iter_files"><code class="docutils literal notranslate"><span class="pre">iter_files()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.parse_file"><code class="docutils literal notranslate"><span class="pre">parse_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.program_model_unparse"><code class="docutils literal notranslate"><span class="pre">program_model_unparse()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.split_binary_operator"><code class="docutils literal notranslate"><span class="pre">split_binary_operator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.split_compound_assignment"><code class="docutils literal notranslate"><span class="pre">split_compound_assignment()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.split_for_loop_conditions"><code class="docutils literal notranslate"><span class="pre">split_for_loop_conditions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.split_unary_operator"><code class="docutils literal notranslate"><span class="pre">split_unary_operator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.traversal"><code class="docutils literal notranslate"><span class="pre">traversal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="clang_utils.html#MetronomeStatic.clang_utils.code_attributes.traversal_with_callback"><code class="docutils literal notranslate"><span class="pre">traversal_with_callback()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Universal AST</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#members-list">Members List</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Additive"><code class="docutils literal notranslate"><span class="pre">Additive</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.And"><code class="docutils literal notranslate"><span class="pre">And</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Annotation"><code class="docutils literal notranslate"><span class="pre">Annotation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.AnnotationDeclaration"><code class="docutils literal notranslate"><span class="pre">AnnotationDeclaration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.AnnotationMember"><code class="docutils literal notranslate"><span class="pre">AnnotationMember</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.AnnotationMethodDeclaration"><code class="docutils literal notranslate"><span class="pre">AnnotationMethodDeclaration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ArrayAccess"><code class="docutils literal notranslate"><span class="pre">ArrayAccess</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ArrayCreation"><code class="docutils literal notranslate"><span class="pre">ArrayCreation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ArrayInitializer"><code class="docutils literal notranslate"><span class="pre">ArrayInitializer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Assert"><code class="docutils literal notranslate"><span class="pre">Assert</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Assignment"><code class="docutils literal notranslate"><span class="pre">Assignment</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression"><code class="docutils literal notranslate"><span class="pre">BinaryExpression</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Block"><code class="docutils literal notranslate"><span class="pre">Block</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Break"><code class="docutils literal notranslate"><span class="pre">Break</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Cast"><code class="docutils literal notranslate"><span class="pre">Cast</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Catch"><code class="docutils literal notranslate"><span class="pre">Catch</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ClassDeclaration"><code class="docutils literal notranslate"><span class="pre">ClassDeclaration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ClassInitializer"><code class="docutils literal notranslate"><span class="pre">ClassInitializer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ClassLiteral"><code class="docutils literal notranslate"><span class="pre">ClassLiteral</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.CompilationUnit"><code class="docutils literal notranslate"><span class="pre">CompilationUnit</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Conditional"><code class="docutils literal notranslate"><span class="pre">Conditional</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ConditionalAnd"><code class="docutils literal notranslate"><span class="pre">ConditionalAnd</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ConditionalOr"><code class="docutils literal notranslate"><span class="pre">ConditionalOr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ConstructorDeclaration"><code class="docutils literal notranslate"><span class="pre">ConstructorDeclaration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ConstructorInvocation"><code class="docutils literal notranslate"><span class="pre">ConstructorInvocation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Continue"><code class="docutils literal notranslate"><span class="pre">Continue</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.DefaultStatement"><code class="docutils literal notranslate"><span class="pre">DefaultStatement</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.DereferenceExpr"><code class="docutils literal notranslate"><span class="pre">DereferenceExpr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.DoWhile"><code class="docutils literal notranslate"><span class="pre">DoWhile</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Empty"><code class="docutils literal notranslate"><span class="pre">Empty</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.EmptyDeclaration"><code class="docutils literal notranslate"><span class="pre">EmptyDeclaration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.EnumConstant"><code class="docutils literal notranslate"><span class="pre">EnumConstant</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.EnumDeclaration"><code class="docutils literal notranslate"><span class="pre">EnumDeclaration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Equality"><code class="docutils literal notranslate"><span class="pre">Equality</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Expression"><code class="docutils literal notranslate"><span class="pre">Expression</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ExpressionStatement"><code class="docutils literal notranslate"><span class="pre">ExpressionStatement</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.FieldAccess"><code class="docutils literal notranslate"><span class="pre">FieldAccess</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.FieldDeclaration"><code class="docutils literal notranslate"><span class="pre">FieldDeclaration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.For"><code class="docutils literal notranslate"><span class="pre">For</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ForEach"><code class="docutils literal notranslate"><span class="pre">ForEach</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.FormalParameter"><code class="docutils literal notranslate"><span class="pre">FormalParameter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.FuncCall"><code class="docutils literal notranslate"><span class="pre">FuncCall</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.GoToStatement"><code class="docutils literal notranslate"><span class="pre">GoToStatement</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.IfThenElse"><code class="docutils literal notranslate"><span class="pre">IfThenElse</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ImportDeclaration"><code class="docutils literal notranslate"><span class="pre">ImportDeclaration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.InstanceCreation"><code class="docutils literal notranslate"><span class="pre">InstanceCreation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.InstanceOf"><code class="docutils literal notranslate"><span class="pre">InstanceOf</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.InterfaceDeclaration"><code class="docutils literal notranslate"><span class="pre">InterfaceDeclaration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Label"><code class="docutils literal notranslate"><span class="pre">Label</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Literal"><code class="docutils literal notranslate"><span class="pre">Literal</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.MethodDeclaration"><code class="docutils literal notranslate"><span class="pre">MethodDeclaration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Multiplicative"><code class="docutils literal notranslate"><span class="pre">Multiplicative</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Name"><code class="docutils literal notranslate"><span class="pre">Name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Or"><code class="docutils literal notranslate"><span class="pre">Or</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.PackageDeclaration"><code class="docutils literal notranslate"><span class="pre">PackageDeclaration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ReferenceExpr"><code class="docutils literal notranslate"><span class="pre">ReferenceExpr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Relational"><code class="docutils literal notranslate"><span class="pre">Relational</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Resource"><code class="docutils literal notranslate"><span class="pre">Resource</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Return"><code class="docutils literal notranslate"><span class="pre">Return</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Shift"><code class="docutils literal notranslate"><span class="pre">Shift</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="docutils literal notranslate"><span class="pre">SourceElement</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Statement"><code class="docutils literal notranslate"><span class="pre">Statement</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Switch"><code class="docutils literal notranslate"><span class="pre">Switch</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SwitchCase"><code class="docutils literal notranslate"><span class="pre">SwitchCase</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Synchronized"><code class="docutils literal notranslate"><span class="pre">Synchronized</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Throw"><code class="docutils literal notranslate"><span class="pre">Throw</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Throws"><code class="docutils literal notranslate"><span class="pre">Throws</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Try"><code class="docutils literal notranslate"><span class="pre">Try</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Type"><code class="docutils literal notranslate"><span class="pre">Type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.TypeParameter"><code class="docutils literal notranslate"><span class="pre">TypeParameter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Unary"><code class="docutils literal notranslate"><span class="pre">Unary</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Variable"><code class="docutils literal notranslate"><span class="pre">Variable</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.VariableDeclaration"><code class="docutils literal notranslate"><span class="pre">VariableDeclaration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.VariableDeclarator"><code class="docutils literal notranslate"><span class="pre">VariableDeclarator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.While"><code class="docutils literal notranslate"><span class="pre">While</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Wildcard"><code class="docutils literal notranslate"><span class="pre">Wildcard</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.WildcardBound"><code class="docutils literal notranslate"><span class="pre">WildcardBound</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Xor"><code class="docutils literal notranslate"><span class="pre">Xor</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#start-may-10-2023">Start (May. 10, 2023)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MetronomeStatic</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="_index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">Universal AST</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/universal_ast.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="universal-ast">
+<h1>Universal AST<a class="headerlink" href="#universal-ast" title="Permalink to this heading"></a></h1>
+<section id="members-list">
+<h2>Members List<a class="headerlink" href="#members-list" title="Permalink to this heading"></a></h2>
+<span class="target" id="module-MetronomeStatic.universal_ast.universal_ast_nodes"><span id="apidoc-commonutils"></span></span><p>This file is copied from plyj package.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Additive">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Additive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Additive" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression" title="MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression"><code class="xref py py-class docutils literal notranslate"><span class="pre">BinaryExpression</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.And">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">And</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.And" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression" title="MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression"><code class="xref py py-class docutils literal notranslate"><span class="pre">BinaryExpression</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Annotation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Annotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">members</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_member</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Annotation" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Annotation.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">members</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_member</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Annotation.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.AnnotationDeclaration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AnnotationDeclaration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extends</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">implements</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.AnnotationDeclaration" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.AnnotationDeclaration.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extends</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">implements</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.AnnotationDeclaration.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.AnnotationMember">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AnnotationMember</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.AnnotationMember" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.AnnotationMember.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.AnnotationMember.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.AnnotationMethodDeclaration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AnnotationMethodDeclaration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extended_dims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.AnnotationMethodDeclaration" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.AnnotationMethodDeclaration.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extended_dims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.AnnotationMethodDeclaration.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ArrayAccess">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ArrayAccess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ArrayAccess" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Expression" title="MetronomeStatic.universal_ast.universal_ast_nodes.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ArrayAccess.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ArrayAccess.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ArrayCreation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ArrayCreation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ArrayCreation" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Expression" title="MetronomeStatic.universal_ast.universal_ast_nodes.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ArrayCreation.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ArrayCreation.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ArrayInitializer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ArrayInitializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ArrayInitializer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ArrayInitializer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ArrayInitializer.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Assert">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Assert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predicate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Assert" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Statement" title="MetronomeStatic.universal_ast.universal_ast_nodes.Statement"><code class="xref py py-class docutils literal notranslate"><span class="pre">Statement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Assert.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predicate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Assert.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Assignment">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Assignment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Assignment" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression" title="MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression"><code class="xref py py-class docutils literal notranslate"><span class="pre">BinaryExpression</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BinaryExpression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Expression" title="MetronomeStatic.universal_ast.universal_ast_nodes.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Block">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">statements</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Block" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Statement" title="MetronomeStatic.universal_ast.universal_ast_nodes.Statement"><code class="xref py py-class docutils literal notranslate"><span class="pre">Statement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Block.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">statements</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Block.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Break">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Break</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Break" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Statement" title="MetronomeStatic.universal_ast.universal_ast_nodes.Statement"><code class="xref py py-class docutils literal notranslate"><span class="pre">Statement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Break.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Break.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Cast">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Cast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expression</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Cast" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Expression" title="MetronomeStatic.universal_ast.universal_ast_nodes.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Cast.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expression</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Cast.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Catch">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Catch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">types</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Catch" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Catch.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">types</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Catch.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ClassDeclaration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ClassDeclaration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extends</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">implements</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ClassDeclaration" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ClassDeclaration.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extends</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">implements</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ClassDeclaration.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ClassInitializer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ClassInitializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">static</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ClassInitializer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ClassInitializer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">static</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ClassInitializer.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ClassLiteral">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ClassLiteral</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ClassLiteral" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ClassLiteral.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ClassLiteral.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.CompilationUnit">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CompilationUnit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.CompilationUnit" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.CompilationUnit.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.CompilationUnit.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Conditional">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Conditional</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predicate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">if_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">if_false</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Conditional" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Expression" title="MetronomeStatic.universal_ast.universal_ast_nodes.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Conditional.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predicate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">if_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">if_false</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Conditional.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ConditionalAnd">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ConditionalAnd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ConditionalAnd" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression" title="MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression"><code class="xref py py-class docutils literal notranslate"><span class="pre">BinaryExpression</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ConditionalOr">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ConditionalOr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ConditionalOr" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression" title="MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression"><code class="xref py py-class docutils literal notranslate"><span class="pre">BinaryExpression</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ConstructorDeclaration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ConstructorDeclaration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">throws</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ConstructorDeclaration" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ConstructorDeclaration.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">throws</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ConstructorDeclaration.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ConstructorInvocation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ConstructorInvocation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ConstructorInvocation" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Statement" title="MetronomeStatic.universal_ast.universal_ast_nodes.Statement"><code class="xref py py-class docutils literal notranslate"><span class="pre">Statement</span></code></a></p>
+<p>An explicit invocations of a class’s constructor.</p>
+<p>This is a variant of either this() or super(), NOT a “new” expression.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ConstructorInvocation.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ConstructorInvocation.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Continue">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Continue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Continue" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Statement" title="MetronomeStatic.universal_ast.universal_ast_nodes.Statement"><code class="xref py py-class docutils literal notranslate"><span class="pre">Statement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Continue.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Continue.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.DefaultStatement">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DefaultStatement</span></span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.DefaultStatement" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.DefaultStatement.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.DefaultStatement.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.DereferenceExpr">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DereferenceExpr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.DereferenceExpr" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Expression" title="MetronomeStatic.universal_ast.universal_ast_nodes.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.DereferenceExpr.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.DereferenceExpr.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.DoWhile">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoWhile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predicate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Block" title="MetronomeStatic.universal_ast.universal_ast_nodes.Block"><span class="pre">Block</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.DoWhile" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Statement" title="MetronomeStatic.universal_ast.universal_ast_nodes.Statement"><code class="xref py py-class docutils literal notranslate"><span class="pre">Statement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.DoWhile.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predicate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Block" title="MetronomeStatic.universal_ast.universal_ast_nodes.Block"><span class="pre">Block</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.DoWhile.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Empty">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Empty</span></span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Empty" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Statement" title="MetronomeStatic.universal_ast.universal_ast_nodes.Statement"><code class="xref py py-class docutils literal notranslate"><span class="pre">Statement</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.EmptyDeclaration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EmptyDeclaration</span></span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.EmptyDeclaration" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.EnumConstant">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EnumConstant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.EnumConstant" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.EnumConstant.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.EnumConstant.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.EnumDeclaration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EnumDeclaration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">implements</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.EnumDeclaration" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.EnumDeclaration.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">implements</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.EnumDeclaration.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Equality">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Equality</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Equality" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression" title="MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression"><code class="xref py py-class docutils literal notranslate"><span class="pre">BinaryExpression</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Expression">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Expression</span></span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Expression" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Expression.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Expression.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ExpressionStatement">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ExpressionStatement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expression</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ExpressionStatement" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Statement" title="MetronomeStatic.universal_ast.universal_ast_nodes.Statement"><code class="xref py py-class docutils literal notranslate"><span class="pre">Statement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ExpressionStatement.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expression</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ExpressionStatement.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.FieldAccess">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FieldAccess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.FieldAccess" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Expression" title="MetronomeStatic.universal_ast.universal_ast_nodes.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.FieldAccess.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.FieldAccess.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.FieldDeclaration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FieldDeclaration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable_declarators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.FieldDeclaration" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.FieldDeclaration.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable_declarators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.FieldDeclaration.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.For">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">For</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">init</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predicate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.For" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Statement" title="MetronomeStatic.universal_ast.universal_ast_nodes.Statement"><code class="xref py py-class docutils literal notranslate"><span class="pre">Statement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.For.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">init</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predicate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.For.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ForEach">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ForEach</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ForEach" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Statement" title="MetronomeStatic.universal_ast.universal_ast_nodes.Statement"><code class="xref py py-class docutils literal notranslate"><span class="pre">Statement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ForEach.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ForEach.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.FormalParameter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FormalParameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vararg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.FormalParameter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.FormalParameter.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vararg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.FormalParameter.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.FuncCall">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FuncCall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.FuncCall" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Expression" title="MetronomeStatic.universal_ast.universal_ast_nodes.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.FuncCall.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.FuncCall.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.GoToStatement">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GoToStatement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.GoToStatement" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.GoToStatement.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.GoToStatement.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.IfThenElse">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">IfThenElse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predicate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">if_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">if_false</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.IfThenElse" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Statement" title="MetronomeStatic.universal_ast.universal_ast_nodes.Statement"><code class="xref py py-class docutils literal notranslate"><span class="pre">Statement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.IfThenElse.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predicate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">if_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">if_false</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.IfThenElse.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ImportDeclaration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ImportDeclaration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">static</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_demand</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ImportDeclaration" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ImportDeclaration.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">static</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_demand</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ImportDeclaration.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.InstanceCreation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">InstanceCreation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enclosed_in</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.InstanceCreation" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Expression" title="MetronomeStatic.universal_ast.universal_ast_nodes.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.InstanceCreation.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enclosed_in</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.InstanceCreation.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.InstanceOf">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">InstanceOf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.InstanceOf" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression" title="MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression"><code class="xref py py-class docutils literal notranslate"><span class="pre">BinaryExpression</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.InterfaceDeclaration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">InterfaceDeclaration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extends</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.InterfaceDeclaration" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.InterfaceDeclaration.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extends</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.InterfaceDeclaration.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Label">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Label</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stmt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Label" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Label.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stmt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Label.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Literal">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Literal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Literal" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Literal.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Literal.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.MethodDeclaration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MethodDeclaration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'void'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Block" title="MetronomeStatic.universal_ast.universal_ast_nodes.Block"><span class="pre">Block</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abstract</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extended_dims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">throws</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.MethodDeclaration" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.MethodDeclaration.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'void'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Block" title="MetronomeStatic.universal_ast.universal_ast_nodes.Block"><span class="pre">Block</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abstract</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extended_dims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">throws</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.MethodDeclaration.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Multiplicative">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Multiplicative</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Multiplicative" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression" title="MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression"><code class="xref py py-class docutils literal notranslate"><span class="pre">BinaryExpression</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Name">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Name" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Name.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Name.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Or">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Or</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Or" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression" title="MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression"><code class="xref py py-class docutils literal notranslate"><span class="pre">BinaryExpression</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.PackageDeclaration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PackageDeclaration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.PackageDeclaration" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.PackageDeclaration.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.PackageDeclaration.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ReferenceExpr">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ReferenceExpr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ReferenceExpr" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Expression" title="MetronomeStatic.universal_ast.universal_ast_nodes.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.ReferenceExpr.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.ReferenceExpr.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Relational">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Relational</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Relational" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression" title="MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression"><code class="xref py py-class docutils literal notranslate"><span class="pre">BinaryExpression</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Resource">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Resource</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Resource" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Resource.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Resource.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Return">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Return</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Return" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Statement" title="MetronomeStatic.universal_ast.universal_ast_nodes.Statement"><code class="xref py py-class docutils literal notranslate"><span class="pre">Statement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Return.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Return.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Shift">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Shift</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Shift" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression" title="MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression"><code class="xref py py-class docutils literal notranslate"><span class="pre">BinaryExpression</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SourceElement</span></span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A SourceElement is the base class for all elements that occur in a Java
+file parsed by plyj.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement.accept">
+<span class="sig-name descname"><span class="pre">accept</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">visitor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement.accept" title="Permalink to this definition"></a></dt>
+<dd><p>default implementation that visit the subnodes in the order
+they are stored in self_field</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement.from_dict">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement.from_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Load this element from the json-serializable dict</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement.to_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Convert this element to a json-serializable dict</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Statement">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Statement</span></span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Statement" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Switch">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Switch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expression</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">switch_cases</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SwitchCase" title="MetronomeStatic.universal_ast.universal_ast_nodes.SwitchCase"><span class="pre">SwitchCase</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Switch" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Statement" title="MetronomeStatic.universal_ast.universal_ast_nodes.Statement"><code class="xref py py-class docutils literal notranslate"><span class="pre">Statement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Switch.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expression</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">switch_cases</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SwitchCase" title="MetronomeStatic.universal_ast.universal_ast_nodes.SwitchCase"><span class="pre">SwitchCase</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Switch.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.SwitchCase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SwitchCase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">case</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.DefaultStatement" title="MetronomeStatic.universal_ast.universal_ast_nodes.DefaultStatement"><span class="pre">DefaultStatement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Block" title="MetronomeStatic.universal_ast.universal_ast_nodes.Block"><span class="pre">Block</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SwitchCase" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.SwitchCase.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">case</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.DefaultStatement" title="MetronomeStatic.universal_ast.universal_ast_nodes.DefaultStatement"><span class="pre">DefaultStatement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Block" title="MetronomeStatic.universal_ast.universal_ast_nodes.Block"><span class="pre">Block</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SwitchCase.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Synchronized">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Synchronized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monitor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Synchronized" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Statement" title="MetronomeStatic.universal_ast.universal_ast_nodes.Statement"><code class="xref py py-class docutils literal notranslate"><span class="pre">Statement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Synchronized.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monitor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Synchronized.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Throw">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Throw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exception</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Throw" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Statement" title="MetronomeStatic.universal_ast.universal_ast_nodes.Statement"><code class="xref py py-class docutils literal notranslate"><span class="pre">Statement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Throw.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exception</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Throw.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Throws">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Throws</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">types</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Throws" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Throws.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">types</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Throws.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Try">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Try</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">catches</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_finally</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resources</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Try" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Statement" title="MetronomeStatic.universal_ast.universal_ast_nodes.Statement"><code class="xref py py-class docutils literal notranslate"><span class="pre">Statement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Try.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">catches</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_finally</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resources</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Try.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Try.accept">
+<span class="sig-name descname"><span class="pre">accept</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">visitor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Try.accept" title="Permalink to this definition"></a></dt>
+<dd><p>default implementation that visit the subnodes in the order
+they are stored in self_field</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Type">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enclosed_in</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Type" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Type.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enclosed_in</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Type.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.TypeParameter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TypeParameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extends</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.TypeParameter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.TypeParameter.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extends</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.TypeParameter.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Unary">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Unary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sign</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expression</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Unary" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Expression" title="MetronomeStatic.universal_ast.universal_ast_nodes.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Unary.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sign</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expression</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Unary.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Variable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Variable" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Variable.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Variable.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.VariableDeclaration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">VariableDeclaration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable_declarators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.VariableDeclaration" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Statement" title="MetronomeStatic.universal_ast.universal_ast_nodes.Statement"><code class="xref py py-class docutils literal notranslate"><span class="pre">Statement</span></code></a>, <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.FieldDeclaration" title="MetronomeStatic.universal_ast.universal_ast_nodes.FieldDeclaration"><code class="xref py py-class docutils literal notranslate"><span class="pre">FieldDeclaration</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.VariableDeclarator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">VariableDeclarator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.VariableDeclarator" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.VariableDeclarator.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.VariableDeclarator.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.While">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">While</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predicate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Block" title="MetronomeStatic.universal_ast.universal_ast_nodes.Block"><span class="pre">Block</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.While" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Statement" title="MetronomeStatic.universal_ast.universal_ast_nodes.Statement"><code class="xref py py-class docutils literal notranslate"><span class="pre">Statement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.While.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predicate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Block" title="MetronomeStatic.universal_ast.universal_ast_nodes.Block"><span class="pre">Block</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.While.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Wildcard">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Wildcard</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Wildcard" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Wildcard.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Wildcard.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.WildcardBound">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">WildcardBound</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extends</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_super</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.WildcardBound" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceElement</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.WildcardBound.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extends</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_super</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.WildcardBound.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MetronomeStatic.universal_ast.universal_ast_nodes.Xor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Xor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement" title="MetronomeStatic.universal_ast.universal_ast_nodes.SourceElement"><span class="pre">SourceElement</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MetronomeStatic.universal_ast.universal_ast_nodes.Xor" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression" title="MetronomeStatic.universal_ast.universal_ast_nodes.BinaryExpression"><code class="xref py py-class docutils literal notranslate"><span class="pre">BinaryExpression</span></code></a></p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="clang_utils.html" class="btn btn-neutral float-left" title="ClangUtils" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../changelog.html" class="btn btn-neutral float-right" title="Change Log" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022-2023, SkyGroup.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
