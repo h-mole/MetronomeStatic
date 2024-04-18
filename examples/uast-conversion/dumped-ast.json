@@ -1,0 +1,66 @@
+{
+  "_cls": "MethodDeclaration",
+  "name": "main",
+  "modifiers": [],
+  "type_parameters": [],
+  "parameters": [
+    null,
+    null
+  ],
+  "return_type": "NotImplemented",
+  "body": {
+    "_cls": "Block",
+    "statements": [
+      {
+        "_cls": "IfThenElse",
+        "predicate": {
+          "_cls": "BinaryExpression",
+          "operator": "<",
+          "lhs": {
+            "_cls": "Name",
+            "value": "paramA"
+          },
+          "rhs": {
+            "_cls": "Literal",
+            "value": 0
+          }
+        },
+        "if_true": {
+          "_cls": "Block",
+          "statements": [
+            {
+              "_cls": "Return",
+              "result": {
+                "_cls": "Unary",
+                "sign": "p-",
+                "expression": {
+                  "_cls": "Literal",
+                  "value": 1
+                }
+              }
+            }
+          ]
+        },
+        "if_false": null
+      },
+      {
+        "_cls": "Return",
+        "result": {
+          "_cls": "BinaryExpression",
+          "operator": "+",
+          "lhs": {
+            "_cls": "Name",
+            "value": "paramA"
+          },
+          "rhs": {
+            "_cls": "Name",
+            "value": "paramB"
+          }
+        }
+      }
+    ]
+  },
+  "abstract": false,
+  "extended_dims": 0,
+  "throws": null
+}

@@ -1,23 +1,310 @@
-# MetronomeStaticé™æ€åˆ†æå·¥å…·
+# MetronomeStatic¾²Ì¬·ÖÎö¹¤¾ß
 
-## å®‰è£…
+## ¼ò½é
+
+MetronomeStaticÊÇÒ»¸öÓÃÓÚ¾²Ì¬´úÂë·ÖÎöµÄPython°ü¡£MetronomeÒâÎª¡°½ÚÅÄÆ÷¡±£¬Ô¢ÒâÊÇÌáÉıÏîÄ¿ÖÊÁ¿£¬´Ó¶øÎÈ×¡¿ª·¢µÄ½Ú×à
+
+ÒÔÏÂÊÇMetronomeStaticµÄ¹¦ÄÜÍ¼¡£ÏÖÔÚÖ»Ö§³ÖC/C++£¬»ùÓÚlibclangÊµÏÖ¡£ÔÚÎ´À´£¬¼Æ»®½øÒ»²½Ìí¼ÓPythonµÄ AST
+
+```mermaid
+graph TD
+    C/C++ -->|LibClang| ClangAST
+    Python["Python (Implement later...)"] --> PythonAST[Python AST] --> UAST
+    
+    ClangAST -->|Conversion| UAST
+
+    subgraph `MetronomeStatic Package Functionalities`
+
+        UAST[Universal AST]
+        CommonUtils["Common Utils"]
+        
+        UAST -->|Control Flow Building| CFG
+        UAST -->|Data Dependency Building| DDG["DDG: To be developed..."]
+    
+    end
+
+    ClangAST --> |Interface| CommonUtils
+```
+
+ÔÚÉÏÃæµÄÍ¼ÖĞ£¬AST´ú±í³éÏóÓï·¨Ê÷£¬ÕâÊÇÒ»¸öÊ÷ĞÎ½á¹¹
+ÓÃÄ³ÖÖÓïÑÔ±íÊ¾³ÌĞò½á¹¹¡£UAST´ú±íÍ¨ÓÃAST£¬Ò»¸öÍ¨ÓÃµÄ³éÏóÓï·¨Ê÷(AST)¿ç²»Í¬ÓïÑÔµÄ±íÊ¾
+
+ÒÔÉÏÍ¼ÖĞC/C++½ÚµãµÄÂ·¾¶ÎªÀı¡£C/C++Í¨¹ıLibClang×ª»»ÎªClang³éÏóÓï·¨Ê÷(Clang AST)£¬È»ºóClang AST¿ÉÒÔ×ª»»ÎªMetronomeStaticÖĞ¶¨ÒåµÄUAST¡£UAST¿ÉÒÔÓÃÀ´¹¹½¨¿ØÖÆÁ÷Í¼(CFG)ºÍÊı¾İÒÀÀµÍ¼(DDG)
+
+ÓÉÓÚUAST¿ÉÒÔ±íÊ¾²»Í¬ÓïÑÔµÄAST£¬Òò´Ë¿ÉÒÔ½øĞĞ¿ØÖÆÁ÷ºÍÊı¾İÁ÷µÄ·ÖÎö£¬¹¹½¨¿ØÖÆÁ÷Í¼¡¢Êı¾İÒÀÀµÍ¼µÈ³ÌĞòÍ¼¡£ÓÉÓÚÕâÒ»¹ı³ÌÒÀÀµµÄUASTÓë¾ßÌåµÄ±à³ÌÓïÑÔÎŞ¹Ø£¬Òò´Ë¾Í¿ÉÒÔ±ÜÃâÌí¼ÓĞÂÓïÑÔÊ±ÖØĞÂĞ´Ò»±é¹¹½¨³ÌĞòÍ¼µÄÂß¼­µÄ·±ËöÇé¿ö¡£
+
+## °²×°
 
 ```bash
 pip install MetronomeStatic
 ```
 
-## æ¶æ„å›¾
+## Ê¾Àı
 
-```mermaid
-graph TD
-    C/C++ -->|LibClang| ClangAST
-    Python["Python (Implement later...)"] --> ClangAST
+### »ñÈ¡UAST & UAST µÄ±£´æÓë¶ÁÈ¡
 
-    ClangAST -->|Conversion| UAST[Universal AST]
-    UAST -->|Control Flow Building| CFG
-    UAST -->|Data Dependency Building| DDG["DDG: To be developed..."]
-    
+- UASTµÄÎÄµµ¼û£º[UAST Docs](https://hzy15610046011.gitee.io/metronome-static/html/api/universal_ast.html)
+
+- ¸ÃÊ¾ÀıÎ»ÓÚ`examples/uast-conversion`ÏÂ
+
+¸ø¶¨Ò»¸ö´ı·ÖÎöµÄCÎÄ¼ş:
+
+`examples/uast-conversion/uast-demo.c`
+
+```c
+int main(int paramA, int paramB)
+{
+    if (paramA < 0)
+    {
+        return -1;
+    }
+    return paramA + paramB;
+}
 ```
+
+¿É°´ÈçÏÂ²½Öè±à³ÌÒÔ½øĞĞ·ÖÎö:
+
+`examples/uast-conversion/demo.py`
+
+```python
+import json
+
+from MetronomeStatic.clang_utils import *
+from MetronomeStatic import *
+
+# »ñÈ¡ Clang AST µÄCursor¶ÔÏó
+file_cursor = parse_file("uast-demo.c").cursor
+
+# »ñÈ¡º¯ÊımainµÄCursor¶ÔÏó
+cursor = get_func_decl(file_cursor, "main")
+
+# Ê¹ÓÃClangASTConverter½«Cursor¶ÔÏó×ª»»ÎªUAST
+converter = ClangASTConverter()
+uast = converter.eval(cursor)
+print(uast)
+
+# ½«UAST×ª»»ÎªJSON¸ñÊ½²¢±£´æµ½ÎÄ¼ş
+with open("dumped-ast.json", "w") as f:
+    json.dump(uast.to_dict(), f, indent=2, ensure_ascii=False)
+
+```
+
+ÔËĞĞÊä³ö:
+
+`examples/uast-conversion/expected_out.txt`
+
+```plaintext
+MethodDeclaration(name='main', modifiers=[], type_parameters=[], parameters=[None, None], return_type='NotImplemented', body=Block(statements=[IfThenElse(predicate=BinaryExpression(operator='<', lhs=Name(value='paramA'), rhs=Literal(value=0)), if_true=Block(statements=[Return(result=Unary(sign='p-', expression=Literal(value=1)))]), if_false=None), Return(result=BinaryExpression(operator='+', lhs=Name(value='paramA'), rhs=Name(value='paramB')))]), abstract=False, extended_dims=0, throws=None)
+```
+
+¿ÉÒÔ¿´³ö£¬Ö±½ÓprintÊä³öµÄ½á¹û¿É¶ÁĞÔ²¢²»Ì«ºÃ£¬µ«²é¿´´òÓ¡³öµÄJSON¾ÍÇáËÉ¶àÁË£º
+
+`examples/uast-conversion/dumped-ast.json`
+
+```json
+{
+  "_cls": "MethodDeclaration",
+  "name": "main",
+  "modifiers": [],
+  "type_parameters": [],
+  "parameters": [
+    null,
+    null
+  ],
+  "return_type": "NotImplemented",
+  "body": {
+    "_cls": "Block",
+    "statements": [
+      {
+        "_cls": "IfThenElse",
+        "predicate": {
+          "_cls": "BinaryExpression",
+          "operator": "<",
+          "lhs": {
+            "_cls": "Name",
+            "value": "paramA"
+          },
+          "rhs": {
+            "_cls": "Literal",
+            "value": 0
+          }
+        },
+        "if_true": {
+          "_cls": "Block",
+          "statements": [
+            {
+              "_cls": "Return",
+              "result": {
+                "_cls": "Unary",
+                "sign": "p-",
+                "expression": {
+                  "_cls": "Literal",
+                  "value": 1
+                }
+              }
+            }
+          ]
+        },
+        "if_false": null
+      },
+      {
+        "_cls": "Return",
+        "result": {
+          "_cls": "BinaryExpression",
+          "operator": "+",
+          "lhs": {
+            "_cls": "Name",
+            "value": "paramA"
+          },
+          "rhs": {
+            "_cls": "Name",
+            "value": "paramB"
+          }
+        }
+      }
+    ]
+  },
+  "abstract": false,
+  "extended_dims": 0,
+  "throws": null
+}
+```
+
+ÒÔÉÏµÄJSONÊÇÒ»¸öÇ¶Ì×½á¹¹£¬Ã¿Ò»ÏîµÄ`_cls`ÊôĞÔ¼ÇÂ¼ÁËUAST½ÚµãµÄÀàÃû£¬ÆäÓà²»ÒÔÏÂ»®Ïß¿ªÍ·µÄÊôĞÔ¶¼ÊÇ¸Ã½ÚµãÏàÓ¦¶ÔÏóµÄÊôĞÔ¡£
+
+¼ÈÈ»UAST¿ÉÒÔ±£´æ£¬ÄÇÃ´Ò²¿ÉÕâÑù¶ÁÈ¡£º
+
+`examples/uast-conversion/load_uast.py`
+
+```python
+import json
+
+from MetronomeStatic import universal_ast_nodes as nodes
+
+
+# ´ÓjsonÎÄ¼şÖĞ¼ÓÔØAST
+with open("dumped-ast.json", "r") as f:
+    ast = nodes.SourceElement.from_dict(json.load(f))
+    print(ast)
+
+```
+
+### ±éÀúUAST
+
+¸ø¶¨Ò»¸öCÎÄ¼ş£º
+
+`examples/uast-traverse/demo.c`
+
+```c
+#include <stdio.h>
+
+int main()
+{
+    int a, b;
+    scanf("%d %d", a, b);
+    printf("Hello World!\n");
+}
+
+```
+
+Í¨¹ıÒÔÏÂ·½·¨£¬¿ÉÒÔ±éÀú¸ÃCÎÄ¼şµÄËùÓĞFuncCall½Úµã£¬²¢´òÓ¡³öÆäº¯ÊıÃû£º
+
+`examples/uast-traverse/demo.py`
+
+```python
+from MetronomeStatic.clang_utils import *
+from MetronomeStatic import universal_ast_nodes as nodes, ClangASTConverter
+
+
+class UniASTVisitor(nodes.Visitor):
+    def visit_FuncCall(self, node: nodes.FuncCall):
+        print(node.name)
+
+
+
+
+# »ñÈ¡ Clang AST µÄCursor¶ÔÏó
+file_cursor = parse_file("demo.c").cursor
+
+# »ñÈ¡º¯ÊımainµÄCursor¶ÔÏó
+cursor = get_func_decl(file_cursor, "main")
+
+# »ñÈ¡UAST
+ast = ClangASTConverter().eval(cursor)
+
+# Ê¹ÓÃUniASTVisitor±éÀúUAST
+ast.accept(UniASTVisitor())
+
+```
+
+Êä³ö£º
+
+`examples/uast-traverse/out.txt`
+
+```plaintext
+Name(value='scanf')
+Name(value='printf')
+```
+
+### »ñÈ¡¿ØÖÆÁ÷Í¼CFG
+
+¸ø¶¨Ò»¸öCÎÄ¼ş£º
+
+`examples/cfg-extraction/demo.c`
+
+```c
+#include <stdio.h>
+
+int main(int a, int b)
+{
+    if (a < 0)
+    {
+        return -1;
+    }
+    for (int i = 0; i < b; i++)
+    {
+        a += i;
+    }
+}
+
+```
+
+ÔËĞĞÈçÏÂPythonÎÄ¼ş½«Æä×ª»»Îª¿ØÖÆÁ÷Í¼£¬²¢ÇÒÊä³öDotÎÄ¼ş£º
+
+`examples/cfg-extraction/demo.py`
+
+```python
+import networkx as nx
+from MetronomeStatic.clang_utils import *
+from MetronomeStatic import universal_ast_nodes as nodes, ClangASTConverter, CFGBuilder
+
+
+# »ñÈ¡ Clang AST µÄCursor¶ÔÏó
+file_cursor = parse_file("demo.c").cursor
+
+# »ñÈ¡º¯ÊımainµÄCursor¶ÔÏó
+cursor = get_func_decl(file_cursor, "main")
+
+# »ñÈ¡UAST
+ast = ClangASTConverter().eval(cursor)
+
+# Ê¹ÓÃCFGBuilder¹¹½¨CFG
+cfg_builder = CFGBuilder()
+cfg_builder.build(ast)
+
+# ½«CFG×ª»»ÎªnetworkxµÄÍøÂç£¬²¢ÇÒ±£´æÎªdot
+# µÃµ½.dotÎÄ¼şÖ®ºó£¬¿ÉÒÔÓÃ
+#  `dot -Tpng cfg.dot -o cfg.png`×ª»¯cfg.dotÎªÍ¼Æ¬
+g = cfg_builder.to_networkx()
+nx.nx_pydot.write_dot(g, "cfg.dot")
+
+```
+
+µÃµ½.dotÎÄ¼şÖ®ºó£¬¿ÉÒÔÓÃ`dot -Tpng cfg.dot -o cfg.png`×ª»¯cfg.dotÎªpng¸ñÊ½µÄÍ¼Æ¬£¬ÈçÏÂÍ¼£º
+
+![Éú³ÉµÄ¿ØÖÆÁ÷Í¼](examples/cfg-extraction/cfg.png)
+
+×¢Òâ£¬Èç¹ûÌáÊ¾Ã»ÓĞ°²×°dot£¬¿ÉÒÔ°´ÕÕhttps://graphviz.org/download/ ÕâÀïµÄ·½Ê½½øĞĞ°²×°
 
 ## Interfaces
 
@@ -25,7 +312,7 @@ graph TD
 
 Clang interface included some useful functionalities.
 
-## Plannings
+## Î´À´¼Æ»®
 
 ### Supporting DDG
 

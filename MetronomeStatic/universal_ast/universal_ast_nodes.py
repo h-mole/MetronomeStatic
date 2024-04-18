@@ -67,9 +67,19 @@ class SourceElement(object):
             if k == "_cls":
                 continue
             else:
-                params_dict[k] = (
-                    cls.from_dict(v) if isinstance(v, dict) and "_cls" in v else v
-                )
+                if isinstance(v, dict) and "_cls" in v:
+                    params_dict[k] = cls.from_dict(v)
+                elif isinstance(v, list):
+                    new_list = []
+                    for elem in v:
+                        if isinstance(elem, dict) and "_cls" in elem:
+                            new_list.append(cls.from_dict(elem))
+                        else:
+                            new_list.append(elem)
+                    params_dict[k] = new_list
+                else:
+                    params_dict[k] = v
+
         return node_cls(**params_dict)
 
     def to_dict(self):
@@ -755,7 +765,7 @@ class SwitchCase(SourceElement):
 class DoWhile(Statement):
     _fields = ["predicate", "body"]
 
-    def __init__(self, predicate, body: Block=None):
+    def __init__(self, predicate, body: Block = None):
         super(DoWhile, self).__init__()
         self.predicate = predicate
         self.body = body
@@ -1006,14 +1016,14 @@ class Visitor(object):
         self.verbose = verbose
 
     def __getattr__(self, name):
-        
+
         if not (name.startswith("visit_") or name.startswith("leave_")):
             raise AttributeError(
                 "name must start with visit_ or leave_ but was {}".format(name)
             )
         else:
             assert name.split("_")[1] in globals(), name
-            
+
         def f(element):
             if self.verbose:
                 msg = "unimplemented call to {}; ignoring ({})"

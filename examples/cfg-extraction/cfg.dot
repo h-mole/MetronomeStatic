@@ -1,0 +1,21 @@
+strict digraph  {
+1 [label="#1 &lt;Block&gt;\n"];
+4 [label="#4 &lt;Block&gt;\nBinaryExpression(operator='<', lhs=Name(value='a'), rhs=Literal(value=0))"];
+2 [label="#2 &lt;Block&gt;\nMETHOD_RETURN"];
+3 [label="#3 &lt;END_IF&gt;\n[Assignment(operator='=', lhs=Name(value='i'), rhs=Literal(value=0))]"];
+8 [label="#8 &lt;Block&gt;\nBinaryExpression(operator='<', lhs=Name(value='i'), rhs=Name(value='b'))"];
+5 [label="#5 &lt;Block&gt;\n"];
+6 [label="#6 &lt;Block&gt;\nReturn(result=Unary(sign='p-', expression=Literal(value=1)))"];
+7 [label="#7 &lt;END_FOR&gt;\n"];
+9 [label="#9 &lt;Block&gt;\nAssignment(operator='+=', lhs=Name(value='a'), rhs=Name(value='i'))\nUnary(sign='++', expression=Name(value='i'))"];
+1 -> 4;
+4 -> 5;
+4 -> 3;
+3 -> 8;
+8 -> 9;
+8 -> 7;
+5 -> 6;
+6 -> 2;
+7 -> 2;
+9 -> 8;
+}

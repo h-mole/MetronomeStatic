@@ -28,7 +28,7 @@ class BasicBlock:
         self.tag_on_empty = tag
 
     def text_on_empty(self):
-        return f"<Empty Block>" if self.tag_on_empty == "" else f"<{self.tag_on_empty}>"
+        return f"<Block>" if self.tag_on_empty == "" else f"<{self.tag_on_empty}>"
 
     def __repr__(self) -> str:
         return f"<BasicBlock #{self._id} {self.statements}>"
