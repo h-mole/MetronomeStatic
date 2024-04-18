@@ -24,9 +24,36 @@ pip install jupyterlab ipywidgets
 ```mermaid
 graph TD
     C/C++ -->|LibClang| ClangAST
+    Python["Python (Implement later...)"] --> ClangAST
+
     ClangAST -->|Conversion| UAST[Universal AST]
-    UAST -->|Conversion| CFG
+    UAST -->|Control Flow Building| CFG
+    UAST -->|Data Dependency Building| DDG["DDG: To be developed..."]
+    
 ```
+
+## Conversions
+
+### AST to UML
+
+There are 2 categories of UML:
+
+- Structural UML:
+    1. Class Diagram
+    2. Object Diagram
+    3. Component Diagram
+    4. Deployment Diagram
+    5. Package Diagram
+    6. Composite Structure Diagram
+- Behavioral UML:
+    1. Sequence Diagram
+    2. Communication Diagram
+    3. Timing Diagram
+    4. State Machine Diagram
+    5. Activity Diagram
+    6. Use Case Diagram
+    7. Interaction Overview Diagram
+    8. State Diagram
 
 ## Interfaces
 

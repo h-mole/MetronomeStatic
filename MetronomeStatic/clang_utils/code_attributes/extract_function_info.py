@@ -2,10 +2,10 @@ from typing import Generator
 
 from clang.cindex import Cursor, CursorKind, Type, TypeKind
 
-from ...utils import sky_generator
+from ...utils import melodie_generator
 
 
-@sky_generator
+@melodie_generator
 def get_local_var_defs(c: Cursor) -> Generator[Cursor, None, None]:
     """
     Get all local variable definitions from a function
@@ -18,7 +18,7 @@ def get_local_var_defs(c: Cursor) -> Generator[Cursor, None, None]:
             yield child
 
 
-@sky_generator
+@melodie_generator
 def get_var_refs(c: Cursor, include_funcs=False) -> Generator[Cursor, None, None]:
     """
     Get all variables referenced from one function body
@@ -34,7 +34,7 @@ def get_var_refs(c: Cursor, include_funcs=False) -> Generator[Cursor, None, None
                 yield child
 
 
-@sky_generator
+@melodie_generator
 def get_param_decls(c: Cursor) -> Generator[Cursor, None, None]:
     """
     Extract parameter declarations from function definition
@@ -46,7 +46,7 @@ def get_param_decls(c: Cursor) -> Generator[Cursor, None, None]:
             yield child
 
 
-@sky_generator
+@melodie_generator
 def get_global_refs(c: Cursor) -> Generator[Cursor, None, None]:
     """
     Get all global variables referenced in one function
@@ -62,7 +62,7 @@ def get_global_refs(c: Cursor) -> Generator[Cursor, None, None]:
             yield var_ref
 
 
-@sky_generator
+@melodie_generator
 def get_global_ref_names(c: Cursor) -> Generator[str, None, None]:
     """
     Get all global variables referenced in one function

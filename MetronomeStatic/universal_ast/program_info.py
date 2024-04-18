@@ -7,7 +7,7 @@ from typing import Dict, Optional
 
 from clang.cindex import Cursor
 
-from ..utils import SkyFrozenGenerator
+from ..utils import MelodieFrozenGenerator
 from ..clang_utils.code_attributes import DefModel, FieldDefModel, FunctionDefModel, StructDefModel
 from .models import StructValue, Variable
 
@@ -16,10 +16,10 @@ class ProgramInfo:
     def __init__(
         self,
         functions: Dict[str, Cursor],
-        structures: Optional[SkyFrozenGenerator[DefModel]] = None,
+        structures: Optional[MelodieFrozenGenerator[DefModel]] = None,
     ) -> None:
         self.functions = functions
-        self.structures = structures if structures else SkyFrozenGenerator([])
+        self.structures = structures if structures else MelodieFrozenGenerator([])
 
     def get_function_structure(self, name: str) -> FunctionDefModel:
         structure = self.structures.filter(lambda x: x.spelling == name).head()

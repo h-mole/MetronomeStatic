@@ -2,10 +2,10 @@ from typing import Generator
 
 from clang.cindex import Cursor, CursorKind
 
-from ...utils import sky_generator
+from ...utils import melodie_generator
 
 
-@sky_generator
+@melodie_generator
 def all_globals(c: Cursor) -> Generator[Cursor, None, None]:
     """
     Extract all globals from a translation unit.

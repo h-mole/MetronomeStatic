@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="./">
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,9 +14,9 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=01f34227"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=2389946f"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="#" />
@@ -67,16 +67,12 @@
 <li class="toctree-l2"><a class="reference internal" href="api/common_utils.html">CommonUtils</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="api/common_utils.html#tips-before-reading">Tips Before Reading</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/common_utils.html#members-list">Members List</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="api/common_utils.html#MetronomeStatic.utils.BaseCommand"><code class="docutils literal notranslate"><span class="pre">BaseCommand</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/common_utils.html#MetronomeStatic.utils.Server"><code class="docutils literal notranslate"><span class="pre">Server</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/common_utils.html#MetronomeStatic.utils.SkyFrozenGenerator"><code class="docutils literal notranslate"><span class="pre">SkyFrozenGenerator</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/common_utils.html#MetronomeStatic.utils.SkyGenerator"><code class="docutils literal notranslate"><span class="pre">SkyGenerator</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/common_utils.html#MetronomeStatic.utils.StateMachine"><code class="docutils literal notranslate"><span class="pre">StateMachine</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/common_utils.html#MetronomeStatic.utils.Status"><code class="docutils literal notranslate"><span class="pre">Status</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/common_utils.html#MetronomeStatic.utils.Transition"><code class="docutils literal notranslate"><span class="pre">Transition</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/common_utils.html#MetronomeStatic.utils.Trigger"><code class="docutils literal notranslate"><span class="pre">Trigger</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/common_utils.html#MetronomeStatic.utils.MelodieFrozenGenerator"><code class="docutils literal notranslate"><span class="pre">MelodieFrozenGenerator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator"><code class="docutils literal notranslate"><span class="pre">MelodieGenerator</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/common_utils.html#MetronomeStatic.utils.abspath_from_current_file"><code class="docutils literal notranslate"><span class="pre">abspath_from_current_file()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/common_utils.html#MetronomeStatic.utils.compose"><code class="docutils literal notranslate"><span class="pre">compose()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/common_utils.html#MetronomeStatic.utils.file_to_dataurl"><code class="docutils literal notranslate"><span class="pre">file_to_dataurl()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/common_utils.html#MetronomeStatic.utils.parse_dataurl"><code class="docutils literal notranslate"><span class="pre">parse_dataurl()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -88,12 +84,14 @@
 <li class="toctree-l4"><a class="reference internal" href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.DefModel"><code class="docutils literal notranslate"><span class="pre">DefModel</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.FieldDefModel"><code class="docutils literal notranslate"><span class="pre">FieldDefModel</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.FunctionDefModel"><code class="docutils literal notranslate"><span class="pre">FunctionDefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.ParamDefModel"><code class="docutils literal notranslate"><span class="pre">ParamDefModel</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.StructDefModel"><code class="docutils literal notranslate"><span class="pre">StructDefModel</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.TraversalContext"><code class="docutils literal notranslate"><span class="pre">TraversalContext</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.TypeDefModel"><code class="docutils literal notranslate"><span class="pre">TypeDefModel</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.TypeWrapper"><code class="docutils literal notranslate"><span class="pre">TypeWrapper</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.UnaryOpPos"><code class="docutils literal notranslate"><span class="pre">UnaryOpPos</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.UnionDefModel"><code class="docutils literal notranslate"><span class="pre">UnionDefModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.VarDefModel"><code class="docutils literal notranslate"><span class="pre">VarDefModel</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.all_globals"><code class="docutils literal notranslate"><span class="pre">all_globals()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.beautified_print_ast"><code class="docutils literal notranslate"><span class="pre">beautified_print_ast()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.build_call_graph"><code class="docutils literal notranslate"><span class="pre">build_call_graph()</span></code></a></li>
@@ -113,9 +111,19 @@
 <li class="toctree-l4"><a class="reference internal" href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.parse_file"><code class="docutils literal notranslate"><span class="pre">parse_file()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.program_model_unparse"><code class="docutils literal notranslate"><span class="pre">program_model_unparse()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.split_binary_operator"><code class="docutils literal notranslate"><span class="pre">split_binary_operator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.split_compound_assignment"><code class="docutils literal notranslate"><span class="pre">split_compound_assignment()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.split_for_loop_conditions"><code class="docutils literal notranslate"><span class="pre">split_for_loop_conditions()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.split_unary_operator"><code class="docutils literal notranslate"><span class="pre">split_unary_operator()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.traversal"><code class="docutils literal notranslate"><span class="pre">traversal()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.traversal_with_callback"><code class="docutils literal notranslate"><span class="pre">traversal_with_callback()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/melodie_generator.html">MelodieGenerator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/melodie_generator.html#members-list">Members List</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieFrozenGenerator"><code class="docutils literal notranslate"><span class="pre">MelodieFrozenGenerator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator"><code class="docutils literal notranslate"><span class="pre">MelodieGenerator</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -176,6 +184,7 @@
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
+ | <a href="#V"><strong>V</strong></a>
  
 </div>
 <h2 id="_">_</h2>
@@ -190,17 +199,13 @@
 </li>
         <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.FunctionDefModel.__init__">(FunctionDefModel method)</a>
 </li>
-        <li><a href="api/common_utils.html#MetronomeStatic.utils.Server.__init__">(Server method)</a>
+        <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieFrozenGenerator.__init__">(MelodieFrozenGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieFrozenGenerator.__init__">[1]</a>
 </li>
-        <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyFrozenGenerator.__init__">(SkyFrozenGenerator method)</a>
+        <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator.__init__">(MelodieGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator.__init__">[1]</a>
 </li>
-        <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyGenerator.__init__">(SkyGenerator method)</a>
-</li>
-        <li><a href="api/common_utils.html#MetronomeStatic.utils.StateMachine.__init__">(StateMachine method)</a>
+        <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.ParamDefModel.__init__">(ParamDefModel method)</a>
 </li>
         <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.StructDefModel.__init__">(StructDefModel method)</a>
-</li>
-        <li><a href="api/common_utils.html#MetronomeStatic.utils.Transition.__init__">(Transition method)</a>
 </li>
         <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.TraversalContext.__init__">(TraversalContext method)</a>
 </li>
@@ -209,6 +214,8 @@
         <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.TypeWrapper.__init__">(TypeWrapper method)</a>
 </li>
         <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.UnionDefModel.__init__">(UnionDefModel method)</a>
+</li>
+        <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.VarDefModel.__init__">(VarDefModel method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -225,7 +232,7 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.all_globals">all_globals() (in module MetronomeStatic.clang_utils.code_attributes)</a>
 </li>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyGenerator.attributes">attributes() (SkyGenerator method)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator.attributes">attributes() (MelodieGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator.attributes">[1]</a>
 </li>
   </ul></td>
 </tr></table>
@@ -233,8 +240,6 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.BaseCommand">BaseCommand (class in MetronomeStatic.utils)</a>
-</li>
       <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.beautified_print_ast">beautified_print_ast() (in module MetronomeStatic.clang_utils.code_attributes)</a>
 </li>
   </ul></td>
@@ -249,7 +254,7 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyGenerator.cast">cast() (SkyGenerator method)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator.cast">cast() (MelodieGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator.cast">[1]</a>
 </li>
       <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.ClassDefModel">ClassDefModel (class in MetronomeStatic.clang_utils.code_attributes)</a>
 </li>
@@ -273,11 +278,11 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyGenerator.exhaust">exhaust() (SkyGenerator method)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator.exhaust">exhaust() (MelodieGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator.exhaust">[1]</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyGenerator.extra_job">extra_job() (SkyGenerator method)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator.extra_job">extra_job() (MelodieGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator.extra_job">[1]</a>
 </li>
       <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.extract_ast">extract_ast() (in module MetronomeStatic.clang_utils.code_attributes)</a>
 </li>
@@ -287,13 +292,13 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyGenerator.f">f (SkyGenerator property)</a>
-</li>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.Status.FAILED">FAILED (Status attribute)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator.f">f (MelodieGenerator property)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator.f">[1]</a>
 </li>
       <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.FieldDefModel">FieldDefModel (class in MetronomeStatic.clang_utils.code_attributes)</a>
 </li>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyGenerator.filter">filter() (SkyGenerator method)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.file_to_dataurl">file_to_dataurl() (in module MetronomeStatic.utils)</a>
+</li>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator.filter">filter() (MelodieGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator.filter">[1]</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -301,9 +306,9 @@
 </li>
       <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.TraversalContext.find_by_kind_td">find_by_kind_td() (TraversalContext method)</a>
 </li>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.Status.FINISHED">FINISHED (Status attribute)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator.fold_left">fold_left() (MelodieGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator.fold_left">[1]</a>
 </li>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyGenerator.freeze">freeze() (SkyGenerator method)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator.freeze">freeze() (MelodieGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator.freeze">[1]</a>
 </li>
       <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.FunctionDefModel">FunctionDefModel (class in MetronomeStatic.clang_utils.code_attributes)</a>
 </li>
@@ -337,19 +342,23 @@
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyGenerator.head">head() (SkyGenerator method)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieFrozenGenerator.head">head() (MelodieFrozenGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieFrozenGenerator.head">[1]</a>
+
+      <ul>
+        <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator.head">(MelodieGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator.head">[1]</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyGenerator.indexed_extra_job">indexed_extra_job() (SkyGenerator method)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator.indexed_extra_job">indexed_extra_job() (MelodieGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator.indexed_extra_job">[1]</a>
 </li>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyGenerator.indexed_filter">indexed_filter() (SkyGenerator method)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator.indexed_filter">indexed_filter() (MelodieGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator.indexed_filter">[1]</a>
 </li>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyGenerator.indexed_map">indexed_map() (SkyGenerator method)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator.indexed_map">indexed_map() (MelodieGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator.indexed_map">[1]</a>
 </li>
       <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.is_function_definition">is_function_definition() (in module MetronomeStatic.clang_utils.code_attributes)</a>
 </li>
@@ -389,7 +398,7 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyGenerator.l">l (SkyGenerator property)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator.l">l (MelodieGenerator property)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator.l">[1]</a>
 </li>
   </ul></td>
 </tr></table>
@@ -397,12 +406,49 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyGenerator.map">map() (SkyGenerator method)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator.map">map() (MelodieGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator.map">[1]</a>
 </li>
+      <li><a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieFrozenGenerator">MelodieFrozenGenerator (class in MelodieFuncFlow.functional)</a>
+
+      <ul>
+        <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieFrozenGenerator">(class in MetronomeStatic.utils)</a>
+</li>
+      </ul></li>
+      <li>
+    MelodieFuncFlow.functional
+
+      <ul>
+        <li><a href="api/melodie_generator.html#module-MelodieFuncFlow.functional">module</a>
+</li>
+      </ul></li>
+      <li><a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator">MelodieGenerator (class in MelodieFuncFlow.functional)</a>
+
+      <ul>
+        <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator">(class in MetronomeStatic.utils)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    MetronomeStatic.clang_utils.code_attributes
+
+      <ul>
+        <li><a href="api/clang_utils.html#module-MetronomeStatic.clang_utils.code_attributes">module</a>
+</li>
+      </ul></li>
+      <li>
+    MetronomeStatic.utils
+
+      <ul>
+        <li><a href="api/common_utils.html#module-MetronomeStatic.utils">module</a>
+</li>
+      </ul></li>
       <li>
     module
 
       <ul>
+        <li><a href="api/melodie_generator.html#module-MelodieFuncFlow.functional">MelodieFuncFlow.functional</a>
+</li>
         <li><a href="api/clang_utils.html#module-MetronomeStatic.clang_utils.code_attributes">MetronomeStatic.clang_utils.code_attributes</a>
 </li>
         <li><a href="api/common_utils.html#module-MetronomeStatic.utils">MetronomeStatic.utils</a>
@@ -422,13 +468,15 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyGenerator.parallel_map">parallel_map() (SkyGenerator method)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator.parallel_map">parallel_map() (MelodieGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator.parallel_map">[1]</a>
 </li>
-      <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.parse_file">parse_file() (in module MetronomeStatic.clang_utils.code_attributes)</a>
+      <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.ParamDefModel">ParamDefModel (class in MetronomeStatic.clang_utils.code_attributes)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.StateMachine.process">process() (StateMachine method)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.parse_dataurl">parse_dataurl() (in module MetronomeStatic.utils)</a>
+</li>
+      <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.parse_file">parse_file() (in module MetronomeStatic.clang_utils.code_attributes)</a>
 </li>
       <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.program_model_unparse">program_model_unparse() (in module MetronomeStatic.clang_utils.code_attributes)</a>
 </li>
@@ -438,15 +486,11 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.Status.READY">READY (Status attribute)</a>
-</li>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyGenerator.reduce">reduce() (SkyGenerator method)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator.reduce">reduce() (MelodieGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator.reduce">[1]</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyFrozenGenerator.relsort">relsort() (SkyFrozenGenerator method)</a>
-</li>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.Status.RUNNING">RUNNING (Status attribute)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieFrozenGenerator.relsort">relsort() (MelodieFrozenGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieFrozenGenerator.relsort">[1]</a>
 </li>
   </ul></td>
 </tr></table>
@@ -454,57 +498,33 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyGenerator.s">s (SkyGenerator property)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator.s">s (MelodieGenerator property)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator.s">[1]</a>
 </li>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.Server">Server (class in MetronomeStatic.utils)</a>
-</li>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyFrozenGenerator.show_progress">show_progress() (SkyFrozenGenerator method)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieFrozenGenerator.show_progress">show_progress() (MelodieFrozenGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieFrozenGenerator.show_progress">[1]</a>
 
       <ul>
-        <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyGenerator.show_progress">(SkyGenerator method)</a>
+        <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator.show_progress">(MelodieGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator.show_progress">[1]</a>
 </li>
       </ul></li>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyFrozenGenerator">SkyFrozenGenerator (class in MetronomeStatic.utils)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator.slice">slice() (MelodieGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator.slice">[1]</a>
 </li>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyGenerator">SkyGenerator (class in MetronomeStatic.utils)</a>
-</li>
-      <li>
-    MetronomeStatic.clang_utils.code_attributes
-
-      <ul>
-        <li><a href="api/clang_utils.html#module-MetronomeStatic.clang_utils.code_attributes">module</a>
-</li>
-      </ul></li>
-      <li>
-    MetronomeStatic.utils
-
-      <ul>
-        <li><a href="api/common_utils.html#module-MetronomeStatic.utils">module</a>
-</li>
-      </ul></li>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyGenerator.slice">slice() (SkyGenerator method)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyFrozenGenerator.sort">sort() (SkyFrozenGenerator method)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieFrozenGenerator.sort">sort() (MelodieFrozenGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieFrozenGenerator.sort">[1]</a>
 </li>
       <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.TypeWrapper.spelling">spelling (TypeWrapper attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.split_binary_operator">split_binary_operator() (in module MetronomeStatic.clang_utils.code_attributes)</a>
+</li>
+      <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.split_compound_assignment">split_compound_assignment() (in module MetronomeStatic.clang_utils.code_attributes)</a>
+</li>
+      <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.split_for_loop_conditions">split_for_loop_conditions() (in module MetronomeStatic.clang_utils.code_attributes)</a>
 </li>
       <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.split_unary_operator">split_unary_operator() (in module MetronomeStatic.clang_utils.code_attributes)</a>
 </li>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyGenerator.star_filter">star_filter() (SkyGenerator method)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator.star_filter">star_filter() (MelodieGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator.star_filter">[1]</a>
 </li>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyGenerator.star_map">star_map() (SkyGenerator method)</a>
-</li>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.Trigger.START">START (Trigger attribute)</a>
-</li>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.StateMachine">StateMachine (class in MetronomeStatic.utils)</a>
-</li>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.Trigger.STOP">STOP (Trigger attribute)</a>
-</li>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.Status.STOPPED">STOPPED (Status attribute)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator.star_map">star_map() (MelodieGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator.star_map">[1]</a>
 </li>
       <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.StructDefModel">StructDefModel (class in MetronomeStatic.clang_utils.code_attributes)</a>
 </li>
@@ -514,11 +534,9 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyGenerator.to_list">to_list() (SkyGenerator method)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator.to_list">to_list() (MelodieGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator.to_list">[1]</a>
 </li>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.SkyGenerator.to_set">to_set() (SkyGenerator method)</a>
-</li>
-      <li><a href="api/common_utils.html#MetronomeStatic.utils.Transition">Transition (class in MetronomeStatic.utils)</a>
+      <li><a href="api/common_utils.html#MetronomeStatic.utils.MelodieGenerator.to_set">to_set() (MelodieGenerator method)</a>, <a href="api/melodie_generator.html#MelodieFuncFlow.functional.MelodieGenerator.to_set">[1]</a>
 </li>
       <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.traversal">traversal() (in module MetronomeStatic.clang_utils.code_attributes)</a>
 </li>
@@ -539,6 +557,14 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.UnionDefModel">UnionDefModel (class in MetronomeStatic.clang_utils.code_attributes)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/clang_utils.html#MetronomeStatic.clang_utils.code_attributes.VarDefModel">VarDefModel (class in MetronomeStatic.clang_utils.code_attributes)</a>
 </li>
   </ul></td>
 </tr></table>

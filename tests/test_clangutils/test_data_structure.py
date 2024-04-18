@@ -2,7 +2,7 @@ from typing import Generator
 
 from MetronomeStatic.clang_utils.code_attributes.utils import parse_file
 import tests.base as base
-from MetronomeStatic import SkyFrozenGenerator, SkyGenerator
+from MetronomeStatic import MelodieFrozenGenerator, MelodieGenerator
 from MetronomeStatic.clang_utils import (
     ClassDefModel,
     Cursor,
@@ -26,12 +26,12 @@ def extract_tasks(c: Cursor):
     for child in c.walk_preorder():
         if child.kind == CursorKind.CALL_EXPR and child.spelling == "start_task":
             children: Generator[Cursor, None, None] = child.get_children()
-            param = SkyGenerator(children).slice(1).head()
+            param = MelodieGenerator(children).slice(1).head()
             print("spelling", param.spelling)
 
 
 def test_generate_structure():
-    structures: SkyFrozenGenerator[DefModel] = data_structure_from_file(
+    structures: MelodieFrozenGenerator[DefModel] = data_structure_from_file(
         base.asset_path("extractor-demos/global-use.c")
     ).f
     union_wrapper: StructDefModel = structures.filter(

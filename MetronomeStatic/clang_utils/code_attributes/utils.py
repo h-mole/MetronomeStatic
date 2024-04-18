@@ -6,7 +6,7 @@ from typing import Callable, Dict, Generator, List, Optional, Tuple, Union
 
 from clang import cindex
 
-from ...utils import SkyGenerator
+from ...utils import MelodieGenerator
 
 CompilerArgsType = Union[List[str], Callable[[str], List[str]]]
 
@@ -59,7 +59,7 @@ def is_function_definition(node: cindex.Cursor) -> bool:
 
 def get_func_decl_all(
     node: cindex.Cursor, definition_only=False
-) -> SkyGenerator[cindex.Cursor]:
+) -> MelodieGenerator[cindex.Cursor]:
     """
     Get all function definitions from Clang AST.
 
@@ -75,7 +75,7 @@ def get_func_decl_all(
                 ):
                     yield node
 
-    return SkyGenerator(_(node))
+    return MelodieGenerator(_(node))
 
 
 class TraversalContext:
@@ -182,7 +182,7 @@ def _traversal(
 
 def traversal(
     node: cindex.Cursor,
-) -> SkyGenerator[TraversalContext]:
+) -> MelodieGenerator[TraversalContext]:
     """
     Traverse the AST and for each node, returning a ``TraversalContext``.
 
@@ -197,10 +197,10 @@ def traversal(
         yield from _traversal(node, ctx)
         ctx._pop()
 
-    return SkyGenerator(_(node))
+    return MelodieGenerator(_(node))
 
 
-def iter_ast(node: cindex.Cursor) -> SkyGenerator[cindex.Cursor]:
+def iter_ast(node: cindex.Cursor) -> MelodieGenerator[cindex.Cursor]:
     """
     Iterate through all AST nodes
     """
@@ -208,12 +208,12 @@ def iter_ast(node: cindex.Cursor) -> SkyGenerator[cindex.Cursor]:
     def _(node):
         yield from node.walk_preorder()
 
-    return SkyGenerator(_(node))
+    return MelodieGenerator(_(node))
 
 
 def iter_ast_from_file(
     file: str, args: CompilerArgsType = None
-) -> SkyGenerator[cindex.Cursor]:
+) -> MelodieGenerator[cindex.Cursor]:
     """
     Iterate through all AST nodes in file
     """
@@ -342,7 +342,7 @@ def iter_files(
     folder: str,
     filetypes: Union[str, Tuple[str], Callable[[str], bool]] = "",
     abspath=True,
-) -> SkyGenerator[str]:
+) -> MelodieGenerator[str]:
     """
     Iterate all files inside the folder.
     """
@@ -366,7 +366,7 @@ def iter_files(
                 if filter_func(file):
                     yield os.path.join(root, file) if abspath else file
 
-    return SkyGenerator(_())
+    return MelodieGenerator(_())
 
 
 def is_literal_kind(node: cindex.Cursor):

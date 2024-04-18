@@ -17,7 +17,7 @@ import websocket
 from dataclasses_json import DataClassJsonMixin
 
 from ..utils.files import file_to_dataurl
-from ..utils.functional import SkyFrozenGenerator, sky_generator
+from ..utils.functional import MelodieFrozenGenerator, melodie_generator
 from .base_request import Request, RequestFactory, RestRespDataType
 from .log import logger
 from .messages import FileUploadResponse, WSSchedulerMsgParser
@@ -204,7 +204,7 @@ class DistributedTool(Generic[RestRespDataType]):
                 uuid="", start_time=-1, end_time=-1, status=Status.STOPPED
             )
 
-    @sky_generator
+    @melodie_generator
     def all_results(self) -> Generator[Tuple[str, StatusInfo], None, None]:
         for folder in os.listdir(self.root_folder):
             folder_abs_path = os.path.join(self.root_folder, folder)
@@ -218,7 +218,7 @@ class DistributedTool(Generic[RestRespDataType]):
 
                 traceback.print_exc()
 
-    def results(self) -> SkyFrozenGenerator[Tuple[str, StatusInfo]]:
+    def results(self) -> MelodieFrozenGenerator[Tuple[str, StatusInfo]]:
         """
         Get all results, and sort by start time
         """

@@ -3,7 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.bundle
-*.dot
+/*.dot
 *.exe
 out
 out1.json

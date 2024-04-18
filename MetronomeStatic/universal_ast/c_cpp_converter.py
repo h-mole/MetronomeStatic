@@ -35,7 +35,7 @@ from ..clang_utils.code_attributes import (
     split_compound_assignment,
     traversal_with_callback,
 )
-from ..utils.functional import SkyGenerator
+from ..utils.functional import MelodieGenerator
 from .exceptions import FunctionReturn, OnBreakStatement
 from .models import (
     DATA_TYPE,
@@ -106,9 +106,10 @@ class ClangASTConverter:
             # TYPES
             CursorKind.TYPE_REF: lambda c: nodes.Type(c.spelling),
             # LITERALS
-            CursorKind.INTEGER_LITERAL: lambda c: int(
+            CursorKind.INTEGER_LITERAL: lambda c: nodes.Literal(int(
                 ensure_not_none(extract_literal_value(c))
-            ),
+            )),
+            CursorKind.STRING_LITERAL: lambda c: nodes.Literal(ensure_not_none(extract_literal_value(c))),
             # OPERATORS
             CursorKind.BINARY_OPERATOR: self._handle_binary_operator,
             CursorKind.UNARY_OPERATOR: self._handle_unary_operator,
@@ -191,7 +192,7 @@ class ClangASTConverter:
 
     def _handle_var_decl(self, cursor: Cursor) -> Optional[nodes.Assignment]:
         children_asts = (
-            SkyGenerator(cursor.get_children())
+            MelodieGenerator(cursor.get_children())
             .filter(lambda c: c.kind not in (CursorKind.TYPE_REF,))
             .l
         )

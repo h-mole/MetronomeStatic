@@ -4,7 +4,7 @@ from typing import Any, Callable, Dict, Generator, List, Optional, Set, Tuple, U
 
 from clang.cindex import Cursor, CursorKind, SourceLocation, Type, TypeKind
 
-from ...utils import SkyGenerator, sky_generator
+from ...utils import MelodieGenerator, melodie_generator
 from .extract_function_info import get_var_refs
 from .extract_globals import all_globals
 from .utils import (
@@ -157,18 +157,18 @@ class FunctionDefModel(DefModel):
         self.locals: List[VarDefModel] = []
 
     @property
-    def iter_params(self) -> SkyGenerator["ParamDefModel"]:
+    def iter_params(self) -> MelodieGenerator["ParamDefModel"]:
         """
         Iterate each parameters
         """
-        return SkyGenerator(self.params)
+        return MelodieGenerator(self.params)
 
     @property
-    def iter_callings(self) -> SkyGenerator["ParamDefModel"]:
+    def iter_callings(self) -> MelodieGenerator["ParamDefModel"]:
         """
         Iterate all callings inside this definition
         """
-        return SkyGenerator(self.callings)
+        return MelodieGenerator(self.callings)
 
     @classmethod
     def from_cursor(cls, node: Cursor) -> Optional["FunctionDefModel"]:
@@ -238,7 +238,7 @@ class UnionDefModel(DefModel):
         """
         Iterate child fields inside this union
         """
-        return SkyGenerator(self.children)
+        return MelodieGenerator(self.children)
 
     @classmethod
     def from_cursor(cls, node: Cursor) -> "UnionDefModel":
@@ -306,11 +306,11 @@ class StructDefModel(DefModel):
     @property
     def iter_fields(
         self,
-    ) -> SkyGenerator["Union[FieldDefModel, UnionDefModel, StructDefModel]"]:
+    ) -> MelodieGenerator["Union[FieldDefModel, UnionDefModel, StructDefModel]"]:
         """
         Iterate fields of this struct
         """
-        return SkyGenerator(self.fields)
+        return MelodieGenerator(self.fields)
 
     @classmethod
     def from_cursor(cls, node: Cursor) -> "StructDefModel":
@@ -348,18 +348,18 @@ class ClassDefModel(DefModel):
         self.methods: List[FunctionDefModel] = []
 
     @property
-    def iter_fields(self) -> SkyGenerator[FieldDefModel]:
+    def iter_fields(self) -> MelodieGenerator[FieldDefModel]:
         """
         Iterate each field in class
         """
-        return SkyGenerator(self.fields)
+        return MelodieGenerator(self.fields)
 
     @property
-    def iter_methods(self) -> SkyGenerator[FunctionDefModel]:
+    def iter_methods(self) -> MelodieGenerator[FunctionDefModel]:
         """
         Iterate each method in class
         """
-        return SkyGenerator(self.methods)
+        return MelodieGenerator(self.methods)
 
     @classmethod
     def from_cursor(cls, node: Cursor) -> "ClassDefModel":
@@ -387,7 +387,7 @@ class _Context:
 context = _Context()
 
 
-@sky_generator
+@melodie_generator
 def data_structure_from_file(
     filename: str, args: CompilerArgsType = None
 ) -> Generator[DefModel, None, None]:
@@ -425,7 +425,7 @@ def data_structure_from_file(
                 continue
 
 
-@sky_generator
+@melodie_generator
 def iter_data_structures(
     folder: str, name_filter: Callable[[str], bool], args: CompilerArgsType = None
 ) -> Generator[DefModel, None, None]:

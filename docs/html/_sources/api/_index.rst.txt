@@ -10,6 +10,7 @@ Under development.
     
     common_utils
     clang_utils
+    melodie_generator
     
 
 

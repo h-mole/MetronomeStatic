@@ -14,31 +14,31 @@ except:
 
 from typing import Callable, Generator, Generic, Iterable, Union
 
-from MelodieFuncFlow.functional import VARTYPE, MelodieFrozenGenerator, MelodieGenerator
+from MelodieFuncFlow.functional import VARTYPE, MelodieFrozenGenerator, MelodieGenerator, melodie_generator
 
 
-class SkyGenerator(MelodieGenerator, Generic[VARTYPE]):
-    pass
+# class MelodieGenerator(MelodieGenerator, Generic[VARTYPE]):
+#     pass
 
 
-class SkyFrozenGenerator(MelodieFrozenGenerator, Generic[VARTYPE]):
-    def __repr__(self) -> str:
-        return f"<SkyFrozenGenerator {self.inner}>"
+# class MelodieFrozenGenerator(MelodieFrozenGenerator, Generic[VARTYPE]):
+#     def __repr__(self) -> str:
+#         return f"<SkyFrozenGenerator {self.inner}>"
 
 
-def sky_generator(
-    f: "Callable[..., Union[Generator[VARTYPE, None, None], SkyGenerator[VARTYPE]]]",
-) -> "Callable[..., SkyGenerator[VARTYPE]]":
-    @functools.wraps(
-        f,
-        assigned=(
-            ("__module__", "__name__", "__qualname__", "__doc__", "__annotation__")
-        ),
-    )
-    def inner(*args, **kwargs):
-        return SkyGenerator(f(*args, **kwargs))
+# def melodie_generator(
+#     f: "Callable[..., Union[Generator[VARTYPE, None, None], MelodieGenerator[VARTYPE]]]",
+# ) -> "Callable[..., MelodieGenerator[VARTYPE]]":
+#     @functools.wraps(
+#         f,
+#         assigned=(
+#             ("__module__", "__name__", "__qualname__", "__doc__", "__annotation__")
+#         ),
+#     )
+#     def inner(*args, **kwargs):
+#         return MelodieGenerator(f(*args, **kwargs))
 
-    return inner
+#     return inner
 
 
 def to_generator(it: Iterable[VARTYPE]) -> Generator[VARTYPE, None, None]:
