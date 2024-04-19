@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from MetronomeStatic import *
-from MetronomeStatic.clang_utils import *
+from PyBirdViewCode import *
+from PyBirdViewCode.clang_utils import *
 from tests import base
 
 

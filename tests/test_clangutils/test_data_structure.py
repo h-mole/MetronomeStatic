@@ -1,9 +1,9 @@
 from typing import Generator
 
-from MetronomeStatic.clang_utils.code_attributes.utils import parse_file
+from PyBirdViewCode.clang_utils.code_attributes.utils import parse_file
 import tests.base as base
-from MetronomeStatic import MelodieFrozenGenerator, MelodieGenerator
-from MetronomeStatic.clang_utils import (
+from PyBirdViewCode import MelodieFrozenGenerator, MelodieGenerator
+from PyBirdViewCode.clang_utils import (
     ClassDefModel,
     Cursor,
     CursorKind,
@@ -148,7 +148,7 @@ def test_unparse():
             "kind": "TypeKind.FUNCTIONPROTO",
         },
         "location": [
-            "C:\\Users\\houzh\\Developing\\MetronomeStatic\\tests\\assets\\structure-demo\\header.h",
+            "C:\\Users\\houzh\\Developing\\PyBirdViewCode\\tests\\assets\\structure-demo\\header.h",
             2,
             5,
         ],

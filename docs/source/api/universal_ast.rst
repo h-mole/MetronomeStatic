@@ -8,13 +8,13 @@ Universal AST
 
 .. .. code-block:: python
 
-..     from MetronomeStatic import <"Members Listed In This Page">
+..     from PyBirdViewCode import <"Members Listed In This Page">
 
 Members List
 ------------
 .. _apidoc-commonutils:
 
-.. automodule:: MetronomeStatic.universal_ast.universal_ast_nodes
+.. automodule:: PyBirdViewCode.universal_ast.universal_ast_nodes
                 :members:
                 :show-inheritance:
                 :imported-members:

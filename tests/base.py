@@ -3,7 +3,7 @@ import sys
 
 from clang import cindex
 
-from MetronomeStatic.clang_utils import CompilerArgsType, parse_file
+from PyBirdViewCode.clang_utils import CompilerArgsType, parse_file
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), "assets")

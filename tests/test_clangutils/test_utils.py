@@ -1,5 +1,5 @@
 import tests.base as base
-from MetronomeStatic.clang_utils import parse_file
+from PyBirdViewCode.clang_utils import parse_file
 
 
 def test_utils():

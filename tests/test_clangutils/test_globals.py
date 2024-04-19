@@ -1,5 +1,5 @@
 import tests.base as base
-from MetronomeStatic.clang_utils import (
+from PyBirdViewCode.clang_utils import (
     all_globals,
     get_func_decl_all,
     get_global_refs,

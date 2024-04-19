@@ -1,6 +1,6 @@
 import time
 
-from MetronomeStatic import MelodieFrozenGenerator, MelodieGenerator
+from PyBirdViewCode import MelodieFrozenGenerator, MelodieGenerator
 
 
 def test_generator():

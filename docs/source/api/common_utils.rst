@@ -8,13 +8,13 @@ Tips Before Reading
 
 .. code-block:: python
 
-    from MetronomeStatic import <"Members Listed In This Page">
+    from PyBirdViewCode import <"Members Listed In This Page">
 
 Members List
 ------------
 .. _apidoc-commonutils:
 
-.. automodule:: MetronomeStatic.utils
+.. automodule:: PyBirdViewCode.utils
                 :members:
                 :show-inheritance:
                 :imported-members:

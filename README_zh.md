@@ -1,10 +1,10 @@
-# MetronomeStatic静态分析工具
+# PyBirdViewCode静态分析工具
 
 ## 简介
 
-MetronomeStatic是一个用于静态代码分析的Python包。Metronome意为“节拍器”，寓意是提升项目质量，从而稳住开发的节奏
+PyBirdViewCode是一个用于静态代码分析的Python包。Metronome意为“节拍器”，寓意是提升项目质量，从而稳住开发的节奏
 
-以下是MetronomeStatic的功能图。现在只支持C/C++，基于libclang实现。在未来，计划进一步添加Python的 AST
+以下PyBirdViewCodec的功能图。现在只支持C/C++，基于libclang实现。在未来，计划进一步添加Python的 AST
 
 ```mermaid
 graph TD
@@ -13,7 +13,7 @@ graph TD
     
     ClangAST -->|Conversion| UAST
 
-    subgraph `MetronomeStatic Package Functionalities`
+    subgraph `PyBirdViewCode Package Functionalities`
 
         UAST[Universal AST]
         CommonUtils["Common Utils"]
@@ -36,7 +36,7 @@ graph TD
 ## 安装
 
 ```bash
-pip install MetronomeStatic
+pip install PyBirdViewCode
 ```
 
 ## 示例
@@ -69,8 +69,8 @@ int main(int paramA, int paramB)
 ```python
 import json
 
-from MetronomeStatic.clang_utils import *
-from MetronomeStatic import *
+from PyBirdViewCode.clang_utils import *
+from PyBirdViewCode import *
 
 # 获取 Clang AST 的Cursor对象
 file_cursor = parse_file("uast-demo.c").cursor
@@ -179,7 +179,7 @@ MethodDeclaration(name='main', modifiers=[], type_parameters=[], parameters=[Non
 ```python
 import json
 
-from MetronomeStatic import universal_ast_nodes as nodes
+from PyBirdViewCode import universal_ast_nodes as nodes
 
 
 # 从json文件中加载AST
@@ -212,8 +212,8 @@ int main()
 `examples/uast-traverse/demo.py`
 
 ```python
-from MetronomeStatic.clang_utils import *
-from MetronomeStatic import universal_ast_nodes as nodes, ClangASTConverter
+from PyBirdViewCode.clang_utils import *
+from PyBirdViewCode import universal_ast_nodes as nodes, ClangASTConverter
 
 
 class UniASTVisitor(nodes.Visitor):
@@ -275,8 +275,8 @@ int main(int a, int b)
 
 ```python
 import networkx as nx
-from MetronomeStatic.clang_utils import *
-from MetronomeStatic import universal_ast_nodes as nodes, ClangASTConverter, CFGBuilder
+from PyBirdViewCode.clang_utils import *
+from PyBirdViewCode import universal_ast_nodes as nodes, ClangASTConverter, CFGBuilder
 
 
 # 获取 Clang AST 的Cursor对象

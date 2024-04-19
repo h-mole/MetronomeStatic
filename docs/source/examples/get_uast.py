@@ -3,8 +3,8 @@ import sys
 
 sys.path.append("../../..")
 
-from MetronomeStatic.clang_utils import *
-from MetronomeStatic import *
+from PyBirdViewCode.clang_utils import *
+from PyBirdViewCode import *
 
 path = abspath_from_current_file("assets/uast-demo.c", __file__)
 

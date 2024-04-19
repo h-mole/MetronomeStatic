@@ -125,7 +125,7 @@ class Scheduler(Generic[C]):
         self,
         host: str = "0.0.0.0",
         port: int = 8681,
-        root_folder=".MetronomeStatic",
+        root_folder=".PyBirdViewCode",
         scheduler_address: str = "",
     ) -> None:
         self.root_folder = root_folder

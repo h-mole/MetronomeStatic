@@ -19,8 +19,8 @@ Now, we have C file ``assets/load_ast.c``
 The Python script ``load_ast.py`` can parse this C file and dump AST.
 
 Note that ``sys.path.append`` expression is used to let the interpreter 
-know where ``MetronomeStatic`` package is placed when in development.
-**If you have installed** ``MetronomeStatic`` **by pip, expression** ``sys.path.append`` **is not necessary.**
+know where ``PyBirdViewCode`` package is placed when in development.
+**If you have installed** ``PyBirdViewCode`` **by pip, expression** ``sys.path.append`` **is not necessary.**
 This is also true for the other Python scripts below.
 
 .. literalinclude:: /examples/load_ast.py
@@ -77,7 +77,7 @@ In this script, we took some advantage of **functional programming**.
 
 * For functions like ``get_local_var_defs``, it returns a generator ``SkyGenerator``, yielding a ``clang.cindex.Cursor`` object for each iteration. 
 
-* This generator supports some common patterns of functional programming, such as ``map``, ``filter`` and ``head``. Visit `here <../api/common_utils.html#MetronomeStatic.utils.SkyGenerator>`_ for details.
+* This generator supports some common patterns of functional programming, such as ``map``, ``filter`` and ``head``. Visit `here <../api/common_utils.html#PyBirdViewCode.utils.SkyGenerator>`_ for details.
 
 * Method ``.attribute("spelling")`` is a shortcut for ``.map(lambda node: node.spelling)``
 

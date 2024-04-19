@@ -166,7 +166,7 @@ cython_debug/
 # VSCode
 .vscode/
 /out.*
-.MetronomeStatic
+.PyBirdViewCode
 
 .virtual_documents
 /venv38/

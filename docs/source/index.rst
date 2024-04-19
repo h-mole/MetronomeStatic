@@ -1,5 +1,5 @@
 
-MetronomeStatic: Pure-Python static analysis library providing various interfaces.
+PyBirdViewCode: Pure-Python static analysis library providing various interfaces.
 ====================================================================================
 
 .. toctree::

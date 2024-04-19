@@ -1,4 +1,4 @@
-from MetronomeStatic.utils import file_to_dataurl, parse_dataurl
+from PyBirdViewCode.utils import file_to_dataurl, parse_dataurl
 from tests.base import asset_path
 
 

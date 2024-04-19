@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from MetronomeStatic import compose
+from PyBirdViewCode import compose
 
 
 def add(a, b) -> int:

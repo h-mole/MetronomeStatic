@@ -4,12 +4,12 @@ with open("README.md", encoding="utf8") as f:
     long_description = f.read()
 
 setuptools.setup(
-    name="MetronomeStatic",
+    name="PyBirdViewCode",
     version="0.1.0",
     description="A pure-python (Python>=3.8) static analysis library providing various interfaces.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/hzyrc6011/MetronomeStatic",
+    url="https://github.com/hzyrc6011/PyBirdViewCode",
     author="hzyrc6011",
     author_email="1295752786@qq.com",
     license="MIT",
@@ -31,10 +31,10 @@ setuptools.setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     project_urls={
-        "Documentation": "https://hzyrc6011.github.io/MetronomeStatic/",
+        "Documentation": "https://hzyrc6011.github.io/PyBirdViewCode/",
     },
     packages=setuptools.find_namespace_packages(
-        include=["MetronomeStatic", "MetronomeStatic.*"]
+        include=["PyBirdViewCode", "PyBirdViewCode.*"]
     ),
     install_requires=[
         "clang~=16.0",

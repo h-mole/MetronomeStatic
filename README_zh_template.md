@@ -13,7 +13,7 @@ graph TD
     
     ClangAST -->|Conversion| UAST
 
-    subgraph `MetronomeStatic Package Functionalities`
+    subgraph `PyBirdViewCode Package Functionalities`
 
         UAST[Universal AST]
         CommonUtils["Common Utils"]
@@ -36,7 +36,7 @@ graph TD
 ## 安装
 
 ```bash
-pip install MetronomeStatic
+pip install PyBirdViewCode
 ```
 
 ## 示例

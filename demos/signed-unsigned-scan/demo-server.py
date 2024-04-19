@@ -3,13 +3,13 @@ import os
 import sys
 from typing import cast
 
-from MetronomeStatic import abspath_from_current_file
-from MetronomeStatic.third_parties.jsonobject import (
+from PyBirdViewCode import abspath_from_current_file
+from PyBirdViewCode.third_parties.jsonobject import (
     DictProperty,
     JsonObject,
     ObjectProperty,
 )
-from MetronomeStatic.utils.service import BaseCommand, Problem, Server
+from PyBirdViewCode.utils.service import BaseCommand, Problem, Server
 
 
 class CommandData(JsonObject):

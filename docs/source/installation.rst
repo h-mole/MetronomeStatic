@@ -4,11 +4,11 @@ Installation
 
 User Installation
 -----------------
-You can install MetronomeStatic via `pip`:
+You can install PyBirdViewCode via `pip`:
 
 .. code-block:: shell
 
-   pip install MetronomeStatic
+   pip install PyBirdViewCode
 
 
 Developer Installation
@@ -19,7 +19,7 @@ via pip's development mode.
 .. code-block:: shell
 
    git clone <TODO>
-   cd MetronomeStatic
+   cd PyBirdViewCode
 
    # Install the requirements
    pip install -r requirements.txt

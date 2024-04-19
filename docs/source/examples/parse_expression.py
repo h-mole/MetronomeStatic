@@ -1,8 +1,8 @@
 import sys
 
 sys.path.append("../../..")
-from MetronomeStatic import abspath_from_current_file
-from MetronomeStatic.clang_utils import (
+from PyBirdViewCode import abspath_from_current_file
+from PyBirdViewCode.clang_utils import (
     get_func_decl,
     parse_file,
     get_func_decl,

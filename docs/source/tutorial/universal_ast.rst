@@ -3,7 +3,7 @@ Universal AST (UAST)
 ====================
 
 UAST is a universal representation of ASTs across different languages. The UAST from
-MetronomeStatic comes from the project `PLYJ <https://github.com/musiKk/plyj>`_, and modified for
+PyBirdViewCode comes from the project `PLYJ <https://github.com/musiKk/plyj>`_, and modified for
 representing C/C++ ASTs.
 
 The API document of UAST is 

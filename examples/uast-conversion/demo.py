@@ -1,7 +1,7 @@
 import json
 
-from MetronomeStatic.clang_utils import *
-from MetronomeStatic import *
+from PyBirdViewCode.clang_utils import *
+from PyBirdViewCode import *
 
 # 获取 Clang AST 的Cursor对象
 file_cursor = parse_file("uast-demo.c").cursor

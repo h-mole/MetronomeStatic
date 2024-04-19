@@ -1,6 +1,6 @@
 import json
 
-from MetronomeStatic import universal_ast_nodes as nodes
+from PyBirdViewCode import universal_ast_nodes as nodes
 
 
 # 从json文件中加载AST

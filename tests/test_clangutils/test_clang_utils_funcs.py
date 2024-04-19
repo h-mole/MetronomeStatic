@@ -1,7 +1,7 @@
 from typing import Iterable, List, Optional
 
 import tests.base as base
-from MetronomeStatic.clang_utils import (
+from PyBirdViewCode.clang_utils import (
     Cursor,
     CursorKind,
     get_func_decl,

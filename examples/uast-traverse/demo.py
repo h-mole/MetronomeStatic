@@ -1,5 +1,5 @@
-from MetronomeStatic.clang_utils import *
-from MetronomeStatic import universal_ast_nodes as nodes, ClangASTConverter
+from PyBirdViewCode.clang_utils import *
+from PyBirdViewCode import universal_ast_nodes as nodes, ClangASTConverter
 
 
 class UniASTVisitor(nodes.Visitor):

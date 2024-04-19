@@ -6,7 +6,7 @@ from dataclasses import dataclass
 
 from dataclasses_json import DataClassJsonMixin
 
-from MetronomeStatic.tools_service import DistributedTool, Problem, Scheduler
+from PyBirdViewCode.tools_service import DistributedTool, Problem, Scheduler
 
 
 @dataclass
@@ -43,7 +43,7 @@ class Tool(DistributedTool):
         self.current_context.found_problems = [
             Problem.from_dict(
                 {
-                    "file": "C:\\Users\\houzh\\Developing\\MetronomeStatic\\demos\\board-type\\test.c",
+                    "file": "C:\\Users\\houzh\\Developing\\PyBirdViewCode\\demos\\board-type\\test.c",
                     "description": "存在从有符号型整数到无符号型整数的隐式转换，可能存在类型问题。",
                     "position": {
                         "type": "line_col",

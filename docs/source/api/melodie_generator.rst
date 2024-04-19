@@ -8,7 +8,7 @@ MelodieGenerator
 
 .. .. code-block:: python
 
-..     from MetronomeStatic import <"Members Listed In This Page">
+..     from PyBirdViewCode import <"Members Listed In This Page">
 
 Members List
 ------------

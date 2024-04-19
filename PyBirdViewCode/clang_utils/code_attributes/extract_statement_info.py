@@ -1,6 +1,6 @@
 # from typing import Generator, Iterable, Optional, Union
 # from clang.cindex import Cursor, CursorKind, TypeKind
-# from MetronomeStatic.utils import generator_next
+# from PyBirdViewCode.utils import generator_next
 # from .utils import split_binary_operator, split_unary_operator
 
 

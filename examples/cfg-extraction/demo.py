@@ -1,6 +1,6 @@
 import networkx as nx
-from MetronomeStatic.clang_utils import *
-from MetronomeStatic import universal_ast_nodes as nodes, ClangASTConverter, CFGBuilder
+from PyBirdViewCode.clang_utils import *
+from PyBirdViewCode import universal_ast_nodes as nodes, ClangASTConverter, CFGBuilder
 
 
 # 获取 Clang AST 的Cursor对象

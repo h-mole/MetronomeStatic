@@ -1,7 +1,7 @@
 import logging
 import sys
 
-logger = logging.getLogger("MetronomeStatic")
+logger = logging.getLogger("PyBirdViewCode")
 
 # logging.basicConfig(level=logging.INFO)
 logger.setLevel(logging.DEBUG)

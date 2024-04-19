@@ -2,8 +2,8 @@ import json
 import sys
 import time
 
-from MetronomeStatic.clang_utils import *
-from MetronomeStatic.utils.service import Position, Problem
+from PyBirdViewCode.clang_utils import *
+from PyBirdViewCode.utils.service import Position, Problem
 
 
 def find_hidden_conversions(node: Cursor) -> bool:

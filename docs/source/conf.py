@@ -10,12 +10,12 @@ def module_dir():
 
 
 sys.path.insert(0, module_dir())
-import MetronomeStatic
+import PyBirdViewCode
 from sphinx.builders.html import StandaloneHTMLBuilder
 
 # -- Project information -----------------------------------------------------
 
-project = "MetronomeStatic"
+project = "PyBirdViewCode"
 copyright = "2022-2023, SkyGroup"
 author = "hzy15610046011"
 release = "0.1.0"
@@ -82,7 +82,7 @@ html_sidebars = {
 autoclass_content = "both"
 add_module_names = False
 autodoc_default_options = {"special-members": "__init__"}
-# autodoc_type_aliases = {"MetronomeStatic.clang_utils.code_attributes": "MetronomeStatic.clang_utils"}
+# autodoc_type_aliases = {"PyBirdViewCode.clang_utils.code_attributes": "PyBirdViewCode.clang_utils"}
 # typehints_use_signature = True
 # # typehints_use_signature_return = True
 

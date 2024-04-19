@@ -1,10 +1,10 @@
 Introduction
 ============
 
-MetronomeStatic is a Python package for static code analysis. 
+PyBirdViewCode is a Python package for static code analysis. 
 It acts as an interface over a set of common static-analysis packages such as Clang and Joern.
 
-Here is the map of the functionalities of MetronomeStatic. Now only a LibClang-based 
+Here is the map of the functionalities of PyBirdViewCode. Now only a LibClang-based 
 C/C++ AST is supported, and Python AST is planned to be extended further.
 
 .. mermaid::
@@ -15,7 +15,7 @@ C/C++ AST is supported, and Python AST is planned to be extended further.
         
         ClangAST -->|Conversion| UAST
 
-        subgraph `MetronomeStatic Package Functionalities`
+        subgraph `PyBirdViewCode Package Functionalities`
 
             UAST[Universal AST]
             CommonUtils["Common Utils"]
@@ -33,7 +33,7 @@ representation of Abstract Syntax Tree(AST)s across different languages.
 
 Take the route from node C/C++ in the graph above as an example. C/C++ code are converted to
 Clang Abstract Syntax Tree (Clang AST) by `LibClang`, and then the Clang AST could be 
-converted to the Universal AST defined in MetronomeStatic. After that, the Universal AST
+converted to the Universal AST defined in PyBirdViewCode. After that, the Universal AST
 could be used to build Control Flow Graph (CFG) and Data Dependency Graph (DDG).
 
 As UAST could represent ASTs of different languages, the CFG-building and DDG-building

@@ -42,7 +42,7 @@ class DistributedTool(Generic[RestRespDataType]):
         scheduler_addr: str,
         scheduler_port: int,
         name="default",
-        root_folder=".MetronomeStatic/tools_result",
+        root_folder=".PyBirdViewCode/tools_result",
     ) -> None:
         self.root_folder = root_folder
         if not os.path.exists(self.root_folder):

@@ -2,7 +2,7 @@
 About
 =====
 
-Github Repository: https://github.com/hzyrc6011/MetronomeStatic
+Github Repository: https://github.com/hzyrc6011/PyBirdViewCode
 
 
 
