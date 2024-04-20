@@ -4,7 +4,7 @@
 
 PyBirdViewCode是一个用于静态代码分析的Python包。Metronome意为“节拍器”，寓意是提升项目质量，从而稳住开发的节奏
 
-以下PyBirdViewCodec的功能图。现在只支持C/C++，基于libclang实现。在未来，计划进一步添加Python的 AST
+以下是PyBirdViewCode的功能图。现在只支持C/C++，基于libclang实现。在未来，计划进一步添加Python的 AST
 
 ```mermaid
 graph TD
@@ -29,7 +29,7 @@ graph TD
 在上面的图中，AST代表抽象语法树，这是一个树形结构
 用某种语言表示程序结构。UAST代表通用AST，一个通用的抽象语法树(AST)跨不同语言的表示
 
-以上图中C/C++节点的路径为例。C/C++通过LibClang转换为Clang抽象语法树(Clang AST)，然后Clang AST可以转换为MetronomeStatic中定义的UAST。UAST可以用来构建控制流图(CFG)和数据依赖图(DDG)
+以上图中C/C++节点的路径为例。C/C++通过LibClang转换为Clang抽象语法树(Clang AST)，然后Clang AST可以转换为PyBirdViewCode中定义的UAST。UAST可以用来构建控制流图(CFG)和数据依赖图(DDG)
 
 由于UAST可以表示不同语言的AST，因此可以进行控制流和数据流的分析，构建控制流图、数据依赖图等程序图。由于这一过程依赖的UAST与具体的编程语言无关，因此就可以避免添加新语言时重新写一遍构建程序图的逻辑的繁琐情况。
 
@@ -43,7 +43,7 @@ pip install PyBirdViewCode
 
 ### 获取UAST & UAST 的保存与读取
 
-- UAST的文档见：[UAST Docs](https://hzy15610046011.gitee.io/metronome-static/html/api/universal_ast.html)
+- UAST的文档见：[UAST Docs](https://hzy15610046011.gitee.io/py-bird-view-code/html/api/universal_ast.html)
 
 - 该示例位于`examples/uast-conversion`下
 
@@ -306,11 +306,15 @@ nx.nx_pydot.write_dot(g, "cfg.dot")
 
 注意，如果提示没有安装dot，可以按照https://graphviz.org/download/ 这里的方式进行安装
 
-## Interfaces
+## 文档汇总
 
-### Clang
+### 统一抽象语法树 UAST
 
-Clang interface included some useful functionalities.
+[链接](https://hzy15610046011.gitee.io/py-bird-view-code/html/api/universal_ast.html)
+
+### MelodieFuncFlow 生成器相关API
+
+[链接](http://hzy15610046011.gitee.io/py-bird-view-code/html/api/melodie_generator.html)
 
 ## 未来计划
 

@@ -1,5 +1,6 @@
 import json
 import os
+from pprint import pprint
 from PyBirdViewCode.clang_utils.code_attributes.utils import get_func_decl, parse_file
 from PyBirdViewCode.universal_ast.c_cpp_converter import ClangASTConverter
 from PyBirdViewCode.universal_ast.universal_ast_nodes import SourceElement
@@ -122,3 +123,36 @@ def test_cfg_extraction_error_handling():
         "handling-errors.dot",
         graph,
     )
+
+
+def test_c_types_extraction():
+    file = asset_path("universal-ast-extraction/c-types.c")
+    evaluator = ClangASTConverter()
+    cursor = parse_file(
+        file,
+    ).cursor
+    assert cursor is not None
+
+    ret = evaluator.eval(cursor)
+    print(ret)
+
+    beautified_print_ast(
+        cursor, file_manager.get_abspath("c_types_extracted_clang.json")
+    )
+    print(ret)
+    file_manager.json_dump("c_types_uast.json", ret.to_dict())
+
+
+def test_conv_real_code():
+    file = asset_path("universal-ast-extraction/lua-preprocessed.i")
+    evaluator = ClangASTConverter()
+    cursor = parse_file(
+        file,
+    ).cursor
+    assert cursor is not None
+
+    ret = evaluator.eval(cursor)
+    # print(ret)
+
+    pprint(ret.to_dict())
+    file_manager.json_dump("real_code_lua_uast.json", ret.to_dict())

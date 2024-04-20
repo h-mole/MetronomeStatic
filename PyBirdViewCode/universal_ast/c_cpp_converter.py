@@ -34,6 +34,7 @@ from ..clang_utils.code_attributes import (
     split_unary_operator,
     split_compound_assignment,
     traversal_with_callback,
+    is_function_definition,
 )
 from ..utils.functional import MelodieGenerator
 from .exceptions import FunctionReturn, OnBreakStatement
@@ -63,18 +64,25 @@ def ensure_not_none(val: Optional[T]) -> T:
     return val
 
 
+# def str_to_int(s)->T
+
+
 class LabelDesc(TypedDict):
     parent_offset: int
     label: str
     index: int
 
 
-class NotImplementedItem:
-    def __init__(self, tag) -> None:
-        self.tag = tag
+class NotImplementedItem(nodes.SourceElement):
+    _fields = ["kind"]
+
+    def __init__(self, kind: str) -> None:
+        self.kind = kind
 
     def __repr__(self) -> str:
-        return f"<NotimplementedItem {self.tag}>"
+        return f"<NotimplementedItem {self.kind}>"
+
+    # def
 
 
 class ClangASTConverter:
@@ -88,12 +96,21 @@ class ClangASTConverter:
                 self.eval_children(c)
             ),
             # DECLARATIONS
-            CursorKind.STRUCT_DECL: lambda c: NotImplementedItem("structdecl"),
-            CursorKind.TYPEDEF_DECL: lambda c: NotImplementedItem("typedefdecl"),
+            CursorKind.ENUM_DECL: self._handle_enum_decl,
+            CursorKind.STRUCT_DECL: self._handle_struct_decl,
+            CursorKind.TYPEDEF_DECL: self._handle_typedef_decl,
+            CursorKind.FIELD_DECL: self._handle_field_decl,
+            CursorKind.UNION_DECL: self._handle_union_decl,
             CursorKind.DECL_STMT: self.eval_children,
             CursorKind.VAR_DECL: self._handle_var_decl,
             CursorKind.PARM_DECL: lambda c: None,
+            CursorKind.UNEXPOSED_DECL: self._handle_notimplemented,
             CursorKind.FUNCTION_DECL: self._handle_function_decl,
+            CursorKind.ASM_STMT: self._handle_notimplemented,
+            # ATTRIBUTES
+            CursorKind.UNEXPOSED_ATTR: self._handle_notimplemented,
+            CursorKind.DLLIMPORT_ATTR: self._handle_notimplemented,
+            CursorKind.PURE_ATTR: self._handle_notimplemented,
             # EXPRESSIONS
             CursorKind.DECL_REF_EXPR: lambda c: nodes.Name(c.spelling),
             CursorKind.MEMBER_REF_EXPR: self._handle_member_ref_expr,
@@ -103,13 +120,18 @@ class ClangASTConverter:
             CursorKind.PAREN_EXPR: lambda c: self.eval_children(c)[0],
             CursorKind.INIT_LIST_EXPR: self._handle_init_list_expr,
             CursorKind.CALL_EXPR: self._handle_call_expr,
+            CursorKind.CXX_UNARY_EXPR: self._handle_cxx_unary_expr,
+            CursorKind.CONDITIONAL_OPERATOR: self._handle_conditional_operator,
+            CursorKind.ADDR_LABEL_EXPR: self._handle_addr_label_expr,
             # TYPES
             CursorKind.TYPE_REF: lambda c: nodes.Type(c.spelling),
             # LITERALS
-            CursorKind.INTEGER_LITERAL: lambda c: nodes.Literal(int(
-                ensure_not_none(extract_literal_value(c))
-            )),
-            CursorKind.STRING_LITERAL: lambda c: nodes.Literal(ensure_not_none(extract_literal_value(c))),
+            CursorKind.INTEGER_LITERAL: lambda c: nodes.Literal(
+                ensure_not_none(extract_literal_value(c)), "int"
+            ),
+            CursorKind.STRING_LITERAL: lambda c: nodes.Literal(
+                ensure_not_none(extract_literal_value(c)), "str"
+            ),
             # OPERATORS
             CursorKind.BINARY_OPERATOR: self._handle_binary_operator,
             CursorKind.UNARY_OPERATOR: self._handle_unary_operator,
@@ -119,15 +141,18 @@ class ClangASTConverter:
             CursorKind.IF_STMT: self._handle_if_stmt,
             CursorKind.FOR_STMT: self._handle_for_stmt,
             CursorKind.GOTO_STMT: self._handle_goto_stmt,
+            CursorKind.INDIRECT_GOTO_STMT: self._handle_indirect_goto_stmt,
             CursorKind.LABEL_STMT: self._handle_label_stmt,
             CursorKind.WHILE_STMT: self._handle_while_stmt,
             CursorKind.SWITCH_STMT: self._handle_switch_stmt,
+            CursorKind.CASE_STMT: self._handle_case_stmt,
             CursorKind.DO_STMT: self._handle_do_stmt,
             CursorKind.BREAK_STMT: lambda c: nodes.Break(
                 self.eval_single_cursor(next(c.get_children()))
                 if len(list(c.get_children())) > 0
                 else None
             ),
+            CursorKind.NULL_STMT: self._handle_notimplemented,
             CursorKind.CONTINUE_STMT: lambda c: nodes.Continue(
                 self.eval_single_cursor(next(c.get_children()))
                 if len(list(c.get_children())) > 0
@@ -141,6 +166,9 @@ class ClangASTConverter:
         # Return value of execution
         self._ret_value = None
         self._labels: Dict[str, LabelDesc] = {}
+
+    def _handle_notimplemented(self, c: Cursor) -> NotImplementedItem:
+        return NotImplementedItem(str(c.kind))
 
     def _calc_add_add_expression(self, c: Cursor, pos: UnaryOpPos) -> Variable:
         """
@@ -158,7 +186,11 @@ class ClangASTConverter:
         return nodes.DereferenceExpr(result)
 
     def eval_single_cursor(self, cursor: Cursor):
-        return self._handlers_map[cursor.kind](cursor)
+        try:
+            return self._handlers_map[cursor.kind](cursor)
+        except Exception as e:
+            print("error occurred in cursor", cursor.location)
+            raise e
 
     def eval_children(self, cursor: Cursor) -> List:
         children_values = []
@@ -180,7 +212,10 @@ class ClangASTConverter:
             if len(children_values) > 1
             else []
         )
-        body_ast = children_values[-1]
+        if is_function_definition(cursor):
+            body_ast = children_values[-1]
+        else:
+            body_ast = None
         return nodes.MethodDeclaration(
             cursor.spelling, [], [], params_ast, "NotImplemented", body_ast
         )
@@ -189,6 +224,51 @@ class ClangASTConverter:
         return nodes.Cast(
             cursor.type.spelling, self.eval_single_cursor(next(cursor.get_children()))
         )
+
+    def _handle_enum_decl(self, cursor: Cursor) -> Optional[nodes.EnumDeclaration]:
+        # import pdb; pdb.set_trace()
+        enum_children = []
+        child: Cursor
+        for child in cursor.get_children():
+            enum_children.append(nodes.EnumConstant(child.spelling, child.enum_value))
+        return nodes.EnumDeclaration(cursor.spelling, enum_children)
+
+    def _handle_struct_decl(self, cursor: Cursor) -> Optional[nodes.StructDeclaration]:
+        assert cursor.kind == CursorKind.STRUCT_DECL, "Expected a STRUCT_DECL cursor"
+
+        m = nodes.StructDeclaration(cursor.spelling, [])
+
+        for child in cursor.get_children():
+            m.fields.append(self.eval_single_cursor(child))
+
+        return m
+
+    def _handle_union_decl(self, cursor: Cursor) -> Optional[nodes.UnionDeclaration]:
+        assert cursor.kind == CursorKind.UNION_DECL, "Expected a UNION_DECL cursor"
+
+        m = nodes.UnionDeclaration(cursor.spelling, [])
+
+        for child in cursor.get_children():
+            m.children.append(self.eval_single_cursor(child))
+
+        return m
+
+    def _handle_typedef_decl(self, cursor: Cursor) -> nodes.Type:
+        children = list(cursor.get_children())
+
+        child: Optional[nodes.SourceElement] = (
+            self.eval_single_cursor(children[0]) if len(children) > 0 else None
+        )
+        return nodes.Type(cursor.spelling, child)
+
+    def _handle_field_decl(self, cursor: Cursor) -> nodes.FieldDeclaration:
+        assert cursor.kind == CursorKind.FIELD_DECL
+        children: List[Cursor] = list(cursor.get_children())
+        init_value: Optional[str] = None
+        if len(children) == 1:
+            init_value = extract_literal_value(children[0])
+
+        return nodes.FieldDeclaration(cursor.spelling, cursor.type.spelling, init_value)
 
     def _handle_var_decl(self, cursor: Cursor) -> Optional[nodes.Assignment]:
         children_asts = (
@@ -241,6 +321,24 @@ class ClangASTConverter:
         callee_value = self.eval_single_cursor(callee_ast)
         return nodes.FuncCall(callee_value, arg_values)
 
+    def _handle_cxx_unary_expr(self, cursor: Cursor) -> nodes.SpecialOperator:
+        tokens = [
+            t.spelling for t in cursor.get_tokens() if t.spelling not in ("(", ")")
+        ]
+
+        # handle sizeof
+        if tokens[0] == "sizeof":
+            return nodes.SpecialOperator("sizeof", tokens[1:])
+        else:
+            raise NotImplementedError
+
+    def _handle_conditional_operator(self, cursor: Cursor) -> nodes.Conditional:
+        pred, if_true, if_false = self.eval_children(cursor)
+        return nodes.Conditional(pred, if_true, if_false)
+
+    def _handle_addr_label_expr(self, cursor: Cursor) -> nodes.AddressLabel:
+        return nodes.AddressLabel(cursor.spelling)
+
     def _handle_init_list_expr(self, cursor: Cursor) -> nodes.ArrayInitializer:
         children_values = self.eval_children(cursor)
         return nodes.ArrayInitializer(children_values)
@@ -266,6 +364,11 @@ class ClangASTConverter:
     def _handle_goto_stmt(self, cursor: Cursor):
 
         return nodes.GoToStatement(next(cursor.get_children()).spelling)
+
+    def _handle_indirect_goto_stmt(self, cursor: Cursor):
+        return nodes.GoToStatement(
+            self.eval_single_cursor(next(cursor.get_children())), direct=False
+        )
 
     def _handle_label_stmt(self, cursor: Cursor):
         return nodes.Label(
@@ -297,11 +400,13 @@ class ClangASTConverter:
                     switch_cases[-1].body.statements.append(
                         self.eval_single_cursor(switch_body_item_cursor)
                     )
-                # elif switch_body_item_cursor.kind == CursorKind.DEFAULT_STMT:
-
             else:
                 raise NotImplementedError
         return nodes.Switch(self.eval_single_cursor(condition_cursor), switch_cases)
+
+    def _handle_case_stmt(self, cursor: Cursor) -> nodes.SwitchCase:
+        case_cond, body = self.eval_children(cursor)
+        return nodes.SwitchCase(case_cond, body)
 
     def _handle_do_stmt(self, cursor: Cursor):
         body_ast, pred_ast = self.eval_children(cursor)
@@ -311,14 +416,16 @@ class ClangASTConverter:
         stmt1_cursor, cond_expr_cursor, stmt2_cursor, body_cursor = (
             split_for_loop_conditions(cursor)
         )
-        if stmt1_cursor is not None:
-            stmt1_ast = self.eval_single_cursor(stmt1_cursor)
-        if stmt2_cursor is not None:
-            stmt2_ast = self.eval_single_cursor(stmt2_cursor)
-        if cond_expr_cursor is not None:
-            cond_ast = self.eval_single_cursor(cond_expr_cursor)
-        if body_cursor is not None:
-            body_ast = self.eval_single_cursor(body_cursor)
+        # if stmt1_cursor is not None:
+        stmt1_ast = self.eval_single_cursor(stmt1_cursor) if stmt1_cursor else None
+        # if stmt2_cursor is not None:
+        stmt2_ast = self.eval_single_cursor(stmt2_cursor) if stmt2_cursor else None
+        # if cond_expr_cursor is not None:
+        cond_ast = (
+            self.eval_single_cursor(cond_expr_cursor) if cond_expr_cursor else None
+        )
+        # if body_cursor is not None:
+        body_ast = self.eval_single_cursor(body_cursor) if body_cursor else None
         return nodes.For(stmt1_ast, cond_ast, stmt2_ast, body_ast)
 
     def _handle_return_stmt(self, cursor: Cursor) -> nodes.Return:

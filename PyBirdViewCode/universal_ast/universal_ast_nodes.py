@@ -82,30 +82,49 @@ class SourceElement(object):
 
         return node_cls(**params_dict)
 
+    @classmethod
+    def _single_item_to_serializable(
+        cls, item: Any
+    ) -> Union[None, int, str, float, bool, List, Dict]:
+        if isinstance(item, SourceElement):
+            new_dict: Dict[str, Any] = {"_cls": item.__class__.__name__}
+            for field_name in item._fields:
+                field_value = getattr(item, field_name)
+                new_dict[field_name] = cls._single_item_to_serializable(field_value)
+            return new_dict
+        elif isinstance(item, list):
+            return [cls._single_item_to_serializable(list_item) for list_item in item]
+        else:
+            assert isinstance(item, (int, str, float, bool)) or item is None, (
+                item,
+                type(item),
+            )
+            return item
+
     def to_dict(self):
         """
         Convert this element to a json-serializable dict
         """
-        new_dict: Dict[str, Any] = {"_cls": self.__class__.__name__}
+        # new_dict: Dict[str, Any] = {"_cls": self.__class__.__name__}
 
-        for field_name in self._fields:
-            field_value = getattr(self, field_name)
-            if isinstance(field_value, list):
-                new_list = []
-                for elem in field_value:
-                    if isinstance(elem, SourceElement):
-                        new_list.append(elem.to_dict())
-                    else:
-                        # self.check_serializable(elem, field_name)
-                        new_list.append(elem)
-                new_dict[field_name] = new_list
-            else:
-                if isinstance(field_value, SourceElement):
-                    new_dict[field_name] = field_value.to_dict()
-                else:
-                    # self.check_serializable(field_value, field_name)
-                    new_dict[field_name] = field_value
-        return new_dict
+        # for field_name in self._fields:
+        #     field_value = getattr(self, field_name)
+        #     if isinstance(field_value, list):
+        #         new_list = []
+        #         for elem in field_value:
+        #             if isinstance(elem, SourceElement):
+        #                 new_list.append(elem.to_dict())
+        #             else:
+        #                 # self.check_serializable(elem, field_name)
+        #                 new_list.append(elem)
+        #         new_dict[field_name] = new_list
+        #     else:
+        #         if isinstance(field_value, SourceElement):
+        #             new_dict[field_name] = field_value.to_dict()
+        #         else:
+        #             # self.check_serializable(field_value, field_name)
+        #             new_dict[field_name] = field_value
+        return self._single_item_to_serializable(self)
 
     def walk_preorder(self) -> Generator["SourceElement", None, None]:
         for f in self._fields:
@@ -150,6 +169,28 @@ class ImportDeclaration(SourceElement):
         self.name = name
         self.static = static
         self.on_demand = on_demand
+
+
+class StructDeclaration(SourceElement):
+    _fields = [
+        "name",
+        "fields",
+    ]
+
+    def __init__(self, name, fields: List["FieldDeclaration"]):
+        self.name = name
+        self.fields = fields
+
+
+class UnionDeclaration(SourceElement):
+    _fields = [
+        "name",
+        "children",
+    ]
+
+    def __init__(self, name, children: List["FieldDeclaration"]):
+        self.name = name
+        self.children = children
 
 
 class ClassDeclaration(SourceElement):
@@ -235,14 +276,16 @@ class EmptyDeclaration(SourceElement):
 
 
 class FieldDeclaration(SourceElement):
-    _fields = ["type", "variable_declarators", "modifiers"]
+    _fields = ["name", "type", "modifiers"]
 
-    def __init__(self, type, variable_declarators, modifiers=None):
+    def __init__(self, name, type, init_value=None, modifiers=None):
         super(FieldDeclaration, self).__init__()
         if modifiers is None:
             modifiers = []
+        self.name = name
         self.type = type
-        self.variable_declarators = variable_declarators
+        self.init_value = init_value
+        # self.variable_declarators = variable_declarators
         self.modifiers = modifiers
 
 
@@ -360,7 +403,12 @@ class EnumDeclaration(SourceElement):
     _fields = ["name", "implements", "modifiers", "type_parameters", "body"]
 
     def __init__(
-        self, name, implements=None, modifiers=None, type_parameters=None, body=None
+        self,
+        name,
+        implements: List["EnumConstant"],
+        modifiers=None,
+        type_parameters=None,
+        body=None,
     ):
         super(EnumDeclaration, self).__init__()
         if implements is None:
@@ -379,20 +427,16 @@ class EnumDeclaration(SourceElement):
 
 
 class EnumConstant(SourceElement):
-    _fields = ["name", "arguments", "modifiers", "body"]
+    """
+    An item out of a declaration of variable
+    """
 
-    def __init__(self, name, arguments=None, modifiers=None, body=None):
+    _fields = ["name", "value"]
+
+    def __init__(self, name, value=None):
         super(EnumConstant, self).__init__()
-        if arguments is None:
-            arguments = []
-        if modifiers is None:
-            modifiers = []
-        if body is None:
-            body = []
         self.name = name
-        self.arguments = arguments
-        self.modifiers = modifiers
-        self.body = body
+        self.value = value
 
 
 class AnnotationDeclaration(SourceElement):
@@ -490,6 +534,10 @@ class AnnotationMember(SourceElement):
 
 
 class Type(SourceElement):
+    """
+    For typedef statements
+    """
+
     _fields = ["name", "type_arguments", "enclosed_in", "dimensions"]
 
     def __init__(self, name, type_arguments=None, enclosed_in=None, dimensions=0):
@@ -937,11 +985,12 @@ class ArrayCreation(Expression):
 
 
 class Literal(SourceElement):
-    _fields = ["value"]
+    _fields = ["value", "kind"]
 
-    def __init__(self, value):
+    def __init__(self, value, kind: str):
         super(Literal, self).__init__()
         self.value = value
+        self.kind = kind
 
 
 class ClassLiteral(SourceElement):
@@ -993,6 +1042,23 @@ class DereferenceExpr(Expression):
         self.ref = ref
 
 
+class SpecialOperator(SourceElement):
+    """
+    Operator that are not evaluated like normal Unary/BinaryOperator.
+    For example: `sizeof` operator in C
+    """
+
+    _fields = [
+        "name",
+        "arguments",
+    ]
+
+    def __init__(self, name: str, arguments: List[str]):
+        super().__init__()
+        self.name = name
+        self.arguments = arguments
+
+
 class Label(SourceElement):
     _fields = ["name", "statement"]
 
@@ -1002,12 +1068,23 @@ class Label(SourceElement):
         self.statement = stmt
 
 
-class GoToStatement(SourceElement):
-    _fields = ["label"]
+class AddressLabel(SourceElement):
+    _fields = ["name"]
 
-    def __init__(self, label: str):
+    def __init__(self, name: str):
+        super().__init__()
+        self.name = name
+
+
+class GoToStatement(SourceElement):
+    _fields = ["label", "direct"]
+    """
+    If direct, label is a str. Or the label is a SourceElement
+    """
+    def __init__(self, label: Union[str, SourceElement], direct: bool = True):
         super(GoToStatement, self).__init__()
         self.label = label
+        self.direct = direct
 
 
 class Visitor(object):
