@@ -376,6 +376,7 @@ def is_literal_kind(node: cindex.Cursor):
         cindex.CursorKind.IMAGINARY_LITERAL,
         cindex.CursorKind.STRING_LITERAL,
         cindex.CursorKind.CHARACTER_LITERAL,
+        cindex.CursorKind.CXX_BOOL_LITERAL_EXPR,
     }
 
 

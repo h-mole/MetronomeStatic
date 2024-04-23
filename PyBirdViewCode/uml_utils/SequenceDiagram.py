@@ -13,7 +13,7 @@ class NoMethodExists(Exception):
         self.value = "No method name: " + methodName + " exists"
 
 
-def ast_to_diagram(ast: nodes.MethodDeclaration, output_file: str):
+def ast_to_diagram(ast: nodes.MethodDecl, output_file: str):
     invocationList = []
     ast.accept(UniASTVisitor(invocationList))
     className = "default"

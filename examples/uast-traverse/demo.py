@@ -3,7 +3,7 @@ from PyBirdViewCode import universal_ast_nodes as nodes, ClangASTConverter
 
 
 class UniASTVisitor(nodes.Visitor):
-    def visit_FuncCall(self, node: nodes.FuncCall):
+    def visit_FuncCall(self, node: nodes.CallExpr):
         print(node.name)
 
 

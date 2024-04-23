@@ -2,7 +2,7 @@
 This file is copied from plyj package.
 """
 
-from typing import Any, Dict, Generator, List, Optional, Union
+from typing import Any, Dict, Generator, List, Optional, Union, Literal as LiteralType
 
 
 class SourceElement(object):
@@ -150,11 +150,11 @@ class CompilationUnit(SourceElement):
         self.children = children
 
 
-class PackageDeclaration(SourceElement):
+class PackageDecl(SourceElement):
     _fields = ["name", "modifiers"]
 
     def __init__(self, name, modifiers=None):
-        super(PackageDeclaration, self).__init__()
+        super(PackageDecl, self).__init__()
 
         if modifiers is None:
             modifiers = []
@@ -162,39 +162,39 @@ class PackageDeclaration(SourceElement):
         self.modifiers = modifiers
 
 
-class ImportDeclaration(SourceElement):
+class ImportDecl(SourceElement):
     _fields = ["name", "static", "on_demand"]
 
     def __init__(self, name, static=False, on_demand=False):
-        super(ImportDeclaration, self).__init__()
+        super(ImportDecl, self).__init__()
         self.name = name
         self.static = static
         self.on_demand = on_demand
 
 
-class StructDeclaration(SourceElement):
+class StructDecl(SourceElement):
     _fields = [
         "name",
         "fields",
     ]
 
-    def __init__(self, name, fields: List["FieldDeclaration"]):
+    def __init__(self, name, fields: List["FieldDecl"]):
         self.name = name
         self.fields = fields
 
 
-class UnionDeclaration(SourceElement):
+class UnionDecl(SourceElement):
     _fields = [
         "name",
         "children",
     ]
 
-    def __init__(self, name, children: List["FieldDeclaration"]):
+    def __init__(self, name, children: List["FieldDecl"]):
         self.name = name
         self.children = children
 
 
-class ClassDeclaration(SourceElement):
+class ClassDecl(SourceElement):
     _fields = [
         "name",
         "body",
@@ -213,7 +213,7 @@ class ClassDeclaration(SourceElement):
         extends=None,
         implements=None,
     ):
-        super(ClassDeclaration, self).__init__()
+        super(ClassDecl, self).__init__()
 
         if modifiers is None:
             modifiers = []
@@ -238,7 +238,7 @@ class ClassInitializer(SourceElement):
         self.static = static
 
 
-class ConstructorDeclaration(SourceElement):
+class ConstructorDecl(SourceElement):
     _fields = [
         "name",
         "block",
@@ -257,7 +257,7 @@ class ConstructorDeclaration(SourceElement):
         parameters=None,
         throws=None,
     ):
-        super(ConstructorDeclaration, self).__init__()
+        super(ConstructorDecl, self).__init__()
         if modifiers is None:
             modifiers = []
         if type_parameters is None:
@@ -272,15 +272,15 @@ class ConstructorDeclaration(SourceElement):
         self.throws = throws
 
 
-class EmptyDeclaration(SourceElement):
+class EmptyDecl(SourceElement):
     pass
 
 
-class FieldDeclaration(SourceElement):
+class FieldDecl(SourceElement):
     _fields = ["name", "type", "modifiers"]
 
     def __init__(self, name, type, init_value=None, modifiers=None):
-        super(FieldDeclaration, self).__init__()
+        super(FieldDecl, self).__init__()
         if modifiers is None:
             modifiers = []
         self.name = name
@@ -290,7 +290,19 @@ class FieldDeclaration(SourceElement):
         self.modifiers = modifiers
 
 
-class MethodDeclaration(SourceElement):
+class MethodDecl(SourceElement):
+    """
+    en:
+
+    Declaration of a method or function.
+    If `body` is not None, this node is also a definition.
+
+    zh:
+
+    函数或方法的声明。如果``body``为``None``，那么这个节点也是函数的定义
+
+    """
+
     _fields = [
         "name",
         "modifiers",
@@ -301,6 +313,7 @@ class MethodDeclaration(SourceElement):
         "abstract",
         "extended_dims",
         "throws",
+        "type_ref",  
     ]
 
     def __init__(
@@ -310,18 +323,20 @@ class MethodDeclaration(SourceElement):
         type_parameters=None,
         parameters=None,
         return_type="void",
-        body: Optional["Block"] = None,
+        body: Optional["BlockStmt"] = None,
         abstract=False,
         extended_dims=0,
         throws=None,
+        type_ref=None,
     ):
-        super(MethodDeclaration, self).__init__()
+        super(MethodDecl, self).__init__()
         if modifiers is None:
             modifiers = []
         if type_parameters is None:
             type_parameters = []
         if parameters is None:
             parameters = []
+        # if type_ref is Non
         self.name = name
         self.modifiers = modifiers
         self.type_parameters = type_parameters
@@ -331,6 +346,7 @@ class MethodDeclaration(SourceElement):
         self.abstract = abstract
         self.extended_dims = extended_dims
         self.throws = throws
+        self.type_ref = type_ref
 
 
 class FormalParameter(SourceElement):
@@ -361,13 +377,21 @@ class Variable(SourceElement):
         self.dimensions = dimensions
 
 
-class VariableDeclarator(SourceElement):
+class VarDecl(SourceElement):
     _fields = ["variable", "initializer"]
 
     def __init__(self, variable, initializer=None):
-        super(VariableDeclarator, self).__init__()
+        super(VarDecl, self).__init__()
         self.variable = variable
         self.initializer = initializer
+
+class ParamDecl(SourceElement):
+    _fields = ["name", "type"]
+
+    def __init__(self, name: "Name", type):
+        super(ParamDecl, self).__init__()
+        self.name = name
+        self.type = type
 
 
 class Throws(SourceElement):
@@ -378,13 +402,13 @@ class Throws(SourceElement):
         self.types = types
 
 
-class InterfaceDeclaration(SourceElement):
+class InterfaceDecl(SourceElement):
     _fields = ["name", "modifiers", "extends", "type_parameters", "body"]
 
     def __init__(
         self, name, modifiers=None, extends=None, type_parameters=None, body=None
     ):
-        super(InterfaceDeclaration, self).__init__()
+        super(InterfaceDecl, self).__init__()
         if modifiers is None:
             modifiers = []
         if extends is None:
@@ -400,18 +424,18 @@ class InterfaceDeclaration(SourceElement):
         self.body = body
 
 
-class EnumDeclaration(SourceElement):
+class EnumDecl(SourceElement):
     _fields = ["name", "implements", "modifiers", "type_parameters", "body"]
 
     def __init__(
         self,
         name,
-        implements: List["EnumConstant"],
+        implements: List["EnumConst"],
         modifiers=None,
         type_parameters=None,
         body=None,
     ):
-        super(EnumDeclaration, self).__init__()
+        super(EnumDecl, self).__init__()
         if implements is None:
             implements = []
         if modifiers is None:
@@ -427,7 +451,7 @@ class EnumDeclaration(SourceElement):
         self.body = body
 
 
-class EnumConstant(SourceElement):
+class EnumConst(SourceElement):
     """
     An item out of a declaration of variable
     """
@@ -435,12 +459,12 @@ class EnumConstant(SourceElement):
     _fields = ["name", "value"]
 
     def __init__(self, name, value=None):
-        super(EnumConstant, self).__init__()
+        super(EnumConst, self).__init__()
         self.name = name
         self.value = value
 
 
-class AnnotationDeclaration(SourceElement):
+class AnnotationDecl(SourceElement):
     _fields = [
         "name",
         "modifiers",
@@ -459,7 +483,7 @@ class AnnotationDeclaration(SourceElement):
         implements=None,
         body=None,
     ):
-        super(AnnotationDeclaration, self).__init__()
+        super(AnnotationDecl, self).__init__()
         if modifiers is None:
             modifiers = []
         if type_parameters is None:
@@ -476,7 +500,7 @@ class AnnotationDeclaration(SourceElement):
         self.body = body
 
 
-class AnnotationMethodDeclaration(SourceElement):
+class AnnotationMethodDecl(SourceElement):
     _fields = [
         "name",
         "type",
@@ -497,7 +521,7 @@ class AnnotationMethodDeclaration(SourceElement):
         type_parameters=None,
         extended_dims=0,
     ):
-        super(AnnotationMethodDeclaration, self).__init__()
+        super(AnnotationMethodDecl, self).__init__()
         if parameters is None:
             parameters = []
         if modifiers is None:
@@ -572,37 +596,37 @@ class WildcardBound(SourceElement):
         self._super = _super
 
 
-class TypeParameter(SourceElement):
+class TypeParam(SourceElement):
     _fields = ["name", "extends"]
 
     def __init__(self, name, extends=None):
-        super(TypeParameter, self).__init__()
+        super(TypeParam, self).__init__()
         if extends is None:
             extends = []
         self.name = name
         self.extends = extends
 
 
-class Expression(SourceElement):
+class Expr(SourceElement):
     def __init__(self):
-        super(Expression, self).__init__()
+        super(Expr, self).__init__()
 
 
-class BinaryExpression(Expression):
+class BinaryExpr(Expr):
     _fields = ["operator", "lhs", "rhs"]
 
     def __init__(self, operator: str, lhs: SourceElement, rhs: SourceElement):
-        super(BinaryExpression, self).__init__()
+        super(BinaryExpr, self).__init__()
         self.operator = operator
         self.lhs = lhs
         self.rhs = rhs
 
 
-class Assignment(BinaryExpression):
+class Assignment(BinaryExpr):
     pass
 
 
-class Conditional(Expression):
+class Conditional(Expr):
     _fields = ["predicate", "if_true", "if_false"]
 
     def __init__(self, predicate, if_true, if_false):
@@ -612,81 +636,38 @@ class Conditional(Expression):
         self.if_false = if_false
 
 
-class ConditionalOr(BinaryExpression):
-    pass
-
-
-class ConditionalAnd(BinaryExpression):
-    pass
-
-
-class Or(BinaryExpression):
-    pass
-
-
-class Xor(BinaryExpression):
-    pass
-
-
-class And(BinaryExpression):
-    pass
-
-
-class Equality(BinaryExpression):
-    pass
-
-
-class InstanceOf(BinaryExpression):
-    pass
-
-
-class Relational(BinaryExpression):
-    pass
-
-
-class Shift(BinaryExpression):
-    pass
-
-
-class Additive(BinaryExpression):
-    pass
-
-
-class Multiplicative(BinaryExpression):
-    pass
-
-
-class Unary(Expression):
+class UnaryExpr(Expr):
     _fields = ["sign", "expression"]
 
     def __init__(self, sign, expression):
-        super(Unary, self).__init__()
+        super(UnaryExpr, self).__init__()
         self.sign = sign
         self.expression = expression
 
 
-class Cast(Expression):
-    _fields = ["target", "expression"]
+class CastExpr(Expr):
+    _fields = ["target", "expression", "style"]
 
-    def __init__(self, target, expression):
-        super(Cast, self).__init__()
+    def __init__(self, target, expression, style: LiteralType['c', 'cxx_static']):
+        super(CastExpr, self).__init__()
         self.target = target
+        self.style = style
         self.expression = expression
 
 
-class Statement(SourceElement):
+class Stmt(SourceElement):
     pass
 
 
-class Empty(Statement):
+class EmptyStmt(Stmt):
     pass
 
 
-class Block(Statement):
+class BlockStmt(Stmt):
     _fields = ["statements"]
 
     def __init__(self, statements=None):
-        super(Statement, self).__init__()
+        super(Stmt, self).__init__()
         if statements is None:
             statements = []
         self.statements = statements
@@ -696,8 +677,8 @@ class Block(Statement):
             yield s
 
 
-class VariableDeclaration(Statement, FieldDeclaration):
-    pass
+# class VarDecl(Stmt, FieldDecl):
+#     pass
 
 
 class ArrayInitializer(SourceElement):
@@ -710,11 +691,11 @@ class ArrayInitializer(SourceElement):
         self.elements = elements
 
 
-class FuncCall(Expression):
+class CallExpr(Expr):
     _fields = ["name", "arguments", "type_arguments", "target"]
 
     def __init__(self, name, arguments=None, type_arguments=None, target=None):
-        super(FuncCall, self).__init__()
+        super(CallExpr, self).__init__()
         if arguments is None:
             arguments = []
         if type_arguments is None:
@@ -725,41 +706,41 @@ class FuncCall(Expression):
         self.target = target
 
 
-class IfThenElse(Statement):
+class IfThenElseStmt(Stmt):
     _fields = ["predicate", "if_true", "if_false"]
 
     def __init__(self, predicate, if_true, if_false=None):
-        super(IfThenElse, self).__init__()
+        super(IfThenElseStmt, self).__init__()
         self.predicate = predicate
         self.if_true = if_true
         self.if_false = if_false
 
 
-class While(Statement):
+class WhileStmt(Stmt):
     _fields = ["predicate", "body"]
 
-    def __init__(self, predicate, body: Block):
-        super(While, self).__init__()
+    def __init__(self, predicate, body: BlockStmt):
+        super(WhileStmt, self).__init__()
         self.predicate = predicate
         self.body = body
 
 
-class For(Statement):
+class ForStmt(Stmt):
     _fields = ["init", "predicate", "update", "body"]
 
     def __init__(self, init, predicate, update, body):
-        super(For, self).__init__()
+        super(ForStmt, self).__init__()
         self.init = init
         self.predicate = predicate
         self.update = update
         self.body = body
 
 
-class ForEach(Statement):
+class ForEachStmt(Stmt):
     _fields = ["type", "variable", "iterable", "body", "modifiers"]
 
     def __init__(self, type, variable, iterable, body, modifiers=None):
-        super(ForEach, self).__init__()
+        super(ForEachStmt, self).__init__()
         if modifiers is None:
             modifiers = []
         self.type = type
@@ -769,31 +750,31 @@ class ForEach(Statement):
         self.modifiers = modifiers
 
 
-class Assert(Statement):
+class AssertStmt(Stmt):
     _fields = ["predicate", "message"]
 
     def __init__(self, predicate, message=None):
-        super(Assert, self).__init__()
+        super(AssertStmt, self).__init__()
         self.predicate = predicate
         self.message = message
 
 
-class Switch(Statement):
+class SwitchStmt(Stmt):
     _fields = ["expression", "switch_cases"]
 
     def __init__(self, expression, switch_cases: List["SwitchCase"]):
-        super(Switch, self).__init__()
+        super(SwitchStmt, self).__init__()
         self.expression = expression
         self.switch_cases = switch_cases
 
     def get_default_case(self) -> Optional["SwitchCase"]:
         for case in self.switch_cases:
-            if isinstance(case.case, DefaultStatement):
+            if isinstance(case.case, DefaultStmt):
                 return case
         return None
 
 
-class DefaultStatement(SourceElement):
+class DefaultStmt(SourceElement):
     def __init__(self):
         super().__init__()
 
@@ -803,69 +784,69 @@ class SwitchCase(SourceElement):
 
     def __init__(
         self,
-        case: Union[SourceElement, DefaultStatement],
-        body: Union[Block, SourceElement],
+        case: Union[SourceElement, DefaultStmt],
+        body: Union[BlockStmt, SourceElement],
     ):
         super(SwitchCase, self).__init__()
         self.case = case
         self.body = body
 
 
-class DoWhile(Statement):
+class DoWhileStmt(Stmt):
     _fields = ["predicate", "body"]
 
-    def __init__(self, predicate, body: Block = None):
-        super(DoWhile, self).__init__()
+    def __init__(self, predicate, body: BlockStmt = None):
+        super(DoWhileStmt, self).__init__()
         self.predicate = predicate
         self.body = body
 
 
-class Continue(Statement):
+class ContinueStmt(Stmt):
     _fields = ["label"]
 
     def __init__(self, label=None):
-        super(Continue, self).__init__()
+        super(ContinueStmt, self).__init__()
         self.label = label
 
 
-class Break(Statement):
+class BreakStmt(Stmt):
     _fields = ["label"]
 
     def __init__(self, label=None):
-        super(Break, self).__init__()
+        super(BreakStmt, self).__init__()
         self.label = label
 
 
-class Return(Statement):
+class ReturnStmt(Stmt):
     _fields = ["result"]
 
     def __init__(self, result=None):
-        super(Return, self).__init__()
+        super(ReturnStmt, self).__init__()
         self.result = result
 
 
-class Synchronized(Statement):
+class SynchronizedStmt(Stmt):
     _fields = ["monitor", "body"]
 
     def __init__(self, monitor, body):
-        super(Synchronized, self).__init__()
+        super(SynchronizedStmt, self).__init__()
         self.monitor = monitor
         self.body = body
 
 
-class Throw(Statement):
+class ThrowStmt(Stmt):
     _fields = ["exception"]
 
     def __init__(self, exception):
-        super(Throw, self).__init__()
+        super(ThrowStmt, self).__init__()
         self.exception = exception
 
 
-class Try(Statement):
+class TryStmt(Stmt):
     _fields = ["block", "catches", "_finally", "resources"]
 
     def __init__(self, block, catches=None, _finally=None, resources=None):
-        super(Try, self).__init__()
+        super(TryStmt, self).__init__()
         if catches is None:
             catches = []
         if resources is None:
@@ -885,11 +866,11 @@ class Try(Statement):
             self._finally.accept(visitor)
 
 
-class Catch(SourceElement):
+class CatchStmt(SourceElement):
     _fields = ["variable", "modifiers", "types", "block"]
 
     def __init__(self, variable, modifiers=None, types=None, block=None):
-        super(Catch, self).__init__()
+        super(CatchStmt, self).__init__()
         if modifiers is None:
             modifiers = []
         if types is None:
@@ -913,7 +894,7 @@ class Resource(SourceElement):
         self.initializer = initializer
 
 
-class ConstructorInvocation(Statement):
+class ConstructorCallStmt(Stmt):
     """An explicit invocations of a class's constructor.
 
     This is a variant of either this() or super(), NOT a "new" expression.
@@ -922,7 +903,7 @@ class ConstructorInvocation(Statement):
     _fields = ["name", "target", "type_arguments", "arguments"]
 
     def __init__(self, name, target=None, type_arguments=None, arguments=None):
-        super(ConstructorInvocation, self).__init__()
+        super(ConstructorCallStmt, self).__init__()
         if type_arguments is None:
             type_arguments = []
         if arguments is None:
@@ -933,13 +914,13 @@ class ConstructorInvocation(Statement):
         self.arguments = arguments
 
 
-class InstanceCreation(Expression):
+class InstanceCreationExpr(Expr):
     _fields = ["type", "type_arguments", "arguments", "body", "enclosed_in"]
 
     def __init__(
         self, type, type_arguments=None, arguments=None, body=None, enclosed_in=None
     ):
-        super(InstanceCreation, self).__init__()
+        super(InstanceCreationExpr, self).__init__()
 
         if type_arguments is None:
             type_arguments = []
@@ -954,26 +935,37 @@ class InstanceCreation(Expression):
         self.enclosed_in = enclosed_in
 
 
-class FieldAccess(Expression):
+class FieldAccessExpr(Expr):
+    """
+    属性的访问语句，比如``a.b``
+    如果target是None，代表访问所在的类的属性
+    """
+
     _fields = ["name", "target"]
 
-    def __init__(self, name: str, target: SourceElement):
-        super(FieldAccess, self).__init__()
+    def __init__(self, name: str, target: Optional[SourceElement]):
+        super(FieldAccessExpr, self).__init__()
 
         self.name = name
         self.target = target
 
 
-class ArrayAccess(Expression):
+class ArrayAccessExpr(Expr):
+    """
+    zh:
+
+    数组的访问语句，比如``a[0]``
+    """
+
     _fields = ["index", "target"]
 
     def __init__(self, index, target):
-        super(ArrayAccess, self).__init__()
+        super(ArrayAccessExpr, self).__init__()
         self.index = index
         self.target = target
 
 
-class ArrayCreation(Expression):
+class ArrayCreation(Expr):
     _fields = ["type", "dimensions", "initializer"]
 
     def __init__(self, type, dimensions=None, initializer=None):
@@ -1016,18 +1008,21 @@ class Name(SourceElement):
             self.value = self.value + "." + name
 
 
-class ExpressionStatement(Statement):
-    _fields = ["expression"]
+# class ExpressionStatement(Stmt):
+#     _fields = ["expression"]
 
-    def __init__(self, expression):
-        super(ExpressionStatement, self).__init__()
-        self.expression = expression
-
-
-# ===========================
+#     def __init__(self, expression):
+#         super(ExpressionStatement, self).__init__()
+#         self.expression = expression
 
 
-class ReferenceExpr(Expression):
+class ReferenceExpr(Expr):
+    """
+    zh:
+
+    取地址操作，类似于``&p``
+    """
+
     _fields = ["value"]
 
     def __init__(self, value):
@@ -1035,7 +1030,13 @@ class ReferenceExpr(Expression):
         self.value = value
 
 
-class DereferenceExpr(Expression):
+class DereferenceExpr(Expr):
+    """
+    zh:
+
+    指针的取值操作，类似于``*p``
+    """
+
     _fields = ["ref"]
 
     def __init__(self, ref):
@@ -1043,10 +1044,16 @@ class DereferenceExpr(Expression):
         self.ref = ref
 
 
-class SpecialOperator(SourceElement):
+class SpecialExpr(SourceElement):
     """
-    Operator that are not evaluated like normal Unary/BinaryOperator.
+    en:
+
+    Operator that are not evaluated like normal Unary/Binary Operator.
     For example: `sizeof` operator in C
+
+    zh:
+
+    特殊操作符，与普通的Unary/Binary Operator不同，例如C中的`sizeof`操作符
     """
 
     _fields = [
@@ -1077,14 +1084,14 @@ class AddressLabel(SourceElement):
         self.name = name
 
 
-class GoToStatement(SourceElement):
+class GoToStmt(SourceElement):
     _fields = ["label", "direct"]
     """
     If direct, label is a str. Or the label is a SourceElement
     """
 
     def __init__(self, label: Union[str, SourceElement], direct: bool = True):
-        super(GoToStatement, self).__init__()
+        super(GoToStmt, self).__init__()
         self.label = label
         self.direct = direct
 
@@ -1096,8 +1103,16 @@ class Using(SourceElement):
         super().__init__()
         self.used = used
 
+class AccessSpecfier(SourceElement):
+    _fields = ["kind"]
+    def __init__(self, kind):
+        super().__init__()
+        self.kind = kind
 
 class NameSpaceDef(SourceElement):
+    """
+    Define a namespace
+    """
     _fields = ["name", "children"]
 
     def __init__(self, name, children: List[SourceElement]):
@@ -1107,6 +1122,9 @@ class NameSpaceDef(SourceElement):
 
 
 class NameSpaceRef(SourceElement):
+    """
+    Refer to a namespace
+    """
     _fields = ["name"]
 
     def __init__(self, name: str):

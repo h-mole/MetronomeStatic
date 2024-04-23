@@ -22,7 +22,7 @@ class JMethodInvocation:
         if type(name) is not str:
             name = name.value
         if type(target) is not str and target is not None:
-            if isinstance(target, nodes.FieldAccess):
+            if isinstance(target, nodes.FieldAccessExpr):
                 # then the target is a field
                 # if target.target is 'this' or classContainingInvocation, then self reference
                 target = fieldTypes[target.name]

@@ -129,12 +129,12 @@ class CFGBuilder:
         self.all_blocks.append(block)
         return block
 
-    def build(self, ast: nodes.MethodDeclaration):
-        assert isinstance(ast, nodes.MethodDeclaration)
+    def build(self, ast: nodes.MethodDecl):
+        assert isinstance(ast, nodes.MethodDecl)
 
         self.build_on_method_declaration(ast)
 
-    def build_on_method_declaration(self, node: nodes.MethodDeclaration):
+    def build_on_method_declaration(self, node: nodes.MethodDecl):
         assert node.body is not None
         self.build_on_block_or_stmt(node.body)
 
@@ -145,24 +145,24 @@ class CFGBuilder:
         self.add_goto_edges()
 
     def build_on_block_or_stmt(
-        self, node: Union[nodes.Block, nodes.SourceElement]
+        self, node: Union[nodes.BlockStmt, nodes.SourceElement]
     ) -> bool:
         """
         Returns if the control flow was interrupted
         """
         handler_dict = {
-            nodes.IfThenElse: self.build_on_if_then_else,
-            nodes.Return: self.build_on_return,
-            nodes.For: self.build_on_for,
-            nodes.While: self.build_on_while,
-            nodes.DoWhile: self.build_on_do_while,
-            nodes.GoToStatement: self.build_on_goto,
-            nodes.Break: self.build_on_break,
-            nodes.Continue: self.build_on_continue,
-            nodes.Switch: self.build_on_switch,
-            nodes.Block: self.build_on_block_or_stmt
+            nodes.IfThenElseStmt: self.build_on_if_then_else,
+            nodes.ReturnStmt: self.build_on_return,
+            nodes.ForStmt: self.build_on_for,
+            nodes.WhileStmt: self.build_on_while,
+            nodes.DoWhileStmt: self.build_on_do_while,
+            nodes.GoToStmt: self.build_on_goto,
+            nodes.BreakStmt: self.build_on_break,
+            nodes.ContinueStmt: self.build_on_continue,
+            nodes.SwitchStmt: self.build_on_switch,
+            nodes.BlockStmt: self.build_on_block_or_stmt
         }
-        if isinstance(node, nodes.Block):
+        if isinstance(node, nodes.BlockStmt):
             for i, statement in enumerate(node.statements):
                 cls = statement.__class__
                 if cls in handler_dict:
@@ -181,7 +181,7 @@ class CFGBuilder:
                 self.block.add_statement(node)
         return False
 
-    def build_on_if_then_else(self, node: nodes.IfThenElse) -> bool:
+    def build_on_if_then_else(self, node: nodes.IfThenElseStmt) -> bool:
         # save the last block
         last_block = self.block
 
@@ -225,7 +225,7 @@ class CFGBuilder:
             self.block = endif_block
         return False
 
-    def build_on_switch(self, node: nodes.Switch) -> bool:
+    def build_on_switch(self, node: nodes.SwitchStmt) -> bool:
         # save the last block
         block_before = self.block
 
@@ -262,7 +262,7 @@ class CFGBuilder:
         self.block = block_end_switch
         return False
 
-    def build_on_while(self, node: nodes.While) -> bool:
+    def build_on_while(self, node: nodes.WhileStmt) -> bool:
         # save the last block
         last_block = self.block
 
@@ -293,7 +293,7 @@ class CFGBuilder:
         self.block = block_end_loop
         return False
 
-    def build_on_do_while(self, node: nodes.DoWhile) -> bool:
+    def build_on_do_while(self, node: nodes.DoWhileStmt) -> bool:
         # save the last block
         block_before_do_while = self.block
 
@@ -321,7 +321,7 @@ class CFGBuilder:
         self.block = block_end_loop
         return False
 
-    def build_on_for(self, node: nodes.For) -> bool:
+    def build_on_for(self, node: nodes.ForStmt) -> bool:
         # save the last block
         last_block = self.block
 
@@ -358,7 +358,7 @@ class CFGBuilder:
 
         return False
 
-    def build_on_return(self, node: nodes.Return) -> bool:
+    def build_on_return(self, node: nodes.ReturnStmt) -> bool:
         """
         Returns if the `build_on_block` method should return
         """
@@ -369,17 +369,17 @@ class CFGBuilder:
         next_block.next_blocks.append(self.return_block)
         return True
 
-    def build_on_goto(self, node: nodes.GoToStatement) -> bool:
+    def build_on_goto(self, node: nodes.GoToStmt) -> bool:
         self.goto_edges.append((self.block, node.label))
         self.block.set_tag_on_empty(f"GOTO {node.label}")
         return True
 
-    def build_on_break(self, node: nodes.Break) -> bool:
+    def build_on_break(self, node: nodes.BreakStmt) -> bool:
         self.loop_control_stmts.append(("break", self.block))
         self.block.set_tag_on_empty("BREAK")
         return True
 
-    def build_on_continue(self, node: nodes.Continue) -> bool:
+    def build_on_continue(self, node: nodes.ContinueStmt) -> bool:
         self.loop_control_stmts.append(("continue", self.block))
         self.block.set_tag_on_empty("CONTINUE")
         return True
