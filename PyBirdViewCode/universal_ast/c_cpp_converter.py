@@ -107,6 +107,7 @@ class ClangASTConverter:
             CursorKind.UNEXPOSED_DECL: self._handle_notimplemented,
             CursorKind.FUNCTION_DECL: self._handle_function_decl,
             CursorKind.ASM_STMT: self._handle_notimplemented,
+            CursorKind.NAMESPACE: self._handle_namespace,
             # ATTRIBUTES
             CursorKind.UNEXPOSED_ATTR: self._handle_notimplemented,
             CursorKind.DLLIMPORT_ATTR: self._handle_notimplemented,
@@ -123,6 +124,12 @@ class ClangASTConverter:
             CursorKind.CXX_UNARY_EXPR: self._handle_cxx_unary_expr,
             CursorKind.CONDITIONAL_OPERATOR: self._handle_conditional_operator,
             CursorKind.ADDR_LABEL_EXPR: self._handle_addr_label_expr,
+            CursorKind.USING_DIRECTIVE: lambda c: nodes.Using(
+                self.eval_single_cursor(next(c.get_children()))
+            ),
+            CursorKind.NAMESPACE_REF: lambda c: nodes.NameSpaceRef(
+                c.spelling
+            ),
             # TYPES
             CursorKind.TYPE_REF: lambda c: nodes.Type(c.spelling),
             # LITERALS
@@ -360,6 +367,9 @@ class ClangASTConverter:
             )
         else:
             raise NotImplementedError(len(children))
+
+    def _handle_namespace(self, cursor: Cursor):
+        return nodes.NameSpaceDef(cursor.spelling, self.eval_children(cursor))
 
     def _handle_goto_stmt(self, cursor: Cursor):
 

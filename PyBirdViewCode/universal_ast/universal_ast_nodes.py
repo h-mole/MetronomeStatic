@@ -136,6 +136,7 @@ class SourceElement(object):
                             yield from elem.walk_preorder()
                 elif isinstance(field, SourceElement):
                     yield from field.walk_preorder()
+        yield self
 
 
 class CompilationUnit(SourceElement):
@@ -1081,10 +1082,36 @@ class GoToStatement(SourceElement):
     """
     If direct, label is a str. Or the label is a SourceElement
     """
+
     def __init__(self, label: Union[str, SourceElement], direct: bool = True):
         super(GoToStatement, self).__init__()
         self.label = label
         self.direct = direct
+
+
+class Using(SourceElement):
+    _fields = ["used"]
+
+    def __init__(self, used: Union["NameSpaceRef", SourceElement]):
+        super().__init__()
+        self.used = used
+
+
+class NameSpaceDef(SourceElement):
+    _fields = ["name", "children"]
+
+    def __init__(self, name, children: List[SourceElement]):
+        super().__init__()
+        self.name = name
+        self.children = children
+
+
+class NameSpaceRef(SourceElement):
+    _fields = ["name"]
+
+    def __init__(self, name: str):
+        super().__init__()
+        self.name = name
 
 
 class Visitor(object):

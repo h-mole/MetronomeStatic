@@ -33,6 +33,12 @@ graph TD
 
 由于UAST可以表示不同语言的AST，因此可以进行控制流和数据流的分析，构建控制流图、数据依赖图等程序图。由于这一过程依赖的UAST与具体的编程语言无关，因此就可以避免添加新语言时重新写一遍构建程序图的逻辑的繁琐情况。
 
+### 支持的编程语言
+
+- C：目前可以使用
+- C++：正在开发
+- Python：尚未开始
+
 ## 安装
 
 ```bash
@@ -97,7 +103,7 @@ MACRO {"kind": "file", "path": "examples/cfg-extraction/demo.py", "language": "p
 
 ![生成的控制流图](examples/cfg-extraction/cfg.png)
 
-注意，如果提示没有安装dot，可以按照https://graphviz.org/download/ 这里的方式进行安装
+注意，如果提示没有安装dot，可以按照<https://graphviz.org/download/> 这里的方式进行安装
 
 ## Interfaces
 
