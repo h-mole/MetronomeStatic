@@ -3,6 +3,7 @@ This file is copied from plyj package.
 """
 
 from typing import Any, Dict, Generator, List, Optional, Union, Literal as LiteralType
+from MelodieFuncFlow import MelodieGenerator
 
 
 class SourceElement(object):
@@ -137,6 +138,9 @@ class SourceElement(object):
                 elif isinstance(field, SourceElement):
                     yield from field.walk_preorder()
         yield self
+
+    def iter_nodes(self) -> MelodieGenerator["SourceElement"]:
+        return MelodieGenerator(self.walk_preorder())
 
 
 class CompilationUnit(SourceElement):
@@ -313,7 +317,7 @@ class MethodDecl(SourceElement):
         "abstract",
         "extended_dims",
         "throws",
-        "type_ref",  
+        "type_ref",
     ]
 
     def __init__(
@@ -384,6 +388,7 @@ class VarDecl(SourceElement):
         super(VarDecl, self).__init__()
         self.variable = variable
         self.initializer = initializer
+
 
 class ParamDecl(SourceElement):
     _fields = ["name", "type"]
@@ -648,7 +653,7 @@ class UnaryExpr(Expr):
 class CastExpr(Expr):
     _fields = ["target", "expression", "style"]
 
-    def __init__(self, target, expression, style: LiteralType['c', 'cxx_static']):
+    def __init__(self, target, expression, style: LiteralType["c", "cxx_static"]):
         super(CastExpr, self).__init__()
         self.target = target
         self.style = style
@@ -1103,16 +1108,20 @@ class Using(SourceElement):
         super().__init__()
         self.used = used
 
+
 class AccessSpecfier(SourceElement):
     _fields = ["kind"]
+
     def __init__(self, kind):
         super().__init__()
         self.kind = kind
+
 
 class NameSpaceDef(SourceElement):
     """
     Define a namespace
     """
+
     _fields = ["name", "children"]
 
     def __init__(self, name, children: List[SourceElement]):
@@ -1125,6 +1134,7 @@ class NameSpaceRef(SourceElement):
     """
     Refer to a namespace
     """
+
     _fields = ["name"]
 
     def __init__(self, name: str):

@@ -152,7 +152,4 @@ def test_conv_real_code():
     assert cursor is not None
 
     ret = evaluator.eval(cursor)
-    # print(ret)
-
-    pprint(ret.to_dict())
     file_manager.json_dump("real_code_lua_uast.json", ret.to_dict())

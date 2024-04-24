@@ -42,34 +42,22 @@ def test_generate_structure():
     ).to_list()
     assert len(field_classes) == 1 and issubclass(field_classes[0], UnionDefModel)
     l = structures.map(lambda item: item.to_serializable_dict()).to_list()
-    
+
     extract_tasks(base.clangutils_load_ast("extractor-demos/global-use.c"))
+
 
 def test_process_real_preprocessed_file():
     structures = iter_data_structures(
         base.asset_path("lua-preprocessed-code"),
         lambda name: name.endswith((".i")),
     ).freeze()
-    import json
 
-    with open("test.json", "w") as f:
-        json.dump(structures.map(lambda ds: ds.to_serializable_dict()).l, f, indent=2)
-    beautified_print_ast(
-        parse_file(base.asset_path("lua-preprocessed-code/out.i")).cursor, "ast.json"
-    )
 
 def test_iter_data_structures():
     structures = iter_data_structures(
         base.asset_path("structure-demo"),
         lambda name: name.endswith((".c", ".cpp", ".h")),
     ).freeze()
-    import json
-
-    # with open("test.json", "w") as f:
-    #     json.dump(structures.map(lambda ds: ds.to_serializable_dict()).l, f, indent=2)
-    # beautified_print_ast(
-    #     parse_file(base.asset_path("structure-demo/global-use.c")).cursor, "ast.json"
-    # )
     result = {"referenced_globals": {}, "callings": {}}
 
     def reduce_f(orig: dict, model: FunctionDefModel):
@@ -105,7 +93,9 @@ def test_data_structure():
 
 
 def test_class_structure():
-    c = base.clangutils_load_ast("extractor-demos/data-structure.cpp", ['-xc++', '-std=c++11'])
+    c = base.clangutils_load_ast(
+        "extractor-demos/data-structure.cpp", ["-xc++", "-std=c++11"]
+    )
     ctxs = traversal(c).filter(
         lambda ctx: ctx.current_node.kind == CursorKind.CLASS_DECL
         and ctx.current_node.spelling == "Box"
