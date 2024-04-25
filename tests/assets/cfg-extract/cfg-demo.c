@@ -36,3 +36,19 @@ int main()
     printf("%d\n", goto_structure(0));
     return 0;
 }
+
+int f(int a, int b)
+{
+    if (a < 0)
+    {
+        return -1;
+    }
+    else
+    {
+        for (int i = 0; i < b; i++)
+        {
+            a += i;
+        }
+    }
+    return a;
+}
