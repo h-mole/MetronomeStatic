@@ -2,7 +2,7 @@
 
 ## 简介
 
-PyBirdViewCode是一个用于静态代码分析的Python包。Metronome意为“节拍器”，寓意是提升项目质量，从而稳住开发的节奏
+PyBirdViewCode是一个用于静态代码分析的Python包，目标是将代码的依赖关系和逻辑关系以图形化、抽象化的形式表示出来，便于程序理解。希望这个包能够帮助大家从更高的角度分析代码，鸟瞰整体，把握全局。
 
 以下是PyBirdViewCode的功能图。现在只支持C/C++，基于libclang实现。在未来，计划进一步添加Python的 AST
 
@@ -33,8 +33,11 @@ graph TD
 
 由于UAST可以表示不同语言的AST，因此可以进行控制流和数据流的分析，构建控制流图、数据依赖图等程序图。由于这一过程依赖的UAST与具体的编程语言无关，因此就可以避免添加新语言时重新写一遍构建程序图的逻辑的繁琐情况。
 
+### 支持的编程语言
 
-
+- C：目前可以使用
+- C++：正在开发
+- Python：尚未开始
 
 ## 安装
 
@@ -42,13 +45,11 @@ graph TD
 pip install PyBirdViewCode
 ```
 
-
-
 ## 示例
 
 ### 获取UAST & UAST 的保存与读取
 
-- UAST的文档见：[UAST Docs](https://hzy15610046011.gitee.io/py-bird-view-code/html/api/universal_ast.html)
+- UAST的文档见：[UAST Docs](https://hzy15610046011.gitee.io/metronome-static/html/api/universal_ast.html)
 
 - 该示例位于`examples/uast-conversion`下
 
@@ -222,7 +223,7 @@ from PyBirdViewCode import universal_ast_nodes as nodes, ClangASTConverter
 
 
 class UniASTVisitor(nodes.Visitor):
-    def visit_FuncCall(self, node: nodes.FuncCall):
+    def visit_FuncCall(self, node: nodes.CallExpr):
         print(node.name)
 
 
@@ -309,17 +310,13 @@ nx.nx_pydot.write_dot(g, "cfg.dot")
 
 ![生成的控制流图](examples/cfg-extraction/cfg.png)
 
-注意，如果提示没有安装dot，可以按照https://graphviz.org/download/ 这里的方式进行安装
+注意，如果提示没有安装dot，可以按照<https://graphviz.org/download/> 这里的方式进行安装
 
-## 文档汇总
+## Interfaces
 
-### 统一抽象语法树 UAST
+### Clang
 
-[链接](https://hzy15610046011.gitee.io/py-bird-view-code/html/api/universal_ast.html)
-
-### MelodieFuncFlow 生成器相关API
-
-[链接](http://hzy15610046011.gitee.io/py-bird-view-code/html/api/melodie_generator.html)
+Clang interface included some useful functionalities.
 
 ## 未来计划
 

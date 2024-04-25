@@ -2,7 +2,7 @@
 
 ## 简介
 
-PyBirdViewCode是一个用于静态代码分析的Python包。Metronome意为“节拍器”，寓意是提升项目质量，从而稳住开发的节奏
+PyBirdViewCode是一个用于静态代码分析的Python包，目标是将代码的依赖关系和逻辑关系以图形化、抽象化的形式表示出来，便于程序理解。希望这个包能够帮助大家从更高的角度分析代码，鸟瞰整体，把握全局。
 
 以下是PyBirdViewCode的功能图。现在只支持C/C++，基于libclang实现。在未来，计划进一步添加Python的 AST
 
