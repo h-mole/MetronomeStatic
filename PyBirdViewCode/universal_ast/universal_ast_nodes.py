@@ -2,8 +2,22 @@
 This file is copied from plyj package.
 """
 
-from typing import Any, Dict, Generator, List, Optional, Union, Literal as LiteralType
+from typing import (
+    Any,
+    Dict,
+    Generator,
+    List,
+    Optional,
+    TypeVar,
+    Union,
+    Literal as LiteralType,
+    TYPE_CHECKING,
+    Type as TypingType,
+)
 from MelodieFuncFlow import MelodieGenerator
+
+if TYPE_CHECKING:
+    from ..universal_ast import universal_ast_types as types
 
 
 class SourceElement(object):
@@ -141,6 +155,22 @@ class SourceElement(object):
 
     def iter_nodes(self) -> MelodieGenerator["SourceElement"]:
         return MelodieGenerator(self.walk_preorder())
+
+    def filter_by(
+        self, _type: Optional[TypingType["T"]] = None, **props
+    ) -> MelodieGenerator["T"]:
+        def filter_func(node: SourceElement) -> bool:
+            if _type is not None and not isinstance(node, _type):
+                return False
+            for k, v in props.items():
+                if getattr(node, k) != props[k]:
+                    return False
+            return True
+
+        return self.iter_nodes().filter(filter_func)
+
+
+T = TypeVar("T", bound=SourceElement)
 
 
 class CompilationUnit(SourceElement):
@@ -309,10 +339,11 @@ class MethodDecl(SourceElement):
 
     _fields = [
         "name",
-        "modifiers",
-        "type_parameters",
-        "parameters",
-        "return_type",
+        # "modifiers",
+        "type",
+        # "type_parameters",
+        # "parameters",
+        # "return_type",
         "body",
         "abstract",
         "extended_dims",
@@ -323,10 +354,11 @@ class MethodDecl(SourceElement):
     def __init__(
         self,
         name,
-        modifiers=None,
-        type_parameters=None,
-        parameters=None,
-        return_type="void",
+        type: "types.CallableType",
+        # modifiers=None,
+        # type_parameters=None,
+        # parameters=None,
+        # return_type="void",
         body: Optional["BlockStmt"] = None,
         abstract=False,
         extended_dims=0,
@@ -334,18 +366,19 @@ class MethodDecl(SourceElement):
         type_ref=None,
     ):
         super(MethodDecl, self).__init__()
-        if modifiers is None:
-            modifiers = []
-        if type_parameters is None:
-            type_parameters = []
-        if parameters is None:
-            parameters = []
+        # if modifiers is None:
+        #     modifiers = []
+        # if type_parameters is None:
+        #     type_parameters = []
+        # if parameters is None:
+        #     parameters = []
         # if type_ref is Non
         self.name = name
-        self.modifiers = modifiers
-        self.type_parameters = type_parameters
-        self.parameters = parameters
-        self.return_type = return_type
+        self.type = type
+        # self.modifiers = modifiers
+        # self.type_parameters = type_parameters
+        # self.parameters = parameters
+        # self.return_type = return_type
         self.body = body
         self.abstract = abstract
         self.extended_dims = extended_dims
@@ -382,18 +415,33 @@ class Variable(SourceElement):
 
 
 class VarDecl(SourceElement):
-    _fields = ["variable", "initializer"]
+    _fields = ["variable", "initializer", "type"]
 
-    def __init__(self, variable, initializer=None):
+    def __init__(self, variable: "Name", initializer=None, type=None):
         super(VarDecl, self).__init__()
         self.variable = variable
         self.initializer = initializer
+        self.type = type
+
+
+class CompoundDecl(SourceElement):
+    """
+    zh:
+
+    定义多个变量的语句
+    """
+
+    _fields = ["decls"]
+
+    def __init__(self, decls: List[VarDecl]):
+        super().__init__()
+        self.decls = decls
 
 
 class ParamDecl(SourceElement):
     _fields = ["name", "type"]
 
-    def __init__(self, name: "Name", type):
+    def __init__(self, name: "Name", type: str):
         super(ParamDecl, self).__init__()
         self.name = name
         self.type = type
@@ -1000,17 +1048,11 @@ class ClassLiteral(SourceElement):
 
 
 class Name(SourceElement):
-    _fields = ["value"]
+    _fields = ["id"]
 
-    def __init__(self, value: str):
+    def __init__(self, name: str):
         super(Name, self).__init__()
-        self.value = value
-
-    def append_name(self, name):
-        try:
-            self.value = self.value + "." + name.value
-        except:
-            self.value = self.value + "." + name
+        self.id = name
 
 
 # class ExpressionStatement(Stmt):
@@ -1148,13 +1190,15 @@ class Visitor(object):
         self.verbose = verbose
 
     def __getattr__(self, name):
+        from ..universal_ast import universal_ast_types as types
 
         if not (name.startswith("visit_") or name.startswith("leave_")):
             raise AttributeError(
                 "name must start with visit_ or leave_ but was {}".format(name)
             )
         else:
-            assert name.split("_")[1] in globals(), name
+            cls = name.split("_")[1]
+            assert (cls in globals()) or (cls in types.all_type_names), name
 
         def f(element):
             if self.verbose:

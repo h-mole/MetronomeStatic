@@ -18,7 +18,7 @@ from typing import (
     Union,
 )
 
-from clang.cindex import Cursor, CursorKind, SourceLocation
+from clang.cindex import Cursor, CursorKind, SourceLocation, TypeKind
 
 from ..clang_utils.code_attributes.extract_data_structure import (
     FunctionDefModel,
@@ -46,6 +46,7 @@ from .models import (
     Variable,
 )
 from ..universal_ast import universal_ast_nodes as nodes
+from ..universal_ast import universal_ast_types as types
 
 if TYPE_CHECKING:
     CursorKind: Any = CursorKind
@@ -120,7 +121,7 @@ class ClangASTConverter:
             CursorKind.TYPEDEF_DECL: self._handle_typedef_decl,
             CursorKind.FIELD_DECL: self._handle_field_decl,
             CursorKind.UNION_DECL: self._handle_union_decl,
-            CursorKind.DECL_STMT: self.eval_children,
+            CursorKind.DECL_STMT: lambda c: nodes.CompoundDecl(self.eval_children(c)),
             CursorKind.VAR_DECL: self._handle_var_decl,
             CursorKind.PARM_DECL: self._handle_parm_decl,
             CursorKind.UNEXPOSED_DECL: self._handle_notimplemented,
@@ -289,13 +290,10 @@ class ClangASTConverter:
             cursor, lambda c: c.kind == CursorKind.COMPOUND_STMT
         )
         body_ast = self.eval_single_cursor_if_not_none(body_cursor)
-
+        return_type = cursor.type.get_result().spelling
         return nodes.MethodDecl(
             cursor.spelling,
-            [],
-            [],
-            params_ast,
-            "NotImplemented",
+            types.CallableType(params_ast, return_type, []),
             body_ast,
         )
 
@@ -349,6 +347,9 @@ class ClangASTConverter:
         child: Optional[nodes.SourceElement] = (
             self.eval_single_cursor(children[0]) if len(children) > 0 else None
         )
+        # import pdb
+
+        # pdb.set_trace()
         return nodes.Type(cursor.spelling, child)
 
     def _handle_field_decl(self, cursor: Cursor) -> nodes.FieldDecl:
@@ -363,16 +364,34 @@ class ClangASTConverter:
     def _handle_parm_decl(self, cursor: Cursor) -> nodes.ParamDecl:
         return nodes.ParamDecl(cursor.spelling, cursor.type.spelling)
 
-    def _handle_var_decl(self, cursor: Cursor) -> Optional[nodes.Assignment]:
+    def _handle_var_decl(
+        self, cursor: Cursor
+    ) -> Union[nodes.VarDecl, nodes.Assignment]:
         children_asts = (
             MelodieGenerator(cursor.get_children())
             .filter(lambda c: c.kind not in (CursorKind.TYPE_REF,))
             .l
         )
+        children_parsed = self.eval_children(cursor)
+
+        # Handle the vardecl storing a function pointer
+        # if all(map(lambda x: isinstance(x, nodes.ParamDecl), children_parsed)):
+        if cursor.type.kind == TypeKind.POINTER:
+            func_type = cursor.type.get_pointee()
+            if func_type.kind == TypeKind.FUNCTIONPROTO:
+                return_type = func_type.get_result().spelling
+                return nodes.VarDecl(
+                    cursor.spelling,
+                    None,
+                    types.CallableType(children_parsed, return_type),
+                )
         if len(children_asts) >= 1:
             l_value = nodes.Name(cursor.spelling)
             r_value = self.eval_single_cursor(children_asts[-1])
-            return nodes.Assignment("=", l_value, r_value)
+            return nodes.VarDecl(l_value, r_value, cursor.type.spelling)
+        else:
+            l_value = nodes.Name(cursor.spelling)
+            return nodes.VarDecl(l_value, None, cursor.type.spelling)
 
     def _handle_member_ref_expr(self, cursor: Cursor) -> nodes.FieldAccessExpr:
         children = list(cursor.get_children())

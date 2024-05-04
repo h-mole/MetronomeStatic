@@ -115,12 +115,12 @@ def test_conv_cpp_class():
     )
     print(method_ast)
     assert method_ast.name == "set"
-    assert MelodieGenerator(method_ast.parameters).map(lambda param: param.name).s == {
+    assert MelodieGenerator(method_ast.type.pos_args).map(lambda param: param.name).s == {
         "len",
         "bre",
         "hei",
     }
-    assert MelodieGenerator(method_ast.parameters).map(lambda param: param.type).s == {
+    assert MelodieGenerator(method_ast.type.pos_args).map(lambda param: param.type).s == {
         "double"
     }
     assert method_ast.body is None
