@@ -5,7 +5,6 @@ from typing import List
 from PyBirdViewCode.clang_utils.code_attributes.utils import get_func_decl, parse_file
 from PyBirdViewCode.universal_ast.c_cpp_converter import ClangASTConverter
 from PyBirdViewCode.universal_ast import universal_ast_nodes as nodes
-from PyBirdViewCode.universal_ast.universal_cfg_extractor import CFGBuilder
 from PyBirdViewCode.utils.files import FileManager, abspath_from_file
 from tests.base import asset_path
 from PyBirdViewCode.clang_utils import beautified_print_ast, CursorKind
@@ -115,12 +114,14 @@ def test_conv_cpp_class():
     )
     print(method_ast)
     assert method_ast.name == "set"
-    assert MelodieGenerator(method_ast.type.pos_args).map(lambda param: param.name).s == {
+    assert MelodieGenerator(method_ast.type.pos_args).map(
+        lambda param: param.name
+    ).s == {
         "len",
         "bre",
         "hei",
     }
-    assert MelodieGenerator(method_ast.type.pos_args).map(lambda param: param.type).s == {
-        "double"
-    }
+    assert MelodieGenerator(method_ast.type.pos_args).map(
+        lambda param: param.type
+    ).s == {"double"}
     assert method_ast.body is None

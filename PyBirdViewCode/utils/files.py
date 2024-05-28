@@ -116,3 +116,12 @@ class FileManager:
         assert file_relpath.endswith(".dot"), "extension should be *.dot"
         file = self.get_abspath(file_relpath)
         nx.nx_pydot.write_dot(graph, file)
+
+    @decorator_path_ensure
+    def dot_load(self, file_relpath: str):
+        """
+        Load networkx graph from dot file.
+        """
+        assert file_relpath.endswith(".dot"), "extension should be *.dot"
+        file = self.get_abspath(file_relpath)
+        return nx.nx_pydot.read_dot(file)

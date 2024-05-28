@@ -8,12 +8,14 @@ from typing import (
     Generator,
     List,
     Optional,
+    Tuple,
     TypeVar,
     Union,
     Literal as LiteralType,
     TYPE_CHECKING,
     Type as TypingType,
 )
+from itertools import chain
 from MelodieFuncFlow import MelodieGenerator
 
 if TYPE_CHECKING:
@@ -26,13 +28,22 @@ class SourceElement(object):
     file parsed by plyj.
     """
 
+    _common_fields: List[str] = ["location"]
     _fields: List[str] = []
 
     def __init__(self):
         super(SourceElement, self).__init__()
+        self.location: Tuple[Optional[int], Optional[int]] = (
+            None,
+            None,
+        )  # line, column
+        # self.type = ""
 
     def __repr__(self):
-        equals = ("{0}={1!r}".format(k, getattr(self, k)) for k in self._fields)
+        equals = (
+            "{0}={1!r}".format(k, getattr(self, k))
+            for k in chain(self._fields, self._common_fields)
+        )
         args = ", ".join(equals)
         return "{0}({1})".format(self.__class__.__name__, args)
 
@@ -53,7 +64,7 @@ class SourceElement(object):
         class_name = self.__class__.__name__
         visit = getattr(visitor, "visit_" + class_name)
         if visit(self):
-            for f in self._fields:
+            for f in chain(self._fields, self._common_fields):
                 field = getattr(self, f)
                 if field:
                     if isinstance(field, list):
@@ -100,17 +111,17 @@ class SourceElement(object):
     @classmethod
     def _single_item_to_serializable(
         cls, item: Any
-    ) -> Union[None, int, str, float, bool, List, Dict]:
+    ) -> Union[None, int, str, float, bool, tuple, List, Dict]:
         if isinstance(item, SourceElement):
             new_dict: Dict[str, Any] = {"_cls": item.__class__.__name__}
-            for field_name in item._fields:
+            for field_name in chain(item._fields, item._common_fields):
                 field_value = getattr(item, field_name)
                 new_dict[field_name] = cls._single_item_to_serializable(field_value)
             return new_dict
         elif isinstance(item, list):
             return [cls._single_item_to_serializable(list_item) for list_item in item]
         else:
-            assert isinstance(item, (int, str, float, bool)) or item is None, (
+            assert isinstance(item, (int, str, float, bool, tuple)) or item is None, (
                 item,
                 type(item),
             )
@@ -120,29 +131,10 @@ class SourceElement(object):
         """
         Convert this element to a json-serializable dict
         """
-        # new_dict: Dict[str, Any] = {"_cls": self.__class__.__name__}
-
-        # for field_name in self._fields:
-        #     field_value = getattr(self, field_name)
-        #     if isinstance(field_value, list):
-        #         new_list = []
-        #         for elem in field_value:
-        #             if isinstance(elem, SourceElement):
-        #                 new_list.append(elem.to_dict())
-        #             else:
-        #                 # self.check_serializable(elem, field_name)
-        #                 new_list.append(elem)
-        #         new_dict[field_name] = new_list
-        #     else:
-        #         if isinstance(field_value, SourceElement):
-        #             new_dict[field_name] = field_value.to_dict()
-        #         else:
-        #             # self.check_serializable(field_value, field_name)
-        #             new_dict[field_name] = field_value
         return self._single_item_to_serializable(self)
 
     def walk_preorder(self) -> Generator["SourceElement", None, None]:
-        for f in self._fields:
+        for f in chain(self._fields, self._common_fields):
             field = getattr(self, f)
             if field:
                 if isinstance(field, list):
@@ -197,13 +189,14 @@ class PackageDecl(SourceElement):
 
 
 class ImportDecl(SourceElement):
-    _fields = ["name", "static", "on_demand"]
+    _fields = ["name", "static", "on_demand", "path"]
 
-    def __init__(self, name, static=False, on_demand=False):
+    def __init__(self, name, path="", static=False, on_demand=False):
         super(ImportDecl, self).__init__()
         self.name = name
         self.static = static
         self.on_demand = on_demand
+        self.path = path
 
 
 class StructDecl(SourceElement):
@@ -213,6 +206,7 @@ class StructDecl(SourceElement):
     ]
 
     def __init__(self, name, fields: List["FieldDecl"]):
+        super().__init__()
         self.name = name
         self.fields = fields
 
@@ -224,6 +218,7 @@ class UnionDecl(SourceElement):
     ]
 
     def __init__(self, name, children: List["FieldDecl"]):
+        super().__init__()
         self.name = name
         self.children = children
 
@@ -324,6 +319,32 @@ class FieldDecl(SourceElement):
         self.modifiers = modifiers
 
 
+class MethodType(SourceElement):
+    _fields = ["pos_args", "return_type", "modifiers"]
+
+    def __init__(
+        self,
+        pos_args: List["ParamDecl"],
+        return_type: List[SourceElement],
+        modifiers: Optional[List[str]] = None,
+    ) -> None:
+        super().__init__()
+        self.pos_args = pos_args
+        self.return_type = return_type
+        self.modifiers = modifiers if modifiers is not None else []
+
+
+class ArrayType(SourceElement):
+    _fields = ["elem_type", "length"]
+
+    def __init__(
+        self, elem_type: SourceElement, length: Optional[SourceElement] = None
+    ):
+        super().__init__()
+        self.elem_type = elem_type
+        self.length = length
+
+
 class MethodDecl(SourceElement):
     """
     en:
@@ -338,9 +359,9 @@ class MethodDecl(SourceElement):
     """
 
     _fields = [
-        "name",
+        "name",  # Name of method
         # "modifiers",
-        "type",
+        "type",  # Return type of method
         # "type_parameters",
         # "parameters",
         # "return_type",
@@ -353,8 +374,8 @@ class MethodDecl(SourceElement):
 
     def __init__(
         self,
-        name,
-        type: "types.CallableType",
+        name: Optional[SourceElement],
+        type: MethodType,
         # modifiers=None,
         # type_parameters=None,
         # parameters=None,
@@ -665,6 +686,14 @@ class Expr(SourceElement):
         super(Expr, self).__init__()
 
 
+class ExprStmt(SourceElement):
+    _fields = ["expr"]
+
+    def __init__(self, expr: SourceElement):
+        super().__init__()
+        self.expr = expr
+
+
 class BinaryExpr(Expr):
     _fields = ["operator", "lhs", "rhs"]
 
@@ -676,7 +705,15 @@ class BinaryExpr(Expr):
 
 
 class Assignment(BinaryExpr):
-    pass
+    lhs: List[SourceElement]
+    rhs: List[SourceElement]
+
+    def __init__(
+        self, operator: str, lhs: List[SourceElement], rhs: List[SourceElement]
+    ):
+        super().__init__(operator, lhs, rhs)
+        assert isinstance(self.lhs, list)
+        assert isinstance(self.rhs, list)
 
 
 class Conditional(Expr):
@@ -690,12 +727,14 @@ class Conditional(Expr):
 
 
 class UnaryExpr(Expr):
-    _fields = ["sign", "expression"]
+    _fields = ["sign", "expression", "op_before_expr"]
 
-    def __init__(self, sign, expression):
+    def __init__(self, sign, expression, op_before_expr: bool):
         super(UnaryExpr, self).__init__()
         self.sign = sign
         self.expression = expression
+        # self.op_pos = op_pos
+        self.op_before_expr = op_before_expr
 
 
 class CastExpr(Expr):
@@ -742,6 +781,27 @@ class ArrayInitializer(SourceElement):
         if elements is None:
             elements = []
         self.elements = elements
+
+
+class StructInitializer(SourceElement):
+    """
+    Initializer containing field name and theirs value.
+    like Node{[]string{"a", "b"}}
+
+    :fields: can be any expr. especially a k-v pair
+    """
+
+    _fields: List[SourceElement] = ["type", "fields"]
+
+    def __init__(
+        self,
+        type: SourceElement,
+        fields: List[SourceElement],
+    ):
+        super().__init__()
+        self.type = type
+        self.fields = fields
+        # self.named_fields = named_fields
 
 
 class CallExpr(Expr):
@@ -837,11 +897,12 @@ class SwitchCase(SourceElement):
 
     def __init__(
         self,
-        case: Union[SourceElement, DefaultStmt],
+        case: List[Union[SourceElement, DefaultStmt]],
         body: Union[BlockStmt, SourceElement],
     ):
         super(SwitchCase, self).__init__()
         self.case = case
+        assert isinstance(self.case, list)
         self.body = body
 
 
@@ -873,9 +934,12 @@ class BreakStmt(Stmt):
 class ReturnStmt(Stmt):
     _fields = ["result"]
 
-    def __init__(self, result=None):
+    def __init__(self, result: Optional[List[SourceElement]] = None):
         super(ReturnStmt, self).__init__()
-        self.result = result
+        if result is None:
+            result = []
+        self.result: List[SourceElement] = result
+        assert isinstance(self.result, list)
 
 
 class SynchronizedStmt(Stmt):
@@ -1091,6 +1155,20 @@ class DereferenceExpr(Expr):
         self.ref = ref
 
 
+class KeyValuePair(SourceElement):
+    """
+
+    K-V 键值对表达式
+    """
+
+    _fields = ["key", "value"]
+
+    def __init__(self, key: SourceElement, value: SourceElement):
+        super().__init__()
+        self.key = key
+        self.value = value
+
+
 class SpecialExpr(SourceElement):
     """
     en:
@@ -1157,6 +1235,26 @@ class AccessSpecfier(SourceElement):
     def __init__(self, kind):
         super().__init__()
         self.kind = kind
+
+
+class Yield(SourceElement):
+    """
+    Yield is used in Python or C#
+    """
+
+    _fields = ["value"]
+
+    def __init__(self, value):
+        super().__init__()
+        self.value = value
+
+
+class YieldFrom(SourceElement):
+    _fields = ["target"]
+
+    def __init__(self, target):
+        super().__init__()
+        self.target = target
 
 
 class NameSpaceDef(SourceElement):

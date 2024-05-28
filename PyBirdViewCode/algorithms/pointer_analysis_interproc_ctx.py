@@ -1,4 +1,3 @@
-import sys
 from typing import Dict, Set
 import networkx as nx
 
@@ -117,15 +116,12 @@ def propagate(n, pts: Set[str]):
 
 
 def dispatch(o_i, k):
-    # raise NotImplementedError
     print("dispatch", o_i, k)
     key = {
         ("o_3", "m"): "C.m",
         ("o_3", "id"): "C.id",
         ("o_12", "get"): "Number.get",
     }[(o_i, k)]
-    # stmts = Sm[key]
-    # return "B.foo"
     return key
 
 

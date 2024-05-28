@@ -47,6 +47,7 @@ from .models import (
 )
 from ..universal_ast import universal_ast_nodes as nodes
 from ..universal_ast import universal_ast_types as types
+from .models import NotImplementedItem
 
 if TYPE_CHECKING:
     CursorKind: Any = CursorKind
@@ -81,16 +82,6 @@ class LabelDesc(TypedDict):
     parent_offset: int
     label: str
     index: int
-
-
-class NotImplementedItem(nodes.SourceElement):
-    _fields = ["kind"]
-
-    def __init__(self, kind: str) -> None:
-        self.kind = kind
-
-    def __repr__(self) -> str:
-        return f"<NotimplementedItem {self.kind}>"
 
 
 class ClangASTConverter:
@@ -408,9 +399,7 @@ class ClangASTConverter:
 
     def _handle_unary_operator(self, cursor: Cursor) -> nodes.UnaryExpr:
         op, operand, pos = split_unary_operator(cursor)
-        if pos == UnaryOpPos.BEFORE:
-            op = "p" + op
-        return nodes.UnaryExpr(op, self.eval_single_cursor(operand))
+        return nodes.UnaryExpr(op, self.eval_single_cursor(operand), pos == UnaryOpPos.BEFORE)
 
     def _handle_binary_operator(
         self, cursor: Cursor
@@ -418,7 +407,7 @@ class ClangASTConverter:
         l_ast, symbol, r_ast = split_binary_operator(cursor)
         if symbol == "=":
             return nodes.Assignment(
-                "=", self.eval_single_cursor(l_ast), self.eval_single_cursor(r_ast)
+                "=", [self.eval_single_cursor(l_ast)], [self.eval_single_cursor(r_ast)]
             )
         else:
             value_left, value_right = self.eval_children(cursor)
@@ -427,7 +416,7 @@ class ClangASTConverter:
     def _handle_compound_assignment_operator(self, cursor: Cursor) -> nodes.Assignment:
         l_value, op, r_value = split_compound_assignment(cursor)
         return nodes.Assignment(
-            op, self.eval_single_cursor(l_value), self.eval_single_cursor(r_value)
+            op, [self.eval_single_cursor(l_value)], [self.eval_single_cursor(r_value)]
         )
 
     def _handle_call_expr(self, cursor: Cursor) -> nodes.CallExpr:
@@ -510,10 +499,10 @@ class ClangASTConverter:
         for switch_body_item_cursor in switch_body_cursor.get_children():
             if switch_body_item_cursor.kind == CursorKind.CASE_STMT:
                 case_cond, body = self.eval_children(switch_body_item_cursor)
-                switch_cases.append(nodes.SwitchCase(case_cond, body))
+                switch_cases.append(nodes.SwitchCase([case_cond], body))
             elif switch_body_item_cursor.kind == CursorKind.DEFAULT_STMT:
                 body = self.eval_children(switch_body_item_cursor)[0]
-                switch_cases.append(nodes.SwitchCase(nodes.DefaultStmt(), body))
+                switch_cases.append(nodes.SwitchCase([nodes.DefaultStmt()], body))
             elif switch_body_item_cursor.kind in (CursorKind.BREAK_STMT,):
                 if not isinstance(switch_cases[-1].body, nodes.BlockStmt):
                     switch_cases[-1].body = nodes.BlockStmt([switch_cases[-1].body])
@@ -553,7 +542,7 @@ class ClangASTConverter:
         children_values = self.eval_children(cursor)
         if len(children_values) > 0:
             val = children_values[0]
-            return nodes.ReturnStmt(val)
+            return nodes.ReturnStmt([val])
         else:
             return nodes.ReturnStmt()
 

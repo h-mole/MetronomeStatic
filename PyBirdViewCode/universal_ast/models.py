@@ -5,13 +5,11 @@ Models for AST
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, List, Literal, OrderedDict, Tuple, Union
 
-from clang.cindex import CursorKind
 from dataclasses_json import DataClassJsonMixin
-import warnings
+from .universal_ast_nodes import SourceElement
 
 
 if TYPE_CHECKING:
-    CursorKind: Any = CursorKind
     from z3 import ArithRef
 
 
@@ -59,3 +57,14 @@ class StructType:
 @dataclass
 class ArrayType:
     element_type: DATA_TYPE
+
+
+class NotImplementedItem(SourceElement):
+    _fields = ["kind"]
+
+    def __init__(self, kind: str) -> None:
+        super().__init__()
+        self.kind = kind
+
+    def __repr__(self) -> str:
+        return f"<NotimplementedItem {self.kind}>"

@@ -26,9 +26,6 @@ def test_cfg_extraction_error_handling():
 
     beautified_print_ast(cursor, "out.json")
     ret = evaluator.eval(cursor)
-    # print(ret)
-    # cb = CFGBuilder()
-    # cb.build(ret)
 
     # print(cb.print_graph())
     file_manager.json_dump("handle-error-demo.json", ret.to_dict())

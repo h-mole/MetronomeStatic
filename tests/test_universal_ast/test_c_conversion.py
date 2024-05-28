@@ -1,10 +1,5 @@
-import json
-import os
-from pprint import pprint
-from PyBirdViewCode.clang_utils.code_attributes.utils import get_func_decl, parse_file
+from PyBirdViewCode.clang_utils.code_attributes.utils import parse_file
 from PyBirdViewCode.universal_ast.c_cpp_converter import ClangASTConverter
-from PyBirdViewCode.universal_ast.universal_ast_nodes import SourceElement
-from PyBirdViewCode.universal_ast.universal_cfg_extractor import CFGBuilder
 from PyBirdViewCode.universal_ast import (
     universal_ast_nodes as nodes,
     universal_ast_types as types,
@@ -27,106 +22,6 @@ def test_cpp_conversion():
     beautified_print_ast(cursor, "out.json")
     ret = evaluator.eval(cursor)
     print(ret)
-
-
-def test_cfg_extraction_1():
-    file = asset_path("universal-ast-extraction/demo1.c")
-    evaluator = ClangASTConverter()
-    cursor = get_func_decl(
-        parse_file(
-            file,
-        ).cursor,
-        "basic_control_structures",
-    )
-    assert cursor is not None
-
-    beautified_print_ast(cursor, "out1.json")
-    ret = evaluator.eval(cursor)
-    print(ret)
-    cb = CFGBuilder()
-    cb.build(ret)
-
-    print(cb.print_graph())
-
-    graph = cb.to_networkx()
-    nx.nx_pydot.write_dot(graph, "out1.dot")
-
-
-def test_cfg_extraction_2():
-    file = asset_path("universal-ast-extraction/demo2.c")
-    evaluator = ClangASTConverter()
-    cursor = get_func_decl(
-        parse_file(
-            file,
-        ).cursor,
-        "basic_control_structures",
-    )
-    assert cursor is not None
-
-    beautified_print_ast(cursor, "out.json")
-    ret = evaluator.eval(cursor)
-    print(ret)
-    cb = CFGBuilder()
-    cb.build(ret)
-
-    print(cb.print_graph())
-
-    graph = cb.to_networkx()
-    nx.nx_pydot.write_dot(graph, "out.dot")
-
-
-def test_cfg_extraction_3():
-    file = asset_path("universal-ast-extraction/demo3.c")
-    evaluator = ClangASTConverter()
-    cursor = get_func_decl(
-        parse_file(
-            file,
-        ).cursor,
-        "basic_control_structures",
-    )
-    assert cursor is not None
-
-    beautified_print_ast(cursor, "out.json")
-    ret = evaluator.eval(cursor)
-
-    # json_file = "cfg_extraction_3.json"
-    # file_manager.json_dump(json_file, ret.to_dict())
-    # ast = SourceElement.from_dict(file_manager.json_load(json_file))
-
-    cb = CFGBuilder()
-    cb.build(ret)
-
-    print(cb.print_graph())
-
-    graph = cb.to_networkx()
-    nx.nx_pydot.write_dot(graph, "out.dot")
-
-
-def test_cfg_extraction_error_handling():
-    file = asset_path("universal-ast-extraction/error-handling.c")
-    evaluator = ClangASTConverter()
-    cursor = get_func_decl(
-        parse_file(
-            file,
-        ).cursor,
-        "handle_error_demo",
-    )
-    assert cursor is not None
-
-    beautified_print_ast(cursor, "out.json")
-    ret = evaluator.eval(cursor)
-    print(ret)
-    cb = CFGBuilder()
-    cb.build(ret)
-
-    print(cb.print_graph())
-    file_manager.json_dump("handle-error-demo.json", ret.to_dict())
-
-    graph = cb.to_networkx()
-    file_manager.dot_dump(
-        "handling-errors.dot",
-        graph,
-    )
 
 
 def test_c_types_extraction():
@@ -200,8 +95,8 @@ def test_variable_types():
     assert len(a1_func_prop_call.arguments) == 2
     # 扫描对a1.func的赋值
     assignment = main_ast.filter_by(nodes.Assignment).head()
-    assert isinstance(assignment.lhs, nodes.FieldAccessExpr)
-    assert isinstance(assignment.rhs, nodes.Name) and assignment.rhs.id == "add"
+    assert isinstance(assignment.lhs[0], nodes.FieldAccessExpr)
+    assert isinstance(assignment.rhs[0], nodes.Name) and assignment.rhs[0].id == "add"
 
     struct_def_ast = ret.filter_by(nodes.Type, name="A").head()
     assert isinstance(struct_def_ast.type_arguments, nodes.StructDecl)

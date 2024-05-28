@@ -1,8 +1,9 @@
 from html import escape
 from ..universal_ast import universal_ast_nodes as nodes
-from typing import List, Literal, Tuple, Union, Optional
+from typing import Dict, List, Literal, Tuple, Union, Optional
 import networkx as nx
 from .exceptions import OnBreakStatement
+from ..algorithms import ValidNodeKinds
 
 BlockKinds = Literal["normal", "conditional", "switch"]
 LoopControlKinds = Literal["break", "continue"]
@@ -21,6 +22,10 @@ class BasicBlock:
         self.tag_on_empty = ""
         self.next_blocks: List[BasicBlock] = []
 
+    @property
+    def block_id(self):
+        return self._id
+
     def add_statement(self, statement: nodes.SourceElement):
         self.statements.append(statement)
 
@@ -32,6 +37,88 @@ class BasicBlock:
 
     def __repr__(self) -> str:
         return f"<BasicBlock #{self._id} {self.statements}>"
+
+
+class CFG:
+    """
+    控制流图
+    """
+
+    def __init__(
+        self, all_blocks: List[BasicBlock], entry_block_id: int, return_block_id: int
+    ) -> None:
+        self._all_blocks: List[BasicBlock] = all_blocks
+        self._block_id_map: Dict[int, BasicBlock] = {
+            block.block_id: block for block in self._all_blocks
+        }
+        self._entry_block = self._block_id_map[entry_block_id]
+        self._return_block = self._block_id_map[return_block_id]
+        self._topology = self._calc_topology()
+
+    @property
+    def topology(self) -> nx.DiGraph:
+        """
+        The topology of graph.
+        """
+        return self._topology
+
+    def _calc_topology(self) -> nx.DiGraph:
+        """
+        Calculate the topology of the cfg.
+
+        :return: a nx.DiGraph with same edges while nodes just contain theirs id.
+        """
+        g = nx.DiGraph()
+        for block in self._all_blocks:
+            g.add_node(block._id)
+            if block.kind == "normal":
+                for nb in block.next_blocks:
+                    g.add_edge(block._id, nb._id)
+            elif block.kind == "conditional":
+                g.add_edge(
+                    block._id, block.next_blocks[0].block_id, cond="true", label="true"
+                )
+                g.add_edge(
+                    block._id,
+                    block.next_blocks[1].block_id,
+                    cond="false",
+                    label="false",
+                )
+            elif block.kind == "switch":
+                for i, nb in enumerate(block.next_blocks):
+                    g.add_edge(block._id, nb._id, cond=i, label=f"case #{i+1}")
+
+        return g
+
+    def to_networkx(self):
+        """
+        Convert this CFG to a networkx graph
+        """
+        g = nx.DiGraph()
+        # get_edges(self.head_block)
+        for block in self._all_blocks:
+            g.add_node(block._id)
+            g.add_edges_from([(block._id, nb._id) for nb in block.next_blocks])
+            label_base = f"#{block._id} {escape(block.text_on_empty())}\n"
+            if len(block.statements) > 0:
+                g.nodes[block._id]["label"] = label_base + "\n".join(
+                    [str(stmt) for stmt in block.statements]
+                )
+            else:
+                g.nodes[block._id]["label"] = label_base
+        return g
+
+    def print_graph(self):
+        edges = []
+
+        for block in self._all_blocks:
+            edges.extend([(block._id, nb._id) for nb in block.next_blocks])
+            print(block)
+            print("\n")
+        print(edges)
+
+    def get_block(self, block_id: int):
+        return self._block_id_map[block_id]
 
 
 class CFGBuilder:
@@ -48,37 +135,8 @@ class CFGBuilder:
         self.goto_edges: List[Tuple[BasicBlock, str]] = []
         # self.loop_control_edges: List[Tuple[BasicBlock, BasicBlock]] = []
 
-        # Continue or Break statements to add
+        # Storing continue or Break statements to add
         self.loop_control_stmts: List[Tuple[LoopControlKinds, BasicBlock]] = []
-        # self.continues: List[BasicBlock] = []
-
-    def print_graph(self):
-        edges = []
-
-        # get_edges(self.head_block)
-        for block in self.all_blocks:
-            edges.extend([(block._id, nb._id) for nb in block.next_blocks])
-            print(block)
-            print("\n")
-        print(edges)
-
-    def to_networkx(self):
-        """
-        Convert this CFG to a networkx graph
-        """
-        g = nx.DiGraph()
-        # get_edges(self.head_block)
-        for block in self.all_blocks:
-            g.add_node(block._id)
-            g.add_edges_from([(block._id, nb._id) for nb in block.next_blocks])
-            label_base = f"#{block._id} {escape(block.text_on_empty())}\n"
-            if len(block.statements) > 0:
-                g.nodes[block._id]["label"] = label_base + "\n".join(
-                    [str(stmt) for stmt in block.statements]
-                )
-            else:
-                g.nodes[block._id]["label"] = label_base
-        return g
 
     def search_block_with_label(self, label: str) -> BasicBlock:
         """
@@ -108,6 +166,12 @@ class CFGBuilder:
             kind, block_with_control_stmt = self.loop_control_stmts.pop()
             if kind == "break":
                 block_with_control_stmt.next_blocks.append(block_end_loop)
+                # print("added break! for ")
+                print(
+                    "added break! for ",
+                    block_with_control_stmt._id,
+                    block_with_control_stmt.next_blocks,
+                )
             elif kind == "continue":
                 block_with_control_stmt.next_blocks.append(block_loop_head)
             else:
@@ -133,6 +197,9 @@ class CFGBuilder:
         assert isinstance(ast, nodes.MethodDecl)
 
         self.build_on_method_declaration(ast)
+        return CFG(
+            self.all_blocks, self.head_block.block_id, self.return_block.block_id
+        )
 
     def build_on_method_declaration(self, node: nodes.MethodDecl):
         assert node.body is not None
@@ -160,7 +227,7 @@ class CFGBuilder:
             nodes.BreakStmt: self.build_on_break,
             nodes.ContinueStmt: self.build_on_continue,
             nodes.SwitchStmt: self.build_on_switch,
-            nodes.BlockStmt: self.build_on_block_or_stmt
+            nodes.BlockStmt: self.build_on_block_or_stmt,
         }
         if isinstance(node, nodes.BlockStmt):
             for i, statement in enumerate(node.statements):
@@ -314,7 +381,7 @@ class CFGBuilder:
 
         block_loop_predicate.next_blocks.append(block_end_loop)
         block_loop_predicate.next_blocks.append(block_do_while_body_start)
-        
+
         # Handle probable break
         self.add_loop_control_edges(block_end_loop, block_do_while_body_start)
 
@@ -349,7 +416,7 @@ class CFGBuilder:
 
         # add back edge
         self.block.next_blocks.append(block_loop_head)
-
+        print(self.loop_control_stmts)
         # handle probable break
         self.add_loop_control_edges(block_end_for, block_loop_head)
 
