@@ -18,7 +18,13 @@ from typing import (
     Union,
 )
 
-from clang.cindex import Cursor, CursorKind, SourceLocation, TypeKind
+from clang.cindex import (
+    Cursor,
+    CursorKind,
+    SourceLocation,
+    TypeKind,
+    Type as CindexType,
+)
 
 from ..clang_utils.code_attributes.extract_data_structure import (
     FunctionDefModel,
@@ -38,7 +44,6 @@ from ..clang_utils.code_attributes import (
 )
 from ..utils.functional import MelodieGenerator
 from .models import (
-    DATA_TYPE,
     ArrayValue,
     ConcreteValueType,
     PointerValue,
@@ -47,7 +52,6 @@ from .models import (
 )
 from ..universal_ast import universal_ast_nodes as nodes
 from ..universal_ast import universal_ast_types as types
-from .models import NotImplementedItem
 
 if TYPE_CHECKING:
     CursorKind: Any = CursorKind
@@ -89,7 +93,12 @@ class ClangASTConverter:
         self,
     ) -> None:
         self.source_location_filter: Optional[Callable[[SourceLocation], bool]] = None
-        self._handlers_map = {
+        self.platform_default_bits: Dict[
+            Literal["int", "char", "short", "long", "longlong"], int
+        ] = {"int": 32, "long": 32, "longlong": 64, "short": 16, "char": 8}
+        self._handlers_map: Dict[
+            CursorKind, Callable[[Cursor], nodes.SourceElement]
+        ] = {
             # TRANSLATIONS
             CursorKind.TRANSLATION_UNIT: lambda c: nodes.CompilationUnit(
                 self.eval_children(c)
@@ -200,8 +209,43 @@ class ClangASTConverter:
         self._ret_value = None
         self._labels: Dict[str, LabelDesc] = {}
 
-    def _handle_notimplemented(self, c: Cursor) -> NotImplementedItem:
-        return NotImplementedItem(str(c.kind))
+        int_bits = self.platform_default_bits["int"]
+        char_bits = self.platform_default_bits["char"]
+        short_bits = self.platform_default_bits["short"]
+        long_bits = self.platform_default_bits["long"]
+        long_long_bits = self.platform_default_bits["longlong"]
+        self.integer_types_mapping = {
+            TypeKind.CHAR_U: nodes.IntType(char_bits, False),
+            TypeKind.UCHAR: nodes.IntType(char_bits, False),
+            TypeKind.CHAR16: nodes.IntType(16),
+            TypeKind.CHAR32: nodes.IntType(32),
+            TypeKind.USHORT: nodes.IntType(short_bits, False),
+            TypeKind.UINT: nodes.IntType(int_bits, False),
+            TypeKind.ULONG: nodes.IntType(long_bits, False),
+            TypeKind.ULONGLONG: nodes.IntType(long_long_bits, False),
+            TypeKind.UINT128: nodes.IntType(128, False),
+            TypeKind.CHAR_S: nodes.IntType(char_bits),
+            TypeKind.SCHAR: nodes.IntType(char_bits),
+            TypeKind.WCHAR: nodes.IntType(16),
+            TypeKind.SHORT: nodes.IntType(short_bits),
+            TypeKind.INT: nodes.IntType(int_bits),
+            TypeKind.LONG: nodes.IntType(long_bits),
+            TypeKind.LONGLONG: nodes.IntType(long_long_bits),
+            TypeKind.INT128: nodes.IntType(128),
+        }
+
+    def convert_type(self, t: CindexType) -> nodes.DATA_TYPE:
+        if 4 <= t.kind.value <= 20:
+            return self.integer_types_mapping.get(t.kind, nodes.UnknownType(t.spelling))
+        elif t.kind == TypeKind.CONSTANTARRAY:
+            return nodes.ArrayType(
+                self.convert_type(t.get_array_element_type()), t.get_array_size()
+            )
+        else:
+            return nodes.UnknownType(t.spelling)
+
+    def _handle_notimplemented(self, c: Cursor) -> nodes.NotImplementedItem:
+        return nodes.NotImplementedItem(str(c.kind))
 
     def _calc_add_add_expression(self, c: Cursor, pos: UnaryOpPos) -> Variable:
         """
@@ -223,7 +267,10 @@ class ClangASTConverter:
 
     def eval_single_cursor(self, cursor: Cursor):
         try:
-            return self._handlers_map[cursor.kind](cursor)
+            ret = self._handlers_map[cursor.kind](cursor)
+            # cursor.location.file,
+            ret.location = (cursor.location.line, cursor.location.column)
+            return ret
         except Exception as e:
             print(
                 "error occurred in cursor",
@@ -281,7 +328,7 @@ class ClangASTConverter:
             cursor, lambda c: c.kind == CursorKind.COMPOUND_STMT
         )
         body_ast = self.eval_single_cursor_if_not_none(body_cursor)
-        return_type = cursor.type.get_result().spelling
+        return_type = self.convert_type(cursor.type.get_result())
         return nodes.MethodDecl(
             cursor.spelling,
             types.CallableType(params_ast, return_type, []),
@@ -292,7 +339,7 @@ class ClangASTConverter:
         self, cursor: Cursor, kind: Literal["c", "cxx_static"]
     ) -> nodes.CastExpr:
         return nodes.CastExpr(
-            cursor.type.spelling,
+            self.convert_type(cursor.type),
             self.eval_single_cursor(next(cursor.get_children())),
             kind,
         )
@@ -350,10 +397,12 @@ class ClangASTConverter:
         if len(children) == 1:
             init_value = extract_literal_value(children[0])
 
-        return nodes.FieldDecl(cursor.spelling, cursor.type.spelling, init_value)
+        return nodes.FieldDecl(
+            cursor.spelling, self.convert_type(cursor.type), init_value
+        )
 
     def _handle_parm_decl(self, cursor: Cursor) -> nodes.ParamDecl:
-        return nodes.ParamDecl(cursor.spelling, cursor.type.spelling)
+        return nodes.ParamDecl(cursor.spelling, self.convert_type(cursor.type))
 
     def _handle_var_decl(
         self, cursor: Cursor
@@ -379,10 +428,10 @@ class ClangASTConverter:
         if len(children_asts) >= 1:
             l_value = nodes.Name(cursor.spelling)
             r_value = self.eval_single_cursor(children_asts[-1])
-            return nodes.VarDecl(l_value, r_value, cursor.type.spelling)
+            return nodes.VarDecl(l_value, r_value, self.convert_type(cursor.type))
         else:
             l_value = nodes.Name(cursor.spelling)
-            return nodes.VarDecl(l_value, None, cursor.type.spelling)
+            return nodes.VarDecl(l_value, None, self.convert_type(cursor.type))
 
     def _handle_member_ref_expr(self, cursor: Cursor) -> nodes.FieldAccessExpr:
         children = list(cursor.get_children())
@@ -399,7 +448,9 @@ class ClangASTConverter:
 
     def _handle_unary_operator(self, cursor: Cursor) -> nodes.UnaryExpr:
         op, operand, pos = split_unary_operator(cursor)
-        return nodes.UnaryExpr(op, self.eval_single_cursor(operand), pos == UnaryOpPos.BEFORE)
+        return nodes.UnaryExpr(
+            op, self.eval_single_cursor(operand), pos == UnaryOpPos.BEFORE
+        )
 
     def _handle_binary_operator(
         self, cursor: Cursor

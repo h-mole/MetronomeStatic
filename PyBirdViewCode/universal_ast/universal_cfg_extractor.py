@@ -1,3 +1,4 @@
+import copy
 from html import escape
 from ..universal_ast import universal_ast_nodes as nodes
 from typing import Dict, List, Literal, Tuple, Union, Optional
@@ -14,11 +15,11 @@ class BasicBlock:
         self,
         id: int,
         statements: Optional[List[nodes.SourceElement]] = None,
-        kind="normal",
+        kind: BlockKinds = "normal",
     ):
         self._id = id
         self.statements = statements if statements is not None else []
-        self.kind = kind
+        self.kind: BlockKinds = kind
         self.tag_on_empty = ""
         self.next_blocks: List[BasicBlock] = []
 
@@ -94,11 +95,9 @@ class CFG:
         """
         Convert this CFG to a networkx graph
         """
-        g = nx.DiGraph()
+        g = copy.deepcopy(self.topology)
         # get_edges(self.head_block)
         for block in self._all_blocks:
-            g.add_node(block._id)
-            g.add_edges_from([(block._id, nb._id) for nb in block.next_blocks])
             label_base = f"#{block._id} {escape(block.text_on_empty())}\n"
             if len(block.statements) > 0:
                 g.nodes[block._id]["label"] = label_base + "\n".join(

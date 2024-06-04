@@ -3,7 +3,6 @@ import parso
 from parso.tree import NodeOrLeaf
 from parso.python.tree import PythonNode, Operator
 import parso.python.tree as parso_tree
-from .models import NotImplementedItem
 from ..universal_ast import universal_ast_nodes as nodes
 
 
@@ -25,8 +24,8 @@ class ParsoASTConverter:
         self._ret_value = None
         # self._labels: Dict[str, LabelDesc] = {}
 
-    def _handle_notimplemented(self, c: NodeOrLeaf) -> NotImplementedItem:
-        return NotImplementedItem(str(c.kind))
+    def _handle_notimplemented(self, c: NodeOrLeaf) -> nodes.NotImplementedItem:
+        return nodes.NotImplementedItem(str(c.kind))
 
     def _handle_name(self, node: parso_tree.Name) -> nodes.Name:
         return nodes.Name(node.value)

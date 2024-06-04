@@ -4,6 +4,7 @@ This file is copied from plyj package.
 
 from typing import (
     Any,
+    Callable,
     Dict,
     Generator,
     List,
@@ -18,8 +19,11 @@ from typing import (
 from itertools import chain
 from MelodieFuncFlow import MelodieGenerator
 
+
 if TYPE_CHECKING:
     from ..universal_ast import universal_ast_types as types
+
+DATA_TYPE = Union["StructType", "ArrayType", str, "IntType", "FloatType", "UnknownType"]
 
 
 class SourceElement(object):
@@ -27,6 +31,67 @@ class SourceElement(object):
     A SourceElement is the base class for all elements that occur in a Java
     file parsed by plyj.
     """
+
+    class ApplyContext:
+        def __init__(self) -> None:
+            self.hierarchy: List[SourceElement] = []
+
+        def print_hierarchy(self):
+            print([c.__class__.__name__ for c in self.hierarchy])
+
+        @property
+        def current_node(self) -> "SourceElement":
+            """
+            Current node in the Clang AST
+            """
+            if len(self.hierarchy) > 0:
+                return self.hierarchy[-1]
+            else:
+                raise ValueError("Traversal context does not contain any node.")
+
+        def _push(self, node: "SourceElement"):
+            self.hierarchy.append(node)
+
+        def _pop(self):
+            self.hierarchy.pop()
+
+        def find_by_type(self, type: "TypingType[SourceElement]"):
+            """
+            Search the AST hierarchy, get the AST node of the same kind.
+            """
+            for item in self.hierarchy:
+                if item.__class__ == type:
+                    return item
+            return None
+
+        def find_by_type_td(self, type: "TypingType[SourceElement]"):
+            """
+            Perform top-down search by AST node kind in the hierarchy.
+            """
+            for item in reversed(self.hierarchy):
+                if item.__class__ == type:
+                    return item
+            return None
+
+        def nearest_block(self) -> Tuple["SourceElement", "SourceElement"]:
+            """
+            Find nearest Block Statement
+
+            :return:
+            """
+            compound_stmt: Optional[BlockStmt] = None
+            index = len(self.hierarchy)
+            for item in reversed(self.hierarchy):
+                index -= 1
+                if item.__class__ in {BlockStmt}:
+                    compound_stmt = item
+                    break
+
+            expr: SourceElement = self.hierarchy[index + 1]  # compound_stmt下的
+            return compound_stmt, expr
+
+        def __len__(self):
+            return len(self.hierarchy)
 
     _common_fields: List[str] = ["location"]
     _fields: List[str] = []
@@ -132,6 +197,31 @@ class SourceElement(object):
         Convert this element to a json-serializable dict
         """
         return self._single_item_to_serializable(self)
+
+    def _apply_func_to_uast(
+        self, walk_func: Callable[[ApplyContext], bool], ctx: ApplyContext
+    ):
+        ctx._push(self)
+
+        ret = walk_func(ctx)
+        if ret:
+            for f in chain(self._fields, self._common_fields):
+                field = getattr(self, f)
+                if field:
+                    if isinstance(field, list):
+                        for elem in field:
+                            if isinstance(elem, SourceElement):
+                                elem._apply_func_to_uast(walk_func, ctx)
+                    elif isinstance(field, SourceElement):
+                        field._apply_func_to_uast(walk_func, ctx)
+        ctx._pop()
+
+    def apply_with_hierarchy(self, walk_func: Callable[[ApplyContext], bool]):
+        """
+        Walk through the UAST applying the `walk_func` to each node
+        """
+        ctx = self.ApplyContext()
+        self._apply_func_to_uast(walk_func, ctx)
 
     def walk_preorder(self) -> Generator["SourceElement", None, None]:
         for f in chain(self._fields, self._common_fields):
@@ -308,7 +398,7 @@ class EmptyDecl(SourceElement):
 class FieldDecl(SourceElement):
     _fields = ["name", "type", "modifiers"]
 
-    def __init__(self, name, type, init_value=None, modifiers=None):
+    def __init__(self, name, type: DATA_TYPE, init_value=None, modifiers=None):
         super(FieldDecl, self).__init__()
         if modifiers is None:
             modifiers = []
@@ -334,15 +424,44 @@ class MethodType(SourceElement):
         self.modifiers = modifiers if modifiers is not None else []
 
 
+class IntType(SourceElement):
+    _fields = ["bits", "signed"]
+    def __init__(self, bits: int = 0, signed=True):
+        """
+        :bits: Memory bits storing this integer.
+        :signed: Whether this integer is signed or unsigned
+        """
+        super().__init__()
+        assert bits >= 0
+        self.bits = bits
+        self.signed = signed
+
+
+class FloatType(SourceElement):
+    _fields = ["bits"]
+
+    def __init__(self, bits: int = 64):
+        super().__init__()
+        self.bits = bits
+
+
 class ArrayType(SourceElement):
     _fields = ["elem_type", "length"]
 
     def __init__(
-        self, elem_type: SourceElement, length: Optional[SourceElement] = None
+        self, elem_type: DATA_TYPE, length: Optional[SourceElement] = None
     ):
         super().__init__()
         self.elem_type = elem_type
         self.length = length
+
+
+class UnknownType(SourceElement):
+    _fields = ["type"]
+
+    def __init__(self, type_str: str):
+        super().__init__()
+        self.type: str = type_str
 
 
 class MethodDecl(SourceElement):
@@ -462,7 +581,7 @@ class CompoundDecl(SourceElement):
 class ParamDecl(SourceElement):
     _fields = ["name", "type"]
 
-    def __init__(self, name: "Name", type: str):
+    def __init__(self, name: "Name", type: DATA_TYPE):
         super(ParamDecl, self).__init__()
         self.name = name
         self.type = type
@@ -740,7 +859,9 @@ class UnaryExpr(Expr):
 class CastExpr(Expr):
     _fields = ["target", "expression", "style"]
 
-    def __init__(self, target, expression, style: LiteralType["c", "cxx_static"]):
+    def __init__(
+        self, target: "DATA_TYPE", expression, style: LiteralType["c", "cxx_static"]
+    ):
         super(CastExpr, self).__init__()
         self.target = target
         self.style = style
@@ -902,7 +1023,7 @@ class SwitchCase(SourceElement):
     ):
         super(SwitchCase, self).__init__()
         self.case = case
-        assert isinstance(self.case, list)
+        assert isinstance(self.case, list), self.case
         self.body = body
 
 
@@ -1305,3 +1426,14 @@ class Visitor(object):
             return True
 
         return f
+
+
+class NotImplementedItem(SourceElement):
+    _fields = ["kind"]
+
+    def __init__(self, kind: str) -> None:
+        super().__init__()
+        self.kind = kind
+
+    def __repr__(self) -> str:
+        return f"<NotimplementedItem {self.kind}>"
