@@ -1,9 +1,9 @@
 import json
 import os
 from PyBirdViewCode.clang_utils.code_attributes.utils import get_func_decl, parse_file
-from PyBirdViewCode.universal_ast.c_cpp_converter import ClangASTConverter
-from PyBirdViewCode.universal_ast.universal_ast_nodes import SourceElement
-from PyBirdViewCode.universal_ast.universal_cfg_extractor import CFGBuilder
+from PyBirdViewCode.uast.c_cpp_converter import ClangASTConverter
+from PyBirdViewCode.uast.universal_ast_nodes import SourceElement
+from PyBirdViewCode.uast.universal_cfg_extractor import CFGBuilder
 from PyBirdViewCode.utils.files import FileManager, abspath_from_file
 from tests.base import asset_path
 from PyBirdViewCode.clang_utils import beautified_print_ast

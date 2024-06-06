@@ -1,6 +1,6 @@
 from PyBirdViewCode.clang_utils.code_attributes.utils import parse_file
-from PyBirdViewCode.universal_ast.c_cpp_converter import ClangASTConverter
-from PyBirdViewCode.universal_ast import (
+from PyBirdViewCode.uast.c_cpp_converter import ClangASTConverter
+from PyBirdViewCode.uast import (
     universal_ast_nodes as nodes,
     universal_ast_types as types,
 )
@@ -69,9 +69,9 @@ def test_variable_types():
     assert node.name.id == "register_func"
 
     ret2 = ret.filter_by(nodes.VarDecl).filter(lambda c: c.variable == "g_func").head()
-    assert isinstance(ret2.type, types.CallableType)
+    assert isinstance(ret2.type, nodes.MethodType)
 
-    main_ast = ret.filter_by(nodes.MethodDecl).filter(lambda n: n.name == "main").head()
+    main_ast = ret.filter_by(nodes.MethodDecl).filter(lambda n: n.name.id == "main").head()
     compound_decls = main_ast.filter_by(nodes.CompoundDecl).l
     assert len(compound_decls) == 4
 

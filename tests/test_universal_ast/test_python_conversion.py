@@ -1,7 +1,7 @@
 from typing import Any, Callable, Dict
 
 import parso
-from PyBirdViewCode.universal_ast import ParsoASTConverter, universal_ast_nodes as nodes
+from PyBirdViewCode.uast import ParsoASTConverter, universal_ast_nodes as nodes
 
 
 def parse_py_code(code: str, version="3.9"):

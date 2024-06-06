@@ -21,9 +21,16 @@ from MelodieFuncFlow import MelodieGenerator
 
 
 if TYPE_CHECKING:
-    from ..universal_ast import universal_ast_types as types
+    from ..uast import universal_ast_types as types
 
-DATA_TYPE = Union["StructType", "ArrayType", str, "IntType", "FloatType", "UnknownType"]
+DATA_TYPE = Union[
+    "StructType",
+    "ArrayType",
+    "IntType",
+    "FloatType",
+    "UnknownType",
+    "AddrReferenceType",
+]
 
 
 class SourceElement(object):
@@ -105,6 +112,7 @@ class SourceElement(object):
         # self.type = ""
 
     def __repr__(self):
+        # try:
         equals = (
             "{0}={1!r}".format(k, getattr(self, k))
             for k in chain(self._fields, self._common_fields)
@@ -239,7 +247,7 @@ class SourceElement(object):
         return MelodieGenerator(self.walk_preorder())
 
     def filter_by(
-        self, _type: Optional[TypingType["T"]] = None, **props
+        self, _type: Optional[Union[TypingType["T"], Tuple]] = None, **props
     ) -> MelodieGenerator["T"]:
         def filter_func(node: SourceElement) -> bool:
             if _type is not None and not isinstance(node, _type):
@@ -398,7 +406,7 @@ class EmptyDecl(SourceElement):
 class FieldDecl(SourceElement):
     _fields = ["name", "type", "modifiers"]
 
-    def __init__(self, name, type: DATA_TYPE, init_value=None, modifiers=None):
+    def __init__(self, name: str, type: DATA_TYPE, init_value=None, modifiers=None):
         super(FieldDecl, self).__init__()
         if modifiers is None:
             modifiers = []
@@ -426,6 +434,7 @@ class MethodType(SourceElement):
 
 class IntType(SourceElement):
     _fields = ["bits", "signed"]
+
     def __init__(self, bits: int = 0, signed=True):
         """
         :bits: Memory bits storing this integer.
@@ -445,12 +454,26 @@ class FloatType(SourceElement):
         self.bits = bits
 
 
+class UserDefinedType(SourceElement):
+    _fields = ["name"]
+
+    def __init__(self, name: str):
+        super().__init__()
+        self.name = name
+
+
+class AddrReferenceType(SourceElement):
+    _fields = ["referee"]
+
+    def __init__(self, referee: DATA_TYPE):
+        super().__init__()
+        self.referee = referee
+
+
 class ArrayType(SourceElement):
     _fields = ["elem_type", "length"]
 
-    def __init__(
-        self, elem_type: DATA_TYPE, length: Optional[SourceElement] = None
-    ):
+    def __init__(self, elem_type: DATA_TYPE, length: Optional[SourceElement] = None):
         super().__init__()
         self.elem_type = elem_type
         self.length = length
@@ -493,7 +516,7 @@ class MethodDecl(SourceElement):
 
     def __init__(
         self,
-        name: Optional[SourceElement],
+        name: Optional["Name"],
         type: MethodType,
         # modifiers=None,
         # type_parameters=None,
@@ -857,14 +880,19 @@ class UnaryExpr(Expr):
 
 
 class CastExpr(Expr):
-    _fields = ["target", "expression", "style"]
+    _fields = ["target_type", "expr_type", "expression", "style"]
 
     def __init__(
-        self, target: "DATA_TYPE", expression, style: LiteralType["c", "cxx_static"]
+        self,
+        target_type: "DATA_TYPE",
+        expr_type: "DATA_TYPE",
+        expression,
+        style: LiteralType["c", "cxx_static"],
     ):
         super(CastExpr, self).__init__()
-        self.target = target
+        self.target_type = target_type
         self.style = style
+        self.expr_type = expr_type
         self.expression = expression
 
 
@@ -1409,7 +1437,7 @@ class Visitor(object):
         self.verbose = verbose
 
     def __getattr__(self, name):
-        from ..universal_ast import universal_ast_types as types
+        from ..uast import universal_ast_types as types
 
         if not (name.startswith("visit_") or name.startswith("leave_")):
             raise AttributeError(
@@ -1437,3 +1465,96 @@ class NotImplementedItem(SourceElement):
 
     def __repr__(self) -> str:
         return f"<NotimplementedItem {self.kind}>"
+
+
+# TO update this "__ALL__":
+# ", ".join(["\""+k+'"' for k, v in uast.__dict__.items()
+#               if type(v) == type and issubclass(v, uast.SourceElement)])
+__ALL__ = [
+    "SourceElement",
+    "CompilationUnit",
+    "PackageDecl",
+    "ImportDecl",
+    "StructDecl",
+    "UnionDecl",
+    "ClassDecl",
+    "ClassInitializer",
+    "ConstructorDecl",
+    "EmptyDecl",
+    "FieldDecl",
+    "MethodType",
+    "IntType",
+    "FloatType",
+    "ArrayType",
+    "UnknownType",
+    "MethodDecl",
+    "FormalParameter",
+    "Variable",
+    "VarDecl",
+    "CompoundDecl",
+    "ParamDecl",
+    "Throws",
+    "InterfaceDecl",
+    "EnumDecl",
+    "EnumConst",
+    "AnnotationDecl",
+    "AnnotationMethodDecl",
+    "Annotation",
+    "AnnotationMember",
+    "Type",
+    "Wildcard",
+    "WildcardBound",
+    "TypeParam",
+    "Expr",
+    "ExprStmt",
+    "BinaryExpr",
+    "Assignment",
+    "Conditional",
+    "UnaryExpr",
+    "CastExpr",
+    "Stmt",
+    "EmptyStmt",
+    "BlockStmt",
+    "ArrayInitializer",
+    "StructInitializer",
+    "CallExpr",
+    "IfThenElseStmt",
+    "WhileStmt",
+    "ForStmt",
+    "ForEachStmt",
+    "AssertStmt",
+    "SwitchStmt",
+    "DefaultStmt",
+    "SwitchCase",
+    "DoWhileStmt",
+    "ContinueStmt",
+    "BreakStmt",
+    "ReturnStmt",
+    "SynchronizedStmt",
+    "ThrowStmt",
+    "TryStmt",
+    "CatchStmt",
+    "Resource",
+    "ConstructorCallStmt",
+    "InstanceCreationExpr",
+    "FieldAccessExpr",
+    "ArrayAccessExpr",
+    "ArrayCreation",
+    "Literal",
+    "ClassLiteral",
+    "Name",
+    "ReferenceExpr",
+    "DereferenceExpr",
+    "KeyValuePair",
+    "SpecialExpr",
+    "Label",
+    "AddressLabel",
+    "GoToStmt",
+    "Using",
+    "AccessSpecfier",
+    "Yield",
+    "YieldFrom",
+    "NameSpaceDef",
+    "NameSpaceRef",
+    "NotImplementedItem",
+]

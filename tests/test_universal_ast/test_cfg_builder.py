@@ -2,9 +2,9 @@ import json
 import os
 from pprint import pprint
 from PyBirdViewCode.clang_utils.code_attributes.utils import get_func_decl, parse_file
-from PyBirdViewCode.universal_ast.c_cpp_converter import ClangASTConverter
-from PyBirdViewCode.universal_ast.universal_cfg_extractor import CFGBuilder
-from PyBirdViewCode.universal_ast import (
+from PyBirdViewCode.uast.c_cpp_converter import ClangASTConverter
+from PyBirdViewCode.uast.universal_cfg_extractor import CFGBuilder
+from PyBirdViewCode.uast import (
     universal_ast_nodes as nodes,
     universal_ast_types as types,
 )

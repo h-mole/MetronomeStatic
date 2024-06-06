@@ -1,6 +1,6 @@
 from .Visitor import *
 import sys
-from ..universal_ast import universal_ast_nodes as nodes
+from ..uast import universal_ast_nodes as nodes
 
 
 class NoClassExists(Exception):

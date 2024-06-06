@@ -50,8 +50,8 @@ from .models import (
     StructValue,
     Variable,
 )
-from ..universal_ast import universal_ast_nodes as nodes
-from ..universal_ast import universal_ast_types as types
+from ..uast import universal_ast_nodes as nodes
+from ..uast import universal_ast_types as types
 
 if TYPE_CHECKING:
     CursorKind: Any = CursorKind
@@ -94,8 +94,16 @@ class ClangASTConverter:
     ) -> None:
         self.source_location_filter: Optional[Callable[[SourceLocation], bool]] = None
         self.platform_default_bits: Dict[
-            Literal["int", "char", "short", "long", "longlong"], int
-        ] = {"int": 32, "long": 32, "longlong": 64, "short": 16, "char": 8}
+            Literal["int", "char", "short", "long", "longlong", "float", "double"], int
+        ] = {
+            "int": 32,
+            "long": 32,
+            "longlong": 64,
+            "short": 16,
+            "char": 8,
+            "float": 32,
+            "double": 64,
+        }
         self._handlers_map: Dict[
             CursorKind, Callable[[Cursor], nodes.SourceElement]
         ] = {
@@ -214,6 +222,8 @@ class ClangASTConverter:
         short_bits = self.platform_default_bits["short"]
         long_bits = self.platform_default_bits["long"]
         long_long_bits = self.platform_default_bits["longlong"]
+        float_bits = self.platform_default_bits["float"]
+        double_bits = self.platform_default_bits["double"]
         self.integer_types_mapping = {
             TypeKind.CHAR_U: nodes.IntType(char_bits, False),
             TypeKind.UCHAR: nodes.IntType(char_bits, False),
@@ -233,6 +243,11 @@ class ClangASTConverter:
             TypeKind.LONGLONG: nodes.IntType(long_long_bits),
             TypeKind.INT128: nodes.IntType(128),
         }
+        self.float_kinds_mapping = {
+            TypeKind.FLOAT: nodes.FloatType(32),
+            TypeKind.DOUBLE: nodes.FloatType(double_bits),
+            TypeKind.LONGDOUBLE: nodes.FloatType(64),
+        }
 
     def convert_type(self, t: CindexType) -> nodes.DATA_TYPE:
         if 4 <= t.kind.value <= 20:
@@ -241,7 +256,14 @@ class ClangASTConverter:
             return nodes.ArrayType(
                 self.convert_type(t.get_array_element_type()), t.get_array_size()
             )
+        elif t.kind in self.float_kinds_mapping:
+            return self.float_kinds_mapping.get(t.kind, nodes.UnknownType(t.spelling))
+        elif t.kind == TypeKind.ELABORATED:
+            return nodes.UserDefinedType(t.spelling)
+        elif t.kind == TypeKind.POINTER:
+            return nodes.AddrReferenceType(self.convert_type(t.get_pointee()))
         else:
+            print("kind", t.kind, t.spelling)
             return nodes.UnknownType(t.spelling)
 
     def _handle_notimplemented(self, c: Cursor) -> nodes.NotImplementedItem:
@@ -268,16 +290,18 @@ class ClangASTConverter:
     def eval_single_cursor(self, cursor: Cursor):
         try:
             ret = self._handlers_map[cursor.kind](cursor)
-            # cursor.location.file,
-            ret.location = (cursor.location.line, cursor.location.column)
+            if cursor is not None and ret is not None:
+                ret.location = (cursor.location.line, cursor.location.column)
+
             return ret
         except Exception as e:
-            print(
-                "error occurred in cursor",
-                cursor.location.file,
-                cursor.location.line,
-                cursor.location.column,
-            )
+            if cursor is not None:
+                print(
+                    "error occurred in cursor",
+                    cursor.location.file,
+                    cursor.location.line,
+                    cursor.location.column,
+                )
             raise e
 
     def eval_children(self, cursor: Cursor) -> List:
@@ -330,17 +354,19 @@ class ClangASTConverter:
         body_ast = self.eval_single_cursor_if_not_none(body_cursor)
         return_type = self.convert_type(cursor.type.get_result())
         return nodes.MethodDecl(
-            cursor.spelling,
-            types.CallableType(params_ast, return_type, []),
+            nodes.Name(cursor.spelling),
+            nodes.MethodType(params_ast, return_type, []),
             body_ast,
         )
 
     def _handle_cast_expr(
         self, cursor: Cursor, kind: Literal["c", "cxx_static"]
     ) -> nodes.CastExpr:
+        child = next(cursor.get_children())
         return nodes.CastExpr(
             self.convert_type(cursor.type),
-            self.eval_single_cursor(next(cursor.get_children())),
+            self.convert_type(child.type),
+            self.eval_single_cursor(child),
             kind,
         )
 
@@ -423,7 +449,7 @@ class ClangASTConverter:
                 return nodes.VarDecl(
                     cursor.spelling,
                     None,
-                    types.CallableType(children_parsed, return_type),
+                    nodes.MethodType(children_parsed, return_type),
                 )
         if len(children_asts) >= 1:
             l_value = nodes.Name(cursor.spelling)
@@ -567,7 +593,7 @@ class ClangASTConverter:
 
     def _handle_case_stmt(self, cursor: Cursor) -> nodes.SwitchCase:
         case_cond, body = self.eval_children(cursor)
-        return nodes.SwitchCase(case_cond, body)
+        return nodes.SwitchCase([case_cond], body)
 
     def _handle_do_stmt(self, cursor: Cursor):
         body_ast, pred_ast = self.eval_children(cursor)

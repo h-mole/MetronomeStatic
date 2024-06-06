@@ -3,8 +3,8 @@ import os
 from pprint import pprint
 from typing import List
 from PyBirdViewCode.clang_utils.code_attributes.utils import get_func_decl, parse_file
-from PyBirdViewCode.universal_ast.c_cpp_converter import ClangASTConverter
-from PyBirdViewCode.universal_ast import universal_ast_nodes as nodes
+from PyBirdViewCode.uast.c_cpp_converter import ClangASTConverter
+from PyBirdViewCode.uast import universal_ast_nodes as nodes, BaseUASTUnparser
 from PyBirdViewCode.utils.files import FileManager, abspath_from_file
 from tests.base import asset_path
 from PyBirdViewCode.clang_utils import beautified_print_ast, CursorKind
@@ -71,11 +71,11 @@ def test_conv_demo1():
     assert namespaces[1].name == "second_space"
     assert (
         isinstance(namespaces[0].children[0], nodes.MethodDecl)
-        and namespaces[0].children[0].name == "func"
+        and namespaces[0].children[0].name.id == "func"
     )
     assert (
         isinstance(namespaces[1].children[0], nodes.MethodDecl)
-        and namespaces[1].children[0].name == "func"
+        and namespaces[1].children[0].name.id == "func"
     )
 
 
@@ -104,7 +104,7 @@ def test_conv_cpp_class():
             lambda node: (
                 node.iter_nodes()
                 .filter(lambda node: isinstance(node, nodes.MethodDecl))
-                .filter(lambda node: node.name == "set")
+                .filter(lambda node: node.name.id == "set")
                 .l[0]
             )
         )
@@ -113,7 +113,7 @@ def test_conv_cpp_class():
         .l[0]
     )
     print(method_ast)
-    assert method_ast.name == "set"
+    assert method_ast.name.id == "set"
     assert MelodieGenerator(method_ast.type.pos_args).map(
         lambda param: param.name
     ).s == {
@@ -122,6 +122,6 @@ def test_conv_cpp_class():
         "hei",
     }
     assert MelodieGenerator(method_ast.type.pos_args).map(
-        lambda param: param.type
+        lambda param: BaseUASTUnparser().unparse(param.type)
     ).s == {"double"}
     assert method_ast.body is None

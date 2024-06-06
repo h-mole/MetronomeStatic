@@ -1,6 +1,6 @@
 import copy
 from html import escape
-from ..universal_ast import universal_ast_nodes as nodes
+from ..uast import universal_ast_nodes as nodes
 from typing import Dict, List, Literal, Tuple, Union, Optional
 import networkx as nx
 from .exceptions import OnBreakStatement

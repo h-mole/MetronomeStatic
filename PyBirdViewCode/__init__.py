@@ -1,3 +1,3 @@
 from .utils import *
-from .universal_ast import *
+from .uast import *
 from .algorithms import *

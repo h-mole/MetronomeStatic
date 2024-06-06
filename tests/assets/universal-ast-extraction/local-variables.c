@@ -4,6 +4,8 @@ int BB = 145;
 int main()
 {
     AA = 0;
+    int a = 123;
+    int b = 456;
 }
 
 int ARR[2] = {1, 2};

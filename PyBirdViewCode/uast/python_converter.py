@@ -3,7 +3,7 @@ import parso
 from parso.tree import NodeOrLeaf
 from parso.python.tree import PythonNode, Operator
 import parso.python.tree as parso_tree
-from ..universal_ast import universal_ast_nodes as nodes
+from ..uast import universal_ast_nodes as nodes
 
 
 class ParsoASTConverter:
