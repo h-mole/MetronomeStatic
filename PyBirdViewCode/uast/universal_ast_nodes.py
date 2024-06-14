@@ -27,10 +27,65 @@ DATA_TYPE = Union[
     "StructType",
     "ArrayType",
     "IntType",
+    "VoidType",
     "FloatType",
     "UnknownType",
     "AddrReferenceType",
 ]
+
+STANDARD_BINARY_OPERATORS: set[str] = {
+    # Arithmetics
+    "*",  # Times
+    "+",  # Add
+    "-",  # Subtract
+    "/",  # Division
+    "%",  # Mod
+    "**",  # Power
+    ",",  # Comma operator
+    # Logics
+    "&&",  # And
+    "||",  # Or
+    # Bitwise operators
+    "|",  # Bitwise Or
+    "^",  # Bitwise XOR
+    "&",  # Bitwise and
+    "<<",  # Left shift
+    ">>",  # Right shift
+    # Relationships
+    "!=",  # Not equal
+    "<=",  # Less than or equal
+    "<",  # Less than
+    "==",  # Equal
+    ">=",  # Greater than or equal
+    ">",  # Greater than
+}
+
+STANDARD_UNARY_OPERATORS: set[tuple[str, bool]] = {
+    ("+", True),  # Plus (usage like "+a", "+1")
+    ("-", True),  # Minus
+    ("!", True),  # Not
+    ("&", True),  # Address of
+    ("*", True),  # Value of
+    ("++", True),  # Pre-increment
+    ("++", False),  # Post-increment
+    ("--", True),  # Pre-decrement
+    ("--", False),  # Post-decrement
+    ("~", True),  # Bitwise not
+}
+
+STANDARD_ASSIGNMENTS: set[str] = {
+    "=",
+    "+=",
+    "-=",
+    "*=",
+    "/=",
+    "%=",
+    "<<=",
+    ">>=",
+    "&=",
+    "|=",
+    "^=",
+}
 
 
 class SourceElement(object):
@@ -430,6 +485,13 @@ class MethodType(SourceElement):
         self.pos_args = pos_args
         self.return_type = return_type
         self.modifiers = modifiers if modifiers is not None else []
+
+
+class VoidType(SourceElement):
+    _fields = []
+
+    def __init__(self):
+        super().__init__()
 
 
 class IntType(SourceElement):
@@ -844,6 +906,8 @@ class BinaryExpr(Expr):
         self.operator = operator
         self.lhs = lhs
         self.rhs = rhs
+        if self.__class__ == BinaryExpr:
+            assert operator in STANDARD_BINARY_OPERATORS, operator
 
 
 class Assignment(BinaryExpr):
@@ -856,6 +920,8 @@ class Assignment(BinaryExpr):
         super().__init__(operator, lhs, rhs)
         assert isinstance(self.lhs, list)
         assert isinstance(self.rhs, list)
+        if self.__class__ == Assignment:
+            assert operator in STANDARD_ASSIGNMENTS, operator
 
 
 class Conditional(Expr):
@@ -877,6 +943,11 @@ class UnaryExpr(Expr):
         self.expression = expression
         # self.op_pos = op_pos
         self.op_before_expr = op_before_expr
+        if self.__class__ == UnaryExpr:
+            assert (self.sign, self.op_before_expr) in STANDARD_UNARY_OPERATORS, (
+                self.sign,
+                self.op_before_expr,
+            )
 
 
 class CastExpr(Expr):
@@ -1484,6 +1555,7 @@ __ALL__ = [
     "FieldDecl",
     "MethodType",
     "IntType",
+    "VoidType",
     "FloatType",
     "ArrayType",
     "UnknownType",

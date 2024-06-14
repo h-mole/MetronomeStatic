@@ -1,11 +1,7 @@
-# 0 "lvm.c"
-# 0 "<built-in>"
+ # 0 "<built-in>"
 # 0 "<command-line>"
-# 1 "lvm.c"
-# 10 "lvm.c"
-# 1 "lprefix.h" 1
-# 11 "lvm.c" 2
-
+  # 1 "lprefix.h" 1
+ 
 # 1 "C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/float.h" 1 3 4
 # 627 "C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/float.h" 3 4
 # 1 "C:/msys64/mingw64/include/float.h" 1 3 4
@@ -220,10 +216,8 @@ __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) __attribute__ ((_
 
 extern long double __attribute__((__cdecl__)) _chgsignl (long double);
 # 628 "C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/float.h" 2 3 4
-# 13 "lvm.c" 2
-# 1 "C:/msys64/mingw64/include/limits.h" 1 3
-# 14 "lvm.c" 2
-# 1 "C:/msys64/mingw64/include/math.h" 1 3
+ # 1 "C:/msys64/mingw64/include/limits.h" 1 3
+ # 1 "C:/msys64/mingw64/include/math.h" 1 3
 # 10 "C:/msys64/mingw64/include/math.h" 3
        
 # 11 "C:/msys64/mingw64/include/math.h" 3
@@ -658,8 +652,7 @@ __extension__ long long __attribute__((__cdecl__)) llrintl (long double);
    extern long double __attribute__((__cdecl__)) _chgsignl (long double);
 # 1580 "C:/msys64/mingw64/include/math.h" 3
 #pragma pack(pop)
-# 15 "lvm.c" 2
-# 1 "C:/msys64/mingw64/include/stdio.h" 1 3
+ # 1 "C:/msys64/mingw64/include/stdio.h" 1 3
 # 9 "C:/msys64/mingw64/include/stdio.h" 3
 # 1 "C:/msys64/mingw64/include/corecrt_stdio_config.h" 1 3
 # 10 "C:/msys64/mingw64/include/stdio.h" 2 3
@@ -1526,8 +1519,7 @@ void __attribute__((__cdecl__)) __mingw_str_free(void *ptr);
   __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _snwscanf_l(const wchar_t *_Src,size_t _MaxCount,const wchar_t *_Format,_locale_t _Locale,...);
   __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _wscanf_l(const wchar_t *_Format,_locale_t _Locale,...);
 # 1639 "C:/msys64/mingw64/include/stdio.h" 2 3
-# 16 "lvm.c" 2
-# 1 "C:/msys64/mingw64/include/stdlib.h" 1 3
+ # 1 "C:/msys64/mingw64/include/stdlib.h" 1 3
 # 10 "C:/msys64/mingw64/include/stdlib.h" 3
 # 1 "C:/msys64/mingw64/include/corecrt_wstdlib.h" 1 3
 # 15 "C:/msys64/mingw64/include/corecrt_wstdlib.h" 3
@@ -2197,8 +2189,7 @@ _mm_free (void *__aligned_ptr)
 # 189 "C:/msys64/mingw64/include/malloc.h" 3
 #pragma pack(pop)
 # 770 "C:/msys64/mingw64/include/stdlib.h" 2 3
-# 17 "lvm.c" 2
-# 1 "C:/msys64/mingw64/include/string.h" 1 3
+ # 1 "C:/msys64/mingw64/include/string.h" 1 3
 # 45 "C:/msys64/mingw64/include/string.h" 3
   __attribute__ ((__dllimport__)) void *__attribute__((__cdecl__)) _memccpy(void *_Dst,const void *_Src,int _Val,size_t _MaxCount);
   void *__attribute__((__cdecl__)) memchr(const void *_Buf ,int _Val,size_t _MaxCount);
@@ -2430,8 +2421,7 @@ _mm_free (void *__aligned_ptr)
     return _src ? wcsnlen(_src, _count) : 0;
   }
 # 195 "C:/msys64/mingw64/include/string.h" 2 3
-# 18 "lvm.c" 2
-
+ 
 # 1 "lua.h" 1
 # 12 "lua.h"
 # 1 "C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/stdarg.h" 1 3 4
@@ -2733,8 +2723,7 @@ struct lua_Debug {
 
   struct CallInfo *i_ci;
 };
-# 20 "lvm.c" 2
-
+ 
 # 1 "ldebug.h" 1
 # 11 "ldebug.h"
 # 1 "lstate.h" 1
@@ -3310,8 +3299,7 @@ extern const char *luaG_addinfo (lua_State *L, const char *msg,
                                                   TString *src, int line);
 extern void __attribute__((noreturn)) luaG_errormsg (lua_State *L);
 extern int luaG_traceexec (lua_State *L, const Instruction *pc);
-# 22 "lvm.c" 2
-# 1 "ldo.h" 1
+ # 1 "ldo.h" 1
 # 61 "ldo.h"
 typedef void (*Pfunc) (lua_State *L, void *ud);
 
@@ -3338,8 +3326,7 @@ extern void luaD_inctop (lua_State *L);
 
 extern void __attribute__((noreturn)) luaD_throw (lua_State *L, int errcode);
 extern int luaD_rawrunprotected (lua_State *L, Pfunc f, void *ud);
-# 23 "lvm.c" 2
-# 1 "lfunc.h" 1
+ # 1 "lfunc.h" 1
 # 50 "lfunc.h"
 extern Proto *luaF_newproto (lua_State *L);
 extern CClosure *luaF_newCclosure (lua_State *L, int nupvals);
@@ -3353,8 +3340,7 @@ extern void luaF_unlinkupval (UpVal *uv);
 extern void luaF_freeproto (lua_State *L, Proto *f);
 extern const char *luaF_getlocalname (const Proto *func, int local_number,
                                          int pc);
-# 24 "lvm.c" 2
-# 1 "lgc.h" 1
+ # 1 "lgc.h" 1
 # 188 "lgc.h"
 extern void luaC_fix (lua_State *L, GCObject *o);
 extern void luaC_freeallobjects (lua_State *L);
@@ -3368,8 +3354,7 @@ extern void luaC_barrier_ (lua_State *L, GCObject *o, GCObject *v);
 extern void luaC_barrierback_ (lua_State *L, GCObject *o);
 extern void luaC_checkfinalizer (lua_State *L, GCObject *o, Table *mt);
 extern void luaC_changemode (lua_State *L, int newmode);
-# 25 "lvm.c" 2
-
+ 
 # 1 "lopcodes.h" 1
 # 32 "lopcodes.h"
 enum OpMode {iABC, iABx, iAsBx, iAx, isJ};
@@ -3490,8 +3475,7 @@ OP_EXTRAARG
 } OpCode;
 # 381 "lopcodes.h"
 extern const lu_byte luaP_opmodes[((int)(OP_EXTRAARG) + 1)];
-# 27 "lvm.c" 2
-
+ 
 # 1 "lstring.h" 1
 # 44 "lstring.h"
 extern unsigned int luaS_hash (const char *str, size_t l, unsigned int seed);
@@ -3505,8 +3489,7 @@ extern Udata *luaS_newudata (lua_State *L, size_t s, int nuvalue);
 extern TString *luaS_newlstr (lua_State *L, const char *str, size_t l);
 extern TString *luaS_new (lua_State *L, const char *str);
 extern TString *luaS_createlngstrobj (lua_State *L, size_t l);
-# 29 "lvm.c" 2
-# 1 "ltable.h" 1
+ # 1 "ltable.h" 1
 # 38 "ltable.h"
 extern const TValue *luaH_getint (Table *t, lua_Integer key);
 extern void luaH_setint (lua_State *L, Table *t, lua_Integer key,
@@ -3528,8 +3511,7 @@ extern void luaH_free (lua_State *L, Table *t);
 extern int luaH_next (lua_State *L, Table *t, StkId key);
 extern lua_Unsigned luaH_getn (Table *t);
 extern unsigned int luaH_realasize (const Table *t);
-# 30 "lvm.c" 2
-
+ 
 # 1 "lvm.h" 1
 # 43 "lvm.h"
 typedef enum {
@@ -3558,9 +3540,7 @@ extern lua_Integer luaV_mod (lua_State *L, lua_Integer x, lua_Integer y);
 extern lua_Number luaV_modf (lua_State *L, lua_Number x, lua_Number y);
 extern lua_Integer luaV_shiftl (lua_Integer x, lua_Integer y);
 extern void luaV_objlen (lua_State *L, StkId ra, const TValue *rb);
-# 32 "lvm.c" 2
-# 90 "lvm.c"
-static int l_strton (const TValue *obj, TValue *result) {
+  static int l_strton (const TValue *obj, TValue *result) {
   ((void)0);
   if (!(((((((obj))->tt_)) & 0x0F)) == (4)))
     return 0;
@@ -3599,14 +3579,10 @@ int luaV_flttointeger (lua_Number n, lua_Integer *p, F2Imod mode) {
       f += 1;
   }
   return ((f) >= (double)(
-# 128 "lvm.c" 3
-        (-9223372036854775807ll - 1)
-# 128 "lvm.c"
-        ) && (f) < -(double)(
-# 128 "lvm.c" 3
-        (-9223372036854775807ll - 1)
-# 128 "lvm.c"
-        ) && (*(p) = (long long)(f), 1));
+         (-9223372036854775807ll - 1)
+         ) && (f) < -(double)(
+         (-9223372036854775807ll - 1)
+         ) && (*(p) = (long long)(f), 1));
 }
 
 
@@ -3636,8 +3612,7 @@ int luaV_tointeger (const TValue *obj, lua_Integer *p, F2Imod mode) {
     obj = &v;
   return luaV_tointegerns(obj, p, mode);
 }
-# 176 "lvm.c"
-static int forlimit (lua_State *L, lua_Integer init, const TValue *lim,
+ static int forlimit (lua_State *L, lua_Integer init, const TValue *lim,
                                    lua_Integer *p, lua_Integer step) {
   if (!luaV_tointeger(lim, p, (step < 0 ? F2Iceil : F2Ifloor))) {
 
@@ -3648,24 +3623,19 @@ static int forlimit (lua_State *L, lua_Integer init, const TValue *lim,
     if (((0)<(flim))) {
       if (step < 0) return 1;
       *p = 
-# 186 "lvm.c" 3
-          9223372036854775807ll
-# 186 "lvm.c"
-                        ;
+           9223372036854775807ll
+                         ;
     }
     else {
       if (step > 0) return 1;
       *p = 
-# 190 "lvm.c" 3
-          (-9223372036854775807ll - 1)
-# 190 "lvm.c"
-                        ;
+           (-9223372036854775807ll - 1)
+                         ;
     }
   }
   return (step > 0 ? init > *p : init < *p);
 }
-# 206 "lvm.c"
-static int forprep (lua_State *L, StkId ra) {
+ static int forprep (lua_State *L, StkId ra) {
   TValue *pinit = (&(ra)->val);
   TValue *plimit = (&(ra + 1)->val);
   TValue *pstep = (&(ra + 2)->val);
@@ -3752,10 +3722,8 @@ void luaV_finishget (lua_State *L, const TValue *t, TValue *key, StkId val,
   const TValue *tm;
   for (loop = 0; loop < 2000; loop++) {
     if (slot == 
-# 292 "lvm.c" 3 4
-               ((void *)0)
-# 292 "lvm.c"
-                   ) {
+                ((void *)0)
+                    ) {
       ((void)0);
       tm = luaT_gettmbyobj(L, t, TM_INDEX);
       if ((__builtin_expect((((((((((tm))->tt_)) & 0x0F)) == (0))) != 0), 0)))
@@ -3765,23 +3733,15 @@ void luaV_finishget (lua_State *L, const TValue *t, TValue *key, StkId val,
     else {
       ((void)0);
       tm = ((((&((((union GCUnion *)((((t)->value_).gc))))->h)))->metatable) == 
-# 301 "lvm.c" 3 4
-          ((void *)0) 
-# 301 "lvm.c"
-          ? 
-# 301 "lvm.c" 3 4
-          ((void *)0) 
-# 301 "lvm.c"
-          : ((((&((((union GCUnion *)((((t)->value_).gc))))->h)))->metatable)->flags & (1u<<(TM_INDEX))) ? 
-# 301 "lvm.c" 3 4
-          ((void *)0) 
-# 301 "lvm.c"
-          : luaT_gettm(((&((((union GCUnion *)((((t)->value_).gc))))->h)))->metatable, TM_INDEX, ((L->l_G))->tmname[TM_INDEX]));
+           ((void *)0) 
+           ? 
+           ((void *)0) 
+           : ((((&((((union GCUnion *)((((t)->value_).gc))))->h)))->metatable)->flags & (1u<<(TM_INDEX))) ? 
+           ((void *)0) 
+           : luaT_gettm(((&((((union GCUnion *)((((t)->value_).gc))))->h)))->metatable, TM_INDEX, ((L->l_G))->tmname[TM_INDEX]));
       if (tm == 
-# 302 "lvm.c" 3 4
-               ((void *)0)
-# 302 "lvm.c"
-                   ) {
+                ((void *)0)
+                    ) {
         (((&(val)->val))->tt_=(((0) | ((0) << 4))));
         return;
       }
@@ -3793,9 +3753,7 @@ void luaV_finishget (lua_State *L, const TValue *t, TValue *key, StkId val,
     }
     t = tm;
     if ((!((((t))->tt_) == (((((5) | ((0) << 4))) | (1 << 6)))) ? (slot = 
-# 313 "lvm.c" 3 4
        ((void *)0)
-# 313 "lvm.c"
        , 0) : (slot = luaH_get(((&((((union GCUnion *)((((t)->value_).gc))))->h))), key), !(((((((slot))->tt_)) & 0x0F)) == (0))))) {
       { TValue *io1=((&(val)->val)); const TValue *io2=(slot); io1->value_ = io2->value_; ((io1)->tt_=(io2->tt_)); ((void)L, ((void)0)); ((void)0); };
       return;
@@ -3804,37 +3762,26 @@ void luaV_finishget (lua_State *L, const TValue *t, TValue *key, StkId val,
   }
   luaG_runerror(L, "'__index' chain too long; possible loop");
 }
-# 330 "lvm.c"
-void luaV_finishset (lua_State *L, const TValue *t, TValue *key,
+ void luaV_finishset (lua_State *L, const TValue *t, TValue *key,
                      TValue *val, const TValue *slot) {
   int loop;
   for (loop = 0; loop < 2000; loop++) {
     const TValue *tm;
     if (slot != 
-# 335 "lvm.c" 3 4
-               ((void *)0)
-# 335 "lvm.c"
-                   ) {
+                ((void *)0)
+                    ) {
       Table *h = ((&((((union GCUnion *)((((t)->value_).gc))))->h)));
       ((void)0);
       tm = ((h->metatable) == 
-# 338 "lvm.c" 3 4
-          ((void *)0) 
-# 338 "lvm.c"
-          ? 
-# 338 "lvm.c" 3 4
-          ((void *)0) 
-# 338 "lvm.c"
-          : ((h->metatable)->flags & (1u<<(TM_NEWINDEX))) ? 
-# 338 "lvm.c" 3 4
-          ((void *)0) 
-# 338 "lvm.c"
-          : luaT_gettm(h->metatable, TM_NEWINDEX, ((L->l_G))->tmname[TM_NEWINDEX]));
+           ((void *)0) 
+           ? 
+           ((void *)0) 
+           : ((h->metatable)->flags & (1u<<(TM_NEWINDEX))) ? 
+           ((void *)0) 
+           : luaT_gettm(h->metatable, TM_NEWINDEX, ((L->l_G))->tmname[TM_NEWINDEX]));
       if (tm == 
-# 339 "lvm.c" 3 4
-               ((void *)0)
-# 339 "lvm.c"
-                   ) {
+                ((void *)0)
+                    ) {
         luaH_finishset(L, h, key, slot, val);
         ((h)->flags &= ~(~(~0u << (TM_EQ + 1))));
         ( (((val)->tt_) & (1 << 6)) ? ( (((((&(((union GCUnion *)((h)))->gc)))->marked) & ((1<<(5)))) && ((((((val)->value_).gc))->marked) & (((1<<(3)) | (1<<(4)))))) ? luaC_barrierback_(L,(&(((union GCUnion *)((h)))->gc))) : ((void)((0)))) : ((void)((0))));
@@ -3854,9 +3801,8 @@ void luaV_finishset (lua_State *L, const TValue *t, TValue *key,
     }
     t = tm;
     if ((!((((t))->tt_) == (((((5) | ((0) << 4))) | (1 << 6)))) ? (slot = 
-# 358 "lvm.c" 3 4
+
        ((void *)0)
-# 358 "lvm.c"
        , 0) : (slot = luaH_get(((&((((union GCUnion *)((((t)->value_).gc))))->h))), key), !(((((((slot))->tt_)) & 0x0F)) == (0))))) {
       { { TValue *io1=(((TValue *)(slot))); const TValue *io2=(val); io1->value_ = io2->value_; ((io1)->tt_=(io2->tt_)); ((void)L, ((void)0)); ((void)0); }; ( (((val)->tt_) & (1 << 6)) ? ( (((((((t)->value_).gc))->marked) & ((1<<(5)))) && ((((((val)->value_).gc))->marked) & (((1<<(3)) | (1<<(4)))))) ? luaC_barrierback_(L,(((t)->value_).gc)) : ((void)((0)))) : ((void)((0)))); };
       return;
@@ -3865,8 +3811,7 @@ void luaV_finishset (lua_State *L, const TValue *t, TValue *key,
   }
   luaG_runerror(L, "'__newindex' chain too long; possible loop");
 }
-# 375 "lvm.c"
-static int l_strcmp (const TString *ls, const TString *rs) {
+ static int l_strcmp (const TString *ls, const TString *rs) {
   const char *l = ((ls)->contents);
   size_t ll = ((ls)->tt == ((4) | ((0) << 4)) ? (ls)->shrlen : (ls)->u.lnglen);
   const char *r = ((rs)->contents);
@@ -3887,8 +3832,7 @@ static int l_strcmp (const TString *ls, const TString *rs) {
     }
   }
 }
-# 409 "lvm.c"
-static __inline__ int LTintfloat (lua_Integer i, lua_Number f) {
+ static __inline__ int LTintfloat (lua_Integer i, lua_Number f) {
   if (((((lua_Unsigned)1 << ((53))) + ((lua_Unsigned)(i))) <= (2 * ((lua_Unsigned)1 << ((53))))))
     return ((((lua_Number)((i))))<(f));
   else {
@@ -4071,99 +4015,64 @@ int luaV_equalobj (lua_State *L, const TValue *t1, const TValue *t2) {
     case ((7) | ((0) << 4)): {
       if (((&((((union GCUnion *)((((t1)->value_).gc))))->u))) == ((&((((union GCUnion *)((((t2)->value_).gc))))->u)))) return 1;
       else if (L == 
-# 591 "lvm.c" 3 4
-                   ((void *)0)
-# 591 "lvm.c"
-                       ) return 0;
+                    ((void *)0)
+                        ) return 0;
       tm = ((((&((((union GCUnion *)((((t1)->value_).gc))))->u)))->metatable) == 
-# 592 "lvm.c" 3 4
-          ((void *)0) 
-# 592 "lvm.c"
-          ? 
-# 592 "lvm.c" 3 4
-          ((void *)0) 
-# 592 "lvm.c"
-          : ((((&((((union GCUnion *)((((t1)->value_).gc))))->u)))->metatable)->flags & (1u<<(TM_EQ))) ? 
-# 592 "lvm.c" 3 4
-          ((void *)0) 
-# 592 "lvm.c"
-          : luaT_gettm(((&((((union GCUnion *)((((t1)->value_).gc))))->u)))->metatable, TM_EQ, ((L->l_G))->tmname[TM_EQ]));
+           ((void *)0) 
+           ? 
+           ((void *)0) 
+           : ((((&((((union GCUnion *)((((t1)->value_).gc))))->u)))->metatable)->flags & (1u<<(TM_EQ))) ? 
+           ((void *)0) 
+           : luaT_gettm(((&((((union GCUnion *)((((t1)->value_).gc))))->u)))->metatable, TM_EQ, ((L->l_G))->tmname[TM_EQ]));
       if (tm == 
-# 593 "lvm.c" 3 4
-               ((void *)0)
-# 593 "lvm.c"
-                   )
+                ((void *)0)
+                    )
         tm = ((((&((((union GCUnion *)((((t2)->value_).gc))))->u)))->metatable) == 
-# 594 "lvm.c" 3 4
-            ((void *)0) 
-# 594 "lvm.c"
-            ? 
-# 594 "lvm.c" 3 4
-            ((void *)0) 
-# 594 "lvm.c"
-            : ((((&((((union GCUnion *)((((t2)->value_).gc))))->u)))->metatable)->flags & (1u<<(TM_EQ))) ? 
-# 594 "lvm.c" 3 4
-            ((void *)0) 
-# 594 "lvm.c"
-            : luaT_gettm(((&((((union GCUnion *)((((t2)->value_).gc))))->u)))->metatable, TM_EQ, ((L->l_G))->tmname[TM_EQ]));
+             ((void *)0) 
+             ? 
+             ((void *)0) 
+             : ((((&((((union GCUnion *)((((t2)->value_).gc))))->u)))->metatable)->flags & (1u<<(TM_EQ))) ? 
+             ((void *)0) 
+             : luaT_gettm(((&((((union GCUnion *)((((t2)->value_).gc))))->u)))->metatable, TM_EQ, ((L->l_G))->tmname[TM_EQ]));
       break;
     }
     case ((5) | ((0) << 4)): {
       if (((&((((union GCUnion *)((((t1)->value_).gc))))->h))) == ((&((((union GCUnion *)((((t2)->value_).gc))))->h)))) return 1;
       else if (L == 
-# 599 "lvm.c" 3 4
-                   ((void *)0)
-# 599 "lvm.c"
-                       ) return 0;
+                    ((void *)0)
+                        ) return 0;
       tm = ((((&((((union GCUnion *)((((t1)->value_).gc))))->h)))->metatable) == 
-# 600 "lvm.c" 3 4
-          ((void *)0) 
-# 600 "lvm.c"
-          ? 
-# 600 "lvm.c" 3 4
-          ((void *)0) 
-# 600 "lvm.c"
-          : ((((&((((union GCUnion *)((((t1)->value_).gc))))->h)))->metatable)->flags & (1u<<(TM_EQ))) ? 
-# 600 "lvm.c" 3 4
-          ((void *)0) 
-# 600 "lvm.c"
-          : luaT_gettm(((&((((union GCUnion *)((((t1)->value_).gc))))->h)))->metatable, TM_EQ, ((L->l_G))->tmname[TM_EQ]));
+           ((void *)0) 
+           ? 
+           ((void *)0) 
+           : ((((&((((union GCUnion *)((((t1)->value_).gc))))->h)))->metatable)->flags & (1u<<(TM_EQ))) ? 
+           ((void *)0) 
+           : luaT_gettm(((&((((union GCUnion *)((((t1)->value_).gc))))->h)))->metatable, TM_EQ, ((L->l_G))->tmname[TM_EQ]));
       if (tm == 
-# 601 "lvm.c" 3 4
-               ((void *)0)
-# 601 "lvm.c"
-                   )
+                ((void *)0)
+                    )
         tm = ((((&((((union GCUnion *)((((t2)->value_).gc))))->h)))->metatable) == 
-# 602 "lvm.c" 3 4
-            ((void *)0) 
-# 602 "lvm.c"
-            ? 
-# 602 "lvm.c" 3 4
-            ((void *)0) 
-# 602 "lvm.c"
-            : ((((&((((union GCUnion *)((((t2)->value_).gc))))->h)))->metatable)->flags & (1u<<(TM_EQ))) ? 
-# 602 "lvm.c" 3 4
-            ((void *)0) 
-# 602 "lvm.c"
-            : luaT_gettm(((&((((union GCUnion *)((((t2)->value_).gc))))->h)))->metatable, TM_EQ, ((L->l_G))->tmname[TM_EQ]));
+             ((void *)0) 
+             ? 
+             ((void *)0) 
+             : ((((&((((union GCUnion *)((((t2)->value_).gc))))->h)))->metatable)->flags & (1u<<(TM_EQ))) ? 
+             ((void *)0) 
+             : luaT_gettm(((&((((union GCUnion *)((((t2)->value_).gc))))->h)))->metatable, TM_EQ, ((L->l_G))->tmname[TM_EQ]));
       break;
     }
     default:
       return (((t1)->value_).gc) == (((t2)->value_).gc);
   }
   if (tm == 
-# 608 "lvm.c" 3 4
-           ((void *)0)
-# 608 "lvm.c"
-               )
+            ((void *)0)
+                )
     return 0;
   else {
     luaT_callTMres(L, tm, t1, t2, L->top.p);
     return !((((((&(L->top.p)->val)))->tt_) == (((1) | ((0) << 4)))) || ((((((((&(L->top.p)->val)))->tt_)) & 0x0F)) == (0)));
   }
 }
-# 624 "lvm.c"
-static void copy2buff (StkId top, int n, char *buff) {
+ static void copy2buff (StkId top, int n, char *buff) {
   size_t tl = 0;
   do {
     size_t l = ((((&((((union GCUnion *)(((((&(top - n)->val))->value_).gc))))->ts))))->tt == ((4) | ((0) << 4)) ? (((&((((union GCUnion *)(((((&(top - n)->val))->value_).gc))))->ts))))->shrlen : (((&((((union GCUnion *)(((((&(top - n)->val))->value_).gc))))->ts))))->u.lnglen);
@@ -4199,10 +4108,8 @@ void luaV_concat (lua_State *L, int total) {
       for (n = 1; n < total && (((((((((&(top - n - 1)->val)))->tt_)) & 0x0F)) == (4)) || (((((((((&(top - n - 1)->val)))->tt_)) & 0x0F)) == (3)) && (luaO_tostring(L, (&(top - n - 1)->val)), 1))); n++) {
         size_t l = ((((&((((union GCUnion *)(((((&(top - n - 1)->val))->value_).gc))))->ts))))->tt == ((4) | ((0) << 4)) ? (((&((((union GCUnion *)(((((&(top - n - 1)->val))->value_).gc))))->ts))))->shrlen : (((&((((union GCUnion *)(((((&(top - n - 1)->val))->value_).gc))))->ts))))->u.lnglen);
         if ((__builtin_expect(((l >= ((sizeof(size_t) < sizeof(lua_Integer) ? ((size_t)(~(size_t)0)) : (size_t)(
-# 659 "lvm.c" 3
-           9223372036854775807ll
-# 659 "lvm.c"
-           ))/sizeof(char)) - tl) != 0), 0))) {
+            9223372036854775807ll
+            ))/sizeof(char)) - tl) != 0), 0))) {
           L->top.p = top - total;
           luaG_runerror(L, "string length overflow");
         }
@@ -4234,18 +4141,12 @@ void luaV_objlen (lua_State *L, StkId ra, const TValue *rb) {
     case ((5) | ((0) << 4)): {
       Table *h = ((&((((union GCUnion *)((((rb)->value_).gc))))->h)));
       tm = ((h->metatable) == 
-# 690 "lvm.c" 3 4
-          ((void *)0) 
-# 690 "lvm.c"
-          ? 
-# 690 "lvm.c" 3 4
-          ((void *)0) 
-# 690 "lvm.c"
-          : ((h->metatable)->flags & (1u<<(TM_LEN))) ? 
-# 690 "lvm.c" 3 4
-          ((void *)0) 
-# 690 "lvm.c"
-          : luaT_gettm(h->metatable, TM_LEN, ((L->l_G))->tmname[TM_LEN]));
+           ((void *)0) 
+           ? 
+           ((void *)0) 
+           : ((h->metatable)->flags & (1u<<(TM_LEN))) ? 
+           ((void *)0) 
+           : luaT_gettm(h->metatable, TM_LEN, ((L->l_G))->tmname[TM_LEN]));
       if (tm) break;
       { TValue *io=((&(ra)->val)); ((io)->value_).i=(luaH_getn(h)); ((io)->tt_=(((3) | ((0) << 4)))); };
       return;
@@ -4267,8 +4168,7 @@ void luaV_objlen (lua_State *L, StkId ra, const TValue *rb) {
   }
   luaT_callTMres(L, tm, rb, rb, ra);
 }
-# 720 "lvm.c"
-lua_Integer luaV_idiv (lua_State *L, lua_Integer m, lua_Integer n) {
+ lua_Integer luaV_idiv (lua_State *L, lua_Integer m, lua_Integer n) {
   if ((__builtin_expect(((((lua_Unsigned)(n)) + 1u <= 1u) != 0), 0))) {
     if (n == 0)
       luaG_runerror(L, "attempt to divide by zero");
@@ -4311,22 +4211,17 @@ lua_Number luaV_modf (lua_State *L, lua_Number m, lua_Number n) {
   { (void)L; (r) = (lua_Number)fmod(m,n); if (((r) > 0) ? (n) < 0 : ((r) < 0 && (n) > 0)) (r) += (n); };
   return r;
 }
-# 772 "lvm.c"
-lua_Integer luaV_shiftl (lua_Integer x, lua_Integer y) {
+ lua_Integer luaV_shiftl (lua_Integer x, lua_Integer y) {
   if (y < 0) {
     if (y <= -((int)((sizeof(lua_Integer) * 
-# 774 "lvm.c" 3
-             8
-# 774 "lvm.c"
-             )))) return 0;
+              8
+              )))) return 0;
     else return ((lua_Integer)(((lua_Unsigned)(x)) >> ((lua_Unsigned)(-y))));
   }
   else {
     if (y >= ((int)((sizeof(lua_Integer) * 
-# 778 "lvm.c" 3
-            8
-# 778 "lvm.c"
-            )))) return 0;
+             8
+             )))) return 0;
     else return ((lua_Integer)(((lua_Unsigned)(x)) << ((lua_Unsigned)(y))));
   }
 }
@@ -4421,8 +4316,7 @@ void luaV_finishOp (lua_State *L) {
     }
   }
 }
-# 1146 "lvm.c"
-void luaV_execute (lua_State *L, CallInfo *ci) {
+ void luaV_execute (lua_State *L, CallInfo *ci) {
   LClosure *cl;
   TValue *k;
   StkId base;
@@ -4518,8 +4412,7 @@ static const void *const disptab[((int)(OP_EXTRAARG) + 1)] = {
 &&L_OP_EXTRAARG
 
 };
-# 1154 "lvm.c" 2
-
+ 
  startfunc:
   trap = L->hookmask;
  returning:
@@ -4623,9 +4516,7 @@ static const void *const disptab[((int)(OP_EXTRAARG) + 1)] = {
         TValue *rc = (k+((((int)((((i)>>(((((0 + 7) + 8) + 1) + 8))) & ((~((~(Instruction)0)<<(8)))<<(0))))))));
         TString *key = ((&((((union GCUnion *)((((rc)->value_).gc))))->ts)));
         if ((!((((upval))->tt_) == (((((5) | ((0) << 4))) | (1 << 6)))) ? (slot = 
-# 1257 "lvm.c" 3 4
            ((void *)0)
-# 1257 "lvm.c"
            , 0) : (slot = luaH_getshortstr(((&((((union GCUnion *)((((upval)->value_).gc))))->h))), key), !(((((((slot))->tt_)) & 0x0F)) == (0))))) {
           { TValue *io1=((&(ra)->val)); const TValue *io2=(slot); io1->value_ = io2->value_; ((io1)->tt_=(io2->tt_)); ((void)L, ((void)0)); ((void)0); };
         }
@@ -4641,14 +4532,14 @@ static const void *const disptab[((int)(OP_EXTRAARG) + 1)] = {
         lua_Unsigned n;
         if (((((rc))->tt_) == (((3) | ((0) << 4))))
             ? (((void)((n = (((rc)->value_).i)))), (!((((rb))->tt_) == (((((5) | ((0) << 4))) | (1 << 6)))) ? (slot = 
-# 1271 "lvm.c" 3 4
+
                                          ((void *)0)
-# 1271 "lvm.c"
+
                                          , 0) : (slot = (((lua_Unsigned)(n)) - 1u < ((&((((union GCUnion *)((((rb)->value_).gc))))->h)))->alimit) ? &((&((((union GCUnion *)((((rb)->value_).gc))))->h)))->array[n - 1] : luaH_getint(((&((((union GCUnion *)((((rb)->value_).gc))))->h))), n), !(((((((slot))->tt_)) & 0x0F)) == (0)))))
             : (!((((rb))->tt_) == (((((5) | ((0) << 4))) | (1 << 6)))) ? (slot = 
-# 1272 "lvm.c" 3 4
+
              ((void *)0)
-# 1272 "lvm.c"
+
              , 0) : (slot = luaH_get(((&((((union GCUnion *)((((rb)->value_).gc))))->h))), rc), !(((((((slot))->tt_)) & 0x0F)) == (0))))) {
           { TValue *io1=((&(ra)->val)); const TValue *io2=(slot); io1->value_ = io2->value_; ((io1)->tt_=(io2->tt_)); ((void)L, ((void)0)); ((void)0); };
         }
@@ -4662,9 +4553,9 @@ static const void *const disptab[((int)(OP_EXTRAARG) + 1)] = {
         TValue *rb = (&((base+((((int)((((i)>>((((0 + 7) + 8) + 1))) & ((~((~(Instruction)0)<<(8)))<<(0)))))))))->val);
         int c = ((((int)((((i)>>(((((0 + 7) + 8) + 1) + 8))) & ((~((~(Instruction)0)<<(8)))<<(0)))))));
         if ((!((((rb))->tt_) == (((((5) | ((0) << 4))) | (1 << 6)))) ? (slot = 
-# 1284 "lvm.c" 3 4
+
            ((void *)0)
-# 1284 "lvm.c"
+
            , 0) : (slot = (((lua_Unsigned)(c)) - 1u < ((&((((union GCUnion *)((((rb)->value_).gc))))->h)))->alimit) ? &((&((((union GCUnion *)((((rb)->value_).gc))))->h)))->array[c - 1] : luaH_getint(((&((((union GCUnion *)((((rb)->value_).gc))))->h))), c), !(((((((slot))->tt_)) & 0x0F)) == (0))))) {
           { TValue *io1=((&(ra)->val)); const TValue *io2=(slot); io1->value_ = io2->value_; ((io1)->tt_=(io2->tt_)); ((void)L, ((void)0)); ((void)0); };
         }
@@ -4682,9 +4573,9 @@ static const void *const disptab[((int)(OP_EXTRAARG) + 1)] = {
         TValue *rc = (k+((((int)((((i)>>(((((0 + 7) + 8) + 1) + 8))) & ((~((~(Instruction)0)<<(8)))<<(0))))))));
         TString *key = ((&((((union GCUnion *)((((rc)->value_).gc))))->ts)));
         if ((!((((rb))->tt_) == (((((5) | ((0) << 4))) | (1 << 6)))) ? (slot = 
-# 1300 "lvm.c" 3 4
+
            ((void *)0)
-# 1300 "lvm.c"
+
            , 0) : (slot = luaH_getshortstr(((&((((union GCUnion *)((((rb)->value_).gc))))->h))), key), !(((((((slot))->tt_)) & 0x0F)) == (0))))) {
           { TValue *io1=((&(ra)->val)); const TValue *io2=(slot); io1->value_ = io2->value_; ((io1)->tt_=(io2->tt_)); ((void)L, ((void)0)); ((void)0); };
         }
@@ -4699,9 +4590,9 @@ static const void *const disptab[((int)(OP_EXTRAARG) + 1)] = {
         TValue *rc = ((((((int)((((i) & (1u << ((0 + 7) + 8))))))))) ? k + ((((int)((((i)>>(((((0 + 7) + 8) + 1) + 8))) & ((~((~(Instruction)0)<<(8)))<<(0))))))) : (&(base + ((((int)((((i)>>(((((0 + 7) + 8) + 1) + 8))) & ((~((~(Instruction)0)<<(8)))<<(0))))))))->val));
         TString *key = ((&((((union GCUnion *)((((rb)->value_).gc))))->ts)));
         if ((!((((upval))->tt_) == (((((5) | ((0) << 4))) | (1 << 6)))) ? (slot = 
-# 1313 "lvm.c" 3 4
+
            ((void *)0)
-# 1313 "lvm.c"
+
            , 0) : (slot = luaH_getshortstr(((&((((union GCUnion *)((((upval)->value_).gc))))->h))), key), !(((((((slot))->tt_)) & 0x0F)) == (0))))) {
           { { TValue *io1=(((TValue *)(slot))); const TValue *io2=(rc); io1->value_ = io2->value_; ((io1)->tt_=(io2->tt_)); ((void)L, ((void)0)); ((void)0); }; ( (((rc)->tt_) & (1 << 6)) ? ( (((((((upval)->value_).gc))->marked) & ((1<<(5)))) && ((((((rc)->value_).gc))->marked) & (((1<<(3)) | (1<<(4)))))) ? luaC_barrierback_(L,(((upval)->value_).gc)) : ((void)((0)))) : ((void)((0)))); };
         }
@@ -4717,14 +4608,14 @@ static const void *const disptab[((int)(OP_EXTRAARG) + 1)] = {
         lua_Unsigned n;
         if (((((rb))->tt_) == (((3) | ((0) << 4))))
             ? (((void)((n = (((rb)->value_).i)))), (!(((((&(ra)->val)))->tt_) == (((((5) | ((0) << 4))) | (1 << 6)))) ? (slot = 
-# 1327 "lvm.c" 3 4
+
                                          ((void *)0)
-# 1327 "lvm.c"
+
                                          , 0) : (slot = (((lua_Unsigned)(n)) - 1u < ((&((((union GCUnion *)(((((&(ra)->val))->value_).gc))))->h)))->alimit) ? &((&((((union GCUnion *)(((((&(ra)->val))->value_).gc))))->h)))->array[n - 1] : luaH_getint(((&((((union GCUnion *)(((((&(ra)->val))->value_).gc))))->h))), n), !(((((((slot))->tt_)) & 0x0F)) == (0)))))
             : (!(((((&(ra)->val)))->tt_) == (((((5) | ((0) << 4))) | (1 << 6)))) ? (slot = 
-# 1328 "lvm.c" 3 4
+
              ((void *)0)
-# 1328 "lvm.c"
+
              , 0) : (slot = luaH_get(((&((((union GCUnion *)(((((&(ra)->val))->value_).gc))))->h))), rb), !(((((((slot))->tt_)) & 0x0F)) == (0))))) {
           { { TValue *io1=(((TValue *)(slot))); const TValue *io2=(rc); io1->value_ = io2->value_; ((io1)->tt_=(io2->tt_)); ((void)L, ((void)0)); ((void)0); }; ( (((rc)->tt_) & (1 << 6)) ? ( ((((((((&(ra)->val))->value_).gc))->marked) & ((1<<(5)))) && ((((((rc)->value_).gc))->marked) & (((1<<(3)) | (1<<(4)))))) ? luaC_barrierback_(L,((((&(ra)->val))->value_).gc)) : ((void)((0)))) : ((void)((0)))); };
         }
@@ -4738,9 +4629,9 @@ static const void *const disptab[((int)(OP_EXTRAARG) + 1)] = {
         int c = ((((int)((((i)>>((((0 + 7) + 8) + 1))) & ((~((~(Instruction)0)<<(8)))<<(0)))))));
         TValue *rc = ((((((int)((((i) & (1u << ((0 + 7) + 8))))))))) ? k + ((((int)((((i)>>(((((0 + 7) + 8) + 1) + 8))) & ((~((~(Instruction)0)<<(8)))<<(0))))))) : (&(base + ((((int)((((i)>>(((((0 + 7) + 8) + 1) + 8))) & ((~((~(Instruction)0)<<(8)))<<(0))))))))->val));
         if ((!(((((&(ra)->val)))->tt_) == (((((5) | ((0) << 4))) | (1 << 6)))) ? (slot = 
-# 1340 "lvm.c" 3 4
+
            ((void *)0)
-# 1340 "lvm.c"
+
            , 0) : (slot = (((lua_Unsigned)(c)) - 1u < ((&((((union GCUnion *)(((((&(ra)->val))->value_).gc))))->h)))->alimit) ? &((&((((union GCUnion *)(((((&(ra)->val))->value_).gc))))->h)))->array[c - 1] : luaH_getint(((&((((union GCUnion *)(((((&(ra)->val))->value_).gc))))->h))), c), !(((((((slot))->tt_)) & 0x0F)) == (0))))) {
           { { TValue *io1=(((TValue *)(slot))); const TValue *io2=(rc); io1->value_ = io2->value_; ((io1)->tt_=(io2->tt_)); ((void)L, ((void)0)); ((void)0); }; ( (((rc)->tt_) & (1 << 6)) ? ( ((((((((&(ra)->val))->value_).gc))->marked) & ((1<<(5)))) && ((((((rc)->value_).gc))->marked) & (((1<<(3)) | (1<<(4)))))) ? luaC_barrierback_(L,((((&(ra)->val))->value_).gc)) : ((void)((0)))) : ((void)((0)))); };
         }
@@ -4758,9 +4649,9 @@ static const void *const disptab[((int)(OP_EXTRAARG) + 1)] = {
         TValue *rc = ((((((int)((((i) & (1u << ((0 + 7) + 8))))))))) ? k + ((((int)((((i)>>(((((0 + 7) + 8) + 1) + 8))) & ((~((~(Instruction)0)<<(8)))<<(0))))))) : (&(base + ((((int)((((i)>>(((((0 + 7) + 8) + 1) + 8))) & ((~((~(Instruction)0)<<(8)))<<(0))))))))->val));
         TString *key = ((&((((union GCUnion *)((((rb)->value_).gc))))->ts)));
         if ((!(((((&(ra)->val)))->tt_) == (((((5) | ((0) << 4))) | (1 << 6)))) ? (slot = 
-# 1356 "lvm.c" 3 4
+
            ((void *)0)
-# 1356 "lvm.c"
+
            , 0) : (slot = luaH_getshortstr(((&((((union GCUnion *)(((((&(ra)->val))->value_).gc))))->h))), key), !(((((((slot))->tt_)) & 0x0F)) == (0))))) {
           { { TValue *io1=(((TValue *)(slot))); const TValue *io2=(rc); io1->value_ = io2->value_; ((io1)->tt_=(io2->tt_)); ((void)L, ((void)0)); ((void)0); }; ( (((rc)->tt_) & (1 << 6)) ? ( ((((((((&(ra)->val))->value_).gc))->marked) & ((1<<(5)))) && ((((((rc)->value_).gc))->marked) & (((1<<(3)) | (1<<(4)))))) ? luaC_barrierback_(L,((((&(ra)->val))->value_).gc)) : ((void)((0)))) : ((void)((0)))); };
         }
@@ -4795,10 +4686,8 @@ static const void *const disptab[((int)(OP_EXTRAARG) + 1)] = {
         TString *key = ((&((((union GCUnion *)((((rc)->value_).gc))))->ts)));
         { TValue *io1=((&(ra + 1)->val)); const TValue *io2=(rb); io1->value_ = io2->value_; ((io1)->tt_=(io2->tt_)); ((void)L, ((void)0)); ((void)0); };
         if ((!((((rb))->tt_) == (((((5) | ((0) << 4))) | (1 << 6)))) ? (slot = 
-# 1389 "lvm.c" 3 4
-           ((void *)0)
-# 1389 "lvm.c"
-           , 0) : (slot = luaH_getstr(((&((((union GCUnion *)((((rb)->value_).gc))))->h))), key), !(((((((slot))->tt_)) & 0x0F)) == (0))))) {
+            ((void *)0)
+            , 0) : (slot = luaH_getstr(((&((((union GCUnion *)((((rb)->value_).gc))))->h))), key), !(((((((slot))->tt_)) & 0x0F)) == (0))))) {
           { TValue *io1=((&(ra)->val)); const TValue *io2=(slot); io1->value_ = io2->value_; ((io1)->tt_=(io2->tt_)); ((void)L, ((void)0)); ((void)0); };
         }
         else
@@ -5035,10 +4924,8 @@ static const void *const disptab[((int)(OP_EXTRAARG) + 1)] = {
         TValue *rb = (k+((((int)((((i)>>((((0 + 7) + 8) + 1))) & ((~((~(Instruction)0)<<(8)))<<(0))))))));
 
         int cond = luaV_equalobj(
-# 1625 "lvm.c" 3 4
-                  ((void *)0)
-# 1625 "lvm.c"
-                  ,(&(ra)->val),rb);
+                   ((void *)0)
+                   ,(&(ra)->val),rb);
         if (cond != ((((int)((((i)>>(((0 + 7) + 8))) & ((~((~(Instruction)0)<<(1)))<<(0)))))))) pc++; else { Instruction ni = *pc; { pc += ((((int)((((ni)>>((0 + 7))) & ((~((~(Instruction)0)<<(((8 + 8 + 1) + 8))))<<(0)))))) - (((1 << ((8 + 8 + 1) + 8)) - 1) >> 1)) + 1; (trap = ci->u.l.trap); }; };;
         { if ((__builtin_expect(((trap) != 0), 0))) { trap = luaG_traceexec(L, pc); (base = ci->func.p + 1); } i = *(pc++); }; goto *disptab[(((OpCode)(((i)>>0) & ((~((~(Instruction)0)<<(7)))<<(0)))))];;;
       }
@@ -5098,10 +4985,8 @@ static const void *const disptab[((int)(OP_EXTRAARG) + 1)] = {
 
         (ci->u.l.savedpc = pc);
         if ((newci = luaD_precall(L, ra, nresults)) == 
-# 1684 "lvm.c" 3 4
-                                                      ((void *)0)
-# 1684 "lvm.c"
-                                                          )
+                                                       ((void *)0)
+                                                           )
           (trap = ci->u.l.trap);
         else {
           ci = newci;

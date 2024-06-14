@@ -43,13 +43,6 @@ from ..clang_utils.code_attributes import (
     beautified_print_ast,
 )
 from ..utils.functional import MelodieGenerator
-from .models import (
-    ArrayValue,
-    ConcreteValueType,
-    PointerValue,
-    StructValue,
-    Variable,
-)
 from ..uast import universal_ast_nodes as nodes
 from ..uast import universal_ast_types as types
 
@@ -262,19 +255,14 @@ class ClangASTConverter:
             return nodes.UserDefinedType(t.spelling)
         elif t.kind == TypeKind.POINTER:
             return nodes.AddrReferenceType(self.convert_type(t.get_pointee()))
+        elif t.kind == TypeKind.VOID:
+            return nodes.VoidType()
         else:
             print("kind", t.kind, t.spelling)
             return nodes.UnknownType(t.spelling)
 
     def _handle_notimplemented(self, c: Cursor) -> nodes.NotImplementedItem:
         return nodes.NotImplementedItem(str(c.kind))
-
-    def _calc_add_add_expression(self, c: Cursor, pos: UnaryOpPos) -> Variable:
-        """
-        TODO: finish this file
-        """
-        raise NotImplementedError
-        # return nodes.Unary('++', c.)
 
     def _calc_reference_expression(self, c: Cursor) -> nodes.ReferenceExpr:
         referenced_variable = self.eval_single_cursor(c)

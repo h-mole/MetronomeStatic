@@ -6,7 +6,7 @@ with open("README.md", encoding="utf8") as f:
 setuptools.setup(
     name="PyBirdViewCode",
     version="0.1.0",
-    description="A pure-python (Python>=3.8) static analysis library providing various interfaces.",
+    description="A pure-python (Python>=3.10) static analysis library providing various interfaces.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/hzyrc6011/PyBirdViewCode",
@@ -22,8 +22,6 @@ setuptools.setup(
         "Natural Language :: English",
         "Operating System :: Unix",
         "Operating System :: Microsoft :: Windows",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
@@ -54,6 +52,6 @@ setuptools.setup(
         "requests",
         "termcolor"
     ],
-    python_requires=">=3.8",
+    python_requires=">=3.10",
     include_package_data=True,
 )
