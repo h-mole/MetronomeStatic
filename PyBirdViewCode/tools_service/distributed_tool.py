@@ -17,7 +17,7 @@ import websocket
 from dataclasses_json import DataClassJsonMixin
 
 from ..utils.files import file_to_dataurl
-from ..utils.functional import MelodieFrozenGenerator, melodie_generator
+from ..utils import MelodieFrozenGenerator, melodie_generator
 from .base_request import Request, RequestFactory, RestRespDataType
 from .log import logger
 from .messages import FileUploadResponse, WSSchedulerMsgParser

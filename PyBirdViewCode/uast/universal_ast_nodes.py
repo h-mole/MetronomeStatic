@@ -1534,8 +1534,8 @@ class NotImplementedItem(SourceElement):
         super().__init__()
         self.kind = kind
 
-    def __repr__(self) -> str:
-        return f"<NotimplementedItem {self.kind}>"
+    # def __repr__(self) -> str:
+    #     return f"<NotimplementedItem {self.kind}>"
 
 
 # TO update this "__ALL__":

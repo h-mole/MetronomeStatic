@@ -27,6 +27,7 @@ class BaseUASTUnparser:
             nodes.FieldAccessExpr: self.unparse_field_access_expr,
             nodes.ArrayAccessExpr: self.unparse_array_access_expr,
             nodes.UnaryExpr: self.unparse_unary_expr,
+            nodes.VoidType: lambda t: "void",
             # nodes.ArrayType: self.unparse_arr
         }
 
@@ -89,7 +90,11 @@ class BaseUASTUnparser:
         return expr.id
 
     def unparse(self, stmt: nodes.SourceElement):
-        return self.handler[stmt.__class__](stmt)
+        try:
+            return self.handler[stmt.__class__](stmt)
+        except KeyError as e:
+            print(stmt)
+            raise e
 
     def unparse_indented(self, stmt: nodes.SourceElement):
         return indent(self.unparse(stmt), "    ")

@@ -42,7 +42,7 @@ from ..clang_utils.code_attributes import (
     is_function_definition,
     beautified_print_ast,
 )
-from ..utils.functional import MelodieGenerator
+from ..utils import MelodieGenerator
 from ..uast import universal_ast_nodes as nodes
 from ..uast import universal_ast_types as types
 

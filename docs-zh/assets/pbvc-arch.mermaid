@@ -1,0 +1,17 @@
+graph TD
+    C/C++ -->|LibClang| ClangAST
+    Python["Python (Implement later...)"] --> PythonAST[Python AST] --> UAST
+    
+    ClangAST -->|Conversion| UAST
+
+    subgraph `PyBirdViewCode Package Functionalities`
+
+        UAST[Universal AST]
+        CommonUtils["Common Utils"]
+        
+        UAST -->|Control Flow Building| CFG
+        UAST -->|Data Dependency Building| DDG["DDG: To be developed..."]
+    
+    end
+
+    ClangAST --> |Interface| CommonUtils
