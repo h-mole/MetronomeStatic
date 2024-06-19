@@ -1,6 +1,18 @@
 import json
 import os
 import re
+import pandas as pd
+
+
+def csv_to_md(csv_file):
+    # 读取CSV文件
+    data = pd.read_csv(csv_file)
+
+    # 将数据转换为MD格式
+    md_data = data.to_markdown()
+
+    return md_data
+
 
 file_dir = os.path.abspath(os.path.dirname(__file__))
 os.chdir(os.path.dirname(os.path.dirname(file_dir)))
@@ -19,7 +31,7 @@ def format_md_templates(md_file: str, output_file: str):
             with open(payload["path"], encoding="utf-8") as f:
                 file_content = f.read()
                 if (lang := payload.get("language")) is not None:
-                    if payload["with_path"]:
+                    if payload.get("with_path"):
                         file_content = (
                             (f"`{payload['path']}`\n")
                             + f"\n```{lang}\n"
@@ -28,7 +40,9 @@ def format_md_templates(md_file: str, output_file: str):
                         )
                     else:
                         file_content = f"\n```{lang}\n" + file_content + "\n```"
-                content = content.replace(label, file_content)
+                content = content.replace(label, file_content, 1)
+        elif payload.get("kind") == "table":
+            content = content.replace(label, csv_to_md(payload["path"]), 1)
         else:
             raise ValueError(f"Unknown type: {payload['type']}")
 
