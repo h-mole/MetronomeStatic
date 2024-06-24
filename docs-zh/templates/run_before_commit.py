@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import shutil
 import pandas as pd
 
 
@@ -46,7 +47,7 @@ def format_md_templates(md_file: str, output_file: str):
         else:
             raise ValueError(f"Unknown type: {payload['type']}")
 
-    with open(output_file, "w") as f:
+    with open(output_file, "w", encoding="utf8") as f:
         f.write(content)
 
 
@@ -59,3 +60,4 @@ for file in os.listdir(TEMPLATES_PATH):
         format_md_templates(
             os.path.join(TEMPLATES_PATH, file), os.path.join(OUTPUT_PATH, name + ".md")
         )
+shutil.copy("docs-zh/1.项目简介.md", "README_zh.md")

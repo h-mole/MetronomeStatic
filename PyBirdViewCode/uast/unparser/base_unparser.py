@@ -28,6 +28,8 @@ class BaseUASTUnparser:
             nodes.ArrayAccessExpr: self.unparse_array_access_expr,
             nodes.UnaryExpr: self.unparse_unary_expr,
             nodes.VoidType: lambda t: "void",
+            nodes.ReturnStmt: lambda item: f"return {','.join( [self.unparse(res) for res in item.result])}",
+            nodes.Label: lambda item: f"{item.name} {self.unparse(item.statement)}&colon",
             # nodes.ArrayType: self.unparse_arr
         }
 

@@ -40,36 +40,10 @@ UAST-->CFG
 
 以下是PyBirdViewCode的功能图。现在只支持C/C++，基于libclang实现。在未来，计划进一步添加Python的 AST
 
-
-```mermaid
-graph TD
-    C/C++ -->|LibClang| ClangAST
-    Python["Python"] --> PythonAST[Parso AST] --> UAST
-    
-    ClangAST -->|转换| UAST
-
-    subgraph `PyBirdViewCode Package Functionalities`
-
-        UAST["统一抽象语法树（UAST）"]
-        CommonUtils["Clang 常用方法接口"]
-        
-        UAST -->|Control Flow Building| CFG["控制流图（CFG）"]
-        CFG --> ControlFlowAnalysis["控制流分析"] 
-        CFG --> RDA["可达定义分析(RDA)"]
-        CFG --> VLA["活跃变量分析(VLA)"]
-    
-    end
-
-    ClangAST --> |Interface| CommonUtils
-```
+MACRO {"kind": "file", "path": "docs-zh/assets/pbvc-arch.mermaid", "language": "mermaid", "with_path": false}
 
 ## PyBirdViewCode支持的语言
 
 
-|    |  编程语言   |  UAST支持程度   | 如何使用                                               |
-|---:|:--------|:------------|:---------------------------------------------------|
-|  0 | C       | 可用          | 自带，基于LibClang                                      |
-|  1 | C++     | 测试          | 自带，基于LibClang                                      |
-|  2 | Python  | 开发中         | 自带，基于Parso                                         |
-|  3 | Golang  | 开发中         | [仓库链接](https://gitee.com/hzy15610046011/asty2uast) |
+MACRO {"kind": "table", "path": "docs-zh/assets/supported-languages.csv"}
 ![生成的控制流图](/examples/cfg-extraction/cfg.png)

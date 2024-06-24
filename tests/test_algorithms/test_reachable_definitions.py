@@ -1,9 +1,15 @@
-from typing import List
-from PyBirdViewCode.algorithms import (
-    reaching_definition_analysis,
-    bool_list_to_str
-)
+from typing import Dict, List
+from PyBirdViewCode.algorithms import reaching_definition_analysis, bool_list_to_str
+from PyBirdViewCode.algorithms.reaching_definition import RDAOp, RDAOpList
 import networkx as nx
+from PyBirdViewCode import FileManager, abspath_from_file
+
+fm = FileManager(
+    abspath_from_file(
+        "./output",
+        __file__,
+    )
+)
 
 
 def bool_list_to_str(bl: List[bool]):
@@ -25,17 +31,19 @@ def test_1():
     ]
     G = nx.DiGraph()
     G.add_edges_from(edges)
-    defs = {
-        "entry": [],
-        "B1": ["x", "y", "z"],
-        "B2": ["x"],
-        "B3": ["y"],
-        "B4": ["z", "y"],
-        "B5": ["z"],
-        "B6": ["z"],
-        "exit": [],
+
+    defs: Dict[str, RDAOpList] = {
+        "entry": RDAOpList([]),
+        "B1": RDAOpList([RDAOp("x"), RDAOp("y"), RDAOp("z")]),
+        "B2": RDAOpList([RDAOp("x")]),
+        "B3": RDAOpList([RDAOp("y")]),
+        "B4": RDAOpList([RDAOp("z"), RDAOp("y")]),
+        "B5": RDAOpList([RDAOp("z")]),
+        "B6": RDAOpList([RDAOp("z")]),
+        "exit": RDAOpList([]),
     }
-    inputs, outputs = reaching_definition_analysis(G, defs, ["entry", "exit"])
+    fm.dot_dump("rda-test1.dot", G)
+    inputs, outputs, _= reaching_definition_analysis(G, defs, [])
     assert bool_list_to_str(outputs["B1"]) == "111000000"
     assert bool_list_to_str(inputs["B1"]) == "000000000"
     assert bool_list_to_str(inputs["B2"]) == "111110110"

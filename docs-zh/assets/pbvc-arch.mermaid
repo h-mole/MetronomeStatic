@@ -1,16 +1,18 @@
 graph TD
     C/C++ -->|LibClang| ClangAST
-    Python["Python (Implement later...)"] --> PythonAST[Python AST] --> UAST
+    Python["Python"] --> PythonAST[Parso AST] --> UAST
     
-    ClangAST -->|Conversion| UAST
+    ClangAST -->|转换| UAST
 
     subgraph `PyBirdViewCode Package Functionalities`
 
-        UAST[Universal AST]
-        CommonUtils["Common Utils"]
+        UAST["统一抽象语法树（UAST）"]
+        CommonUtils["Clang 常用方法接口"]
         
-        UAST -->|Control Flow Building| CFG
-        UAST -->|Data Dependency Building| DDG["DDG: To be developed..."]
+        UAST -->|Control Flow Building| CFG["控制流图（CFG）"]
+        CFG --> ControlFlowAnalysis["控制流分析"] 
+        CFG --> RDA["可达定义分析(RDA)"]
+        CFG --> VLA["活跃变量分析(VLA)"]
     
     end
 

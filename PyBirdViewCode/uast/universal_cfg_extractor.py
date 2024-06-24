@@ -5,8 +5,9 @@ from typing import Dict, List, Literal, Tuple, Union, Optional
 import networkx as nx
 from .exceptions import OnBreakStatement
 from ..algorithms import ValidNodeKinds
+from .unparser.base_unparser import BaseUASTUnparser
 
-BlockKinds = Literal["normal", "conditional", "switch"]
+BlockKinds = Literal["normal", "conditional", "switch", "method_return"]
 LoopControlKinds = Literal["break", "continue"]
 
 
@@ -52,8 +53,8 @@ class CFG:
         self._block_id_map: Dict[int, BasicBlock] = {
             block.block_id: block for block in self._all_blocks
         }
-        self._entry_block = self._block_id_map[entry_block_id]
-        self._return_block = self._block_id_map[return_block_id]
+        self.entry_block = self._block_id_map[entry_block_id]
+        self.exit_block = self._block_id_map[return_block_id]
         self._topology = self._calc_topology()
 
     @property
@@ -91,18 +92,21 @@ class CFG:
 
         return g
 
-    def to_networkx(self):
+    def to_networkx(self, unparse=True):
         """
         Convert this CFG to a networkx graph
         """
         g = copy.deepcopy(self.topology)
         # get_edges(self.head_block)
+        uast_unparser = BaseUASTUnparser()
         for block in self._all_blocks:
             label_base = f"#{block._id} {escape(block.text_on_empty())}\n"
             if len(block.statements) > 0:
-                g.nodes[block._id]["label"] = label_base + "\n".join(
-                    [str(stmt) for stmt in block.statements]
-                )
+                if unparse:
+                    stmts = [uast_unparser.unparse(stmt) for stmt in block.statements]
+                else:
+                    stmts = [str(stmt) for stmt in block.statements]
+                g.nodes[block._id]["label"] = label_base + "\n".join(stmts)
             else:
                 g.nodes[block._id]["label"] = label_base
         return g
@@ -127,7 +131,7 @@ class CFGBuilder:
         self.block = self.new_block()
         self.head_block = self.block
         self.return_block = self.new_block()
-        self.return_block.statements.append("METHOD_RETURN")
+        self.return_block.kind = "method_return"
 
         # Goto edges are from "goto" node and to the label
         # The edges should add in the last step
