@@ -1,4 +1,7 @@
 from typing import List
+
+import networkx as nx
+
 from .universal_cfg_extractor import CFG
 from .unparser import BaseUASTUnparser
 from ..uast import universal_ast_nodes as nodes
@@ -91,6 +94,9 @@ def dataflow_analyse(cfg: CFG):
         print(k)
         print(v)
         print(var_refs[k])
-    
+
     # print(var_defs_reachable)
     return var_defs_reachable, var_refs
+
+
+

@@ -2,15 +2,17 @@ import os
 from PyBirdViewCode.algorithms.reaching_definition import VarDefItem
 from PyBirdViewCode.algorithms.domination_analysis import (
     get_forward_dominance_tree,
-    create_cdg,
+    merge_cfg_and_fdt,
 )
 from PyBirdViewCode.clang_utils.code_attributes.utils import get_func_decl, parse_file
 from PyBirdViewCode.uast.c_cpp_converter import ClangASTConverter
-from PyBirdViewCode.uast.universal_cfg_extractor import (
+from PyBirdViewCode.uast import (
     CFGBuilder,
     remove_empty_node_from_cfg,
-    create_cdg_topology
+    get_ddg_topology,
+    get_cdg_topology,
 )
+
 from PyBirdViewCode.uast.universal_dataflow_analysis import dataflow_analyse
 from PyBirdViewCode.utils.files import FileManager
 from PyBirdViewCode import abspath_from_file
@@ -52,27 +54,28 @@ def test_data_flow_analysis():
     cfg = new_cfg
     result, var_refs = dataflow_analyse(cfg)
     # print(result)
-    ddg = nx.DiGraph()
-    for node_id, vars_ref in var_refs.items():
-        for referenced_var in vars_ref:
-            print(node_id, referenced_var)
-            valid_vars = result[node_id]
-            for var_def, reachable in valid_vars.items():
-                if (
-                    referenced_var == var_def.modified_var
-                    and reachable
-                    and node_id != var_def.node_id
-                ):
-                    ddg.add_edge(node_id, var_def.node_id, label=referenced_var)
+    # ddg = nx.DiGraph()
+    # for node_id, vars_ref in var_refs.items():
+    #     for referenced_var in vars_ref:
+    #         print(node_id, referenced_var)
+    #         valid_vars = result[node_id]
+    #         for var_def, reachable in valid_vars.items():
+    #             if (
+    #                 referenced_var == var_def.modified_var
+    #                 and reachable
+    #                 and node_id != var_def.node_id
+    #             ):
+    #                 ddg.add_edge(node_id, var_def.node_id, label=referenced_var)
 
-            print(valid_vars)
+    #         print(valid_vars)
 
-    for node_id in ddg.nodes:
-        ddg.nodes[node_id]["label"] = graph.nodes[node_id]["label"]
+    # for node_id in ddg.nodes:
+    #     ddg.nodes[node_id]["label"] = graph.nodes[node_id]["label"]
+    ddg = get_ddg_topology(cfg)
     fm.dot_dump("ddg.dot", ddg)
 
     # fdt = get_forward_dominance_tree(cfg.topology, cfg.exit_block.block_id)
-    merged = create_cdg_topology(cfg)
+    merged = get_cdg_topology(cfg)
     pdg = nx.DiGraph()
     for node_id in merged.nodes:
         if node_id != "CDG_ENTRY":
@@ -85,9 +88,9 @@ def test_data_flow_analysis():
     # slicing
     # criteria: var z, line 15
     for node in cfg.topology.nodes:
-        if len(cfg.get_block(node).statements)>0:
-            stmt =  cfg.get_block(node).statements[0]
-            if stmt.location[0]==15:
+        if len(cfg.get_block(node).statements) > 0:
+            stmt = cfg.get_block(node).statements[0]
+            if stmt.location[0] == 15:
                 # stmt.
                 break
     # fm.dot_dump("fdt.dot", fdt)

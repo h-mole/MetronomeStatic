@@ -58,6 +58,25 @@ MACRO  {"kind": "docs", "module": "PyBirdViewCode.algorithms", "function": "get_
 
 ![](/docs-zh/assets/merge-fdt-and-cfg.png)
 
-具体实现时，由于nx.DiGraph是一个简单图，亦即多次添加边(u,v)时，最终从u到v也只会有一条边。具体程序为函数`create_cdg`，介绍如下：
+具体实现时，由于nx.DiGraph是一个简单图，亦即多次添加边(u,v)时，最终从u到v也只会有一条边。具体程序为函数`merge_cfg_and_fdt`，介绍如下：
 
-MACRO  {"kind": "docs", "module": "PyBirdViewCode.algorithms", "function": "create_cdg"}
+MACRO  {"kind": "docs", "module": "PyBirdViewCode.algorithms", "function": "merge_cfg_and_fdt"}
+
+## 数据依赖图（DDG）及其构建算法
+
+数据依赖图（DDG）描述了程序中各个基本块之间的数据依赖关系。
+
+要理解什么是数据依赖图，我们还是得先对“数据依赖”有些概念。在这里，我们所说的“数据依赖”，主要指的就是：**一条语句中一个变量的定义，可以到达另一条语句中对该变量的使用**
+
+如下图中，语句s3中的变量a就是从语句s1中定义的，因此，我们可以说语句s3中的变量a的值，依赖于语句s1。
+
+![](/docs-zh/assets/data-dependency.webp)
+
+语句之间的数据依赖关系是有“可达定义分析”得出的。可达定义分析的相关说明参见[南大的软件分析课程](https://blog.csdn.net/SHU15121856/article/details/105288593)，它可以根据程序的控制结构，给出诸如“s3中的变量a依赖于哪些语句”这样的结论。
+
+将各个语句之间的变量依赖关系，用图示表示出来，就能构成一个数据依赖图了。
+
+
+
+
+

@@ -5,7 +5,7 @@ import networkx as nx
 from PyBirdViewCode import FileManager, abspath_from_file
 from PyBirdViewCode.algorithms.domination_analysis import (
     get_forward_dominance_tree,
-    create_cdg,
+    merge_cfg_and_fdt,
 )
 
 fm = FileManager(
@@ -27,7 +27,7 @@ def test_dominator():
         fdt,
     )
     assert set(fdt.edges) == set([(6, 5), (5, 4), (5, 3), (5, 2), (2, 1)])
-    merged = create_cdg(G, fdt)
+    merged = merge_cfg_and_fdt(G, fdt)
     assert set(merged.edges) == {
         (2, 3),
         (2, 4),

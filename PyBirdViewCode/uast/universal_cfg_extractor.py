@@ -4,7 +4,7 @@ import uuid
 
 from PyBirdViewCode.algorithms.domination_analysis import (
     get_forward_dominance_tree,
-    create_cdg,
+    merge_cfg_and_fdt,
 )
 from ..uast import universal_ast_nodes as nodes
 from typing import Dict, List, Literal, Tuple, Union, Optional
@@ -59,7 +59,6 @@ class CFG:
     def __init__(
         self, all_blocks: List[BasicBlock], entry_block_id: int, return_block_id: int
     ) -> None:
-        # self._all_blocks: List[BasicBlock] = all_blocks
         self._block_id_map: Dict[int, BasicBlock] = {
             block.block_id: block for block in all_blocks
         }
@@ -111,8 +110,8 @@ class CFG:
         Convert this CFG to a networkx graph
         """
         g = copy.deepcopy(self.topology)
-        # get_edges(self.head_block)
         uast_unparser = BaseUASTUnparser()
+
         for block in self._all_blocks:
             label_base = f"#{block._id} {escape(block.text_on_empty())}\n"
             if len(block.statements) > 0:
@@ -394,7 +393,7 @@ class CFGBuilder:
             block_loop_predicate = self.new_block(node.predicate, kind="conditional")
         else:
             block_loop_predicate = self.new_block()
-    
+
         # Add ast mapping to this node
         self.block_ast_mapping[block_loop_predicate.block_id] = node.id
 
@@ -428,7 +427,7 @@ class CFGBuilder:
             block_loop_head = self.new_block(node.predicate, kind="conditional")
         else:
             block_loop_head = self.new_block()
-        
+
         # Add ast mapping to this node
         self.block_ast_mapping[block_loop_head.block_id] = node.id
 
@@ -527,10 +526,3 @@ def remove_empty_node_from_cfg(cfg: "CFG"):
     return new_cfg
 
 
-def create_cdg_topology(cfg: CFG):
-    """
-    创建CDG的拓扑结构
-    """
-    fdt = get_forward_dominance_tree(cfg.topology)
-    merged = create_cdg(cfg.topology, fdt)
-    return merged.reverse()

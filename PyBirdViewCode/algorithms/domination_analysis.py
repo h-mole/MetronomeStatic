@@ -29,7 +29,7 @@ def get_forward_dominance_tree(cfg_topology: nx.DiGraph):
     return dom_tree
 
 
-def create_cdg(cfg_topology: nx.DiGraph, fdt: nx.DiGraph) -> nx.DiGraph:
+def merge_cfg_and_fdt(cfg_topology: nx.DiGraph, fdt: nx.DiGraph) -> nx.DiGraph:
     """
     CFG拓扑结构（以下简称为CFG）和FDT的节点构成相同。
     要构建CDG，就必须将CFG和FDG这两个图进行融合。
