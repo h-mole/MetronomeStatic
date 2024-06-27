@@ -5,83 +5,92 @@ from ..uast import universal_ast_nodes as nodes
 from ..algorithms import RDAOp, RDAOpList, reaching_definition_analysis
 
 
-def test_1():
+class ReferencedRValueParser:
+    def __init__(self) -> None:
+        self.r_values: set[str] = set()
 
-    edges = [
-        ("entry", "B1"),
-        ("B1", "B2"),
-        ("B2", "B3"),
-        ("B2", "B4"),
-        ("B3", "B5"),
-        ("B4", "B5"),
-        ("B5", "B6"),
-        ("B5", "B2"),
-        ("B6", "exit"),
-    ]
-    G = nx.DiGraph()
-    G.add_edges_from(edges)
-
-    defs: dict[str, RDAOpList] = {
-        "entry": RDAOpList([]),
-        "B1": RDAOpList([RDAOp("x"), RDAOp("y"), RDAOp("z")]),
-        "B2": RDAOpList([RDAOp("x")]),
-        "B3": RDAOpList([RDAOp("y")]),
-        "B4": RDAOpList([RDAOp("z"), RDAOp("y")]),
-        "B5": RDAOpList([RDAOp("z")]),
-        "B6": RDAOpList([RDAOp("z")]),
-        "exit": RDAOpList([]),
-    }
-    fm.dot_dump("rda-test1.dot", G)
-    inputs, outputs = reaching_definition_analysis(G, defs, ["entry", "exit"])
-    assert bool_list_to_str(outputs["B1"]) == "111000000"
-    assert bool_list_to_str(inputs["B1"]) == "000000000"
-    assert bool_list_to_str(inputs["B2"]) == "111110110"
-    assert bool_list_to_str(outputs["B2"]) == "011110110"
+    def parse_referenced_values(self, stmt: nodes.SourceElement):
+        match stmt:
+            case nodes.Assignment(rhs=rhs):
+                for item in rhs:
+                    self.parse_referenced_values(item)
+            case nodes.BinaryExpr(lhs=lhs, rhs=rhs):
+                self.parse_referenced_values(lhs)
+                self.parse_referenced_values(rhs)
+            case nodes.UnaryExpr(expression=expr):
+                self.parse_referenced_values(expr)
+            case nodes.Literal():
+                return None
+            case nodes.Name():
+                self.r_values.add(stmt.id)
+            case _:
+                raise NotImplementedError(stmt)
 
 
-def analyse(cfg: CFG):
-    
-    # return 
+def dataflow_analyse(cfg: CFG):
     unparser = BaseUASTUnparser()
     defs: dict[str, RDAOpList] = {}
+    var_refs: dict[str, List[str]] = {}
+
     for node in cfg.topology.nodes:
         block = cfg.get_block(node)
-        assigned_variables = []
-        for stmt_index, stmt in enumerate(block.statements):
+        defs[node] = RDAOpList([])
+        var_refs[node] = []
+        if node == 1:
+            defs[node].ops.extend([RDAOp("x"), RDAOp("y"), RDAOp("z")])
+        if len(block.statements) == 0:
+            pass
+        elif len(block.statements) == 1:
+            stmt = block.statements[0]
+            assigned_variable = None
+            parser = ReferencedRValueParser()
+            parser.parse_referenced_values(stmt)
             match stmt:
-                case nodes.Assignment():
-                    assigned_variables.extend(
-                        [
-                            (stmt_index, unparser.unparse(lhs_item), lhs_item.location)
-                            for lhs_item in stmt.lhs
-                        ]
+                case nodes.Assignment(lhs=[lhs_item]):
+                    assigned_variable = (
+                        0,
+                        unparser.unparse(lhs_item),
+                        lhs_item.location,
                     )
 
                 case nodes.UnaryExpr(sign="++" | "--"):
-                    assigned_variables.append(
-                        (
-                            stmt_index,
-                            unparser.unparse(stmt.expression),
-                            stmt.location,
-                        )
+                    assigned_variable = (
+                        0,
+                        unparser.unparse(stmt.expression),
+                        stmt.location,
                     )
-
-        print(node, assigned_variables)
-
-        # defs[node] = RDAOpList([])
-        ops: List[RDAOp] = []
-        for stmt_index_, assigned_var_name_, loc in assigned_variables:
-            mod_index = RDAOp.find_var_modification_in_list(assigned_var_name_, ops)
-            if mod_index != -1:
-                ops.pop(mod_index)
-            ops.append(RDAOp(assigned_var_name_, index_in_bb=stmt_index_, location=loc))
-        defs[node] = RDAOpList(ops)
+                case _:
+                    pass
+            print("referenced_values", parser.r_values)
+            if assigned_variable is not None:
+                print(node, assigned_variable)
+                stmt_index_, assigned_var_name_, loc = assigned_variable
+                op = RDAOp(
+                    assigned_var_name_,
+                    used_var=list(parser.r_values),
+                    location=loc,
+                )
+                # )
+                defs[node].ops.append(op)
+            var_refs[node] = list(parser.r_values)
+            # defs[node].ops[0].used_var = list(parser.r_values)
+        else:
+            raise ValueError
 
     print(defs)
     _, _2, var_defs_reachable = reaching_definition_analysis(
         cfg.topology,
-        defs,
+        {
+            k: v
+            for k, v in defs.items()
+            if len(v.ops) == 0 or v.ops[0].defined_var != ""
+        },
         [],
     )
-
-    print(var_defs_reachable)
+    for k, v in var_defs_reachable.items():
+        print(k)
+        print(v)
+        print(var_refs[k])
+    
+    # print(var_defs_reachable)
+    return var_defs_reachable, var_refs

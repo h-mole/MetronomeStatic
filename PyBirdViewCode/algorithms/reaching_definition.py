@@ -21,7 +21,6 @@ class RDAOp(DataClassJsonMixin):
 
     defined_var: str = ""
     used_var: List[str] = None
-    index_in_bb: int = -1  # 在基础块的第`index_in_bb`个语句
     location: Tuple[int, int] = (-1, -1)  # line, column
 
     def __post_init__(self):
@@ -49,7 +48,6 @@ class RDAOpList(DataClassJsonMixin):
 
 class VarDefItem(NamedTuple):
     node_id: str
-    stmt_index: int
     modified_var: str
 
 
@@ -65,7 +63,7 @@ def get_defs(
     d = {}
     for i, reachable in enumerate(def_list):
         node_id, op_index, var = defs[i]
-        d[VarDefItem(node_id, nodes_lists[node_id].ops[op_index].index_in_bb, var)] = (
+        d[VarDefItem(node_id, var)] = (
             reachable
         )
     return d
@@ -84,6 +82,10 @@ def reaching_definition_analysis(
     :cfg: 输入的cfg
     :defs: 各个基本块中定义的变量
     :ignored_basic_blocks: 忽略的节点
+
+    输出：参数1和2为语句的变量定义可否到达每一个节点的输入/输出；
+    参数3代表在每一个节点上，变量定义(类型为VarDefItem)能否到达该节点
+    
     """
     bb_list = list(filter(lambda n: n not in ignored_basic_blocks, cfg.nodes))
     defs_list: List[Tuple[str, int, str]] = [

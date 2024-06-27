@@ -1,6 +1,6 @@
 import warnings
 from .universal_ast_nodes import *
-from .universal_cfg_extractor import CFGBuilder, CFG, BasicBlock
+from .universal_cfg_extractor import CFGBuilder, CFG, BasicBlock, remove_empty_node_from_cfg
 from .unparser import *
 from .uast_queries import *
 

@@ -16,6 +16,7 @@ from typing import (
     TYPE_CHECKING,
     Type as TypingType,
 )
+import uuid
 from itertools import chain
 from MelodieFuncFlow import MelodieGenerator
 
@@ -155,7 +156,7 @@ class SourceElement(object):
         def __len__(self):
             return len(self.hierarchy)
 
-    _common_fields: List[str] = ["location"]
+    _common_fields: List[str] = ["id", "location"]
     _fields: List[str] = []
 
     def __init__(self):
@@ -164,7 +165,7 @@ class SourceElement(object):
             None,
             None,
         )  # line, column
-        # self.type = ""
+        self.id = uuid.uuid4().hex
 
     def __repr__(self):
         # try:
@@ -910,14 +911,20 @@ class BinaryExpr(Expr):
             assert operator in STANDARD_BINARY_OPERATORS, operator
 
 
-class Assignment(BinaryExpr):
+class Assignment(Expr):
+    _fields = ["operator", "lhs", "rhs"]
+    operator: str
     lhs: List[SourceElement]
     rhs: List[SourceElement]
 
     def __init__(
         self, operator: str, lhs: List[SourceElement], rhs: List[SourceElement]
     ):
-        super().__init__(operator, lhs, rhs)
+        super().__init__()
+        self.operator = operator
+        self.lhs = lhs
+        self.rhs = rhs
+
         assert isinstance(self.lhs, list)
         assert isinstance(self.rhs, list)
         if self.__class__ == Assignment:

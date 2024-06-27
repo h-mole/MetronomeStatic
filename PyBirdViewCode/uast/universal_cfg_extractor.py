@@ -1,5 +1,11 @@
 import copy
 from html import escape
+import uuid
+
+from PyBirdViewCode.algorithms.domination_analysis import (
+    get_forward_dominance_tree,
+    create_cdg,
+)
 from ..uast import universal_ast_nodes as nodes
 from typing import Dict, List, Literal, Tuple, Union, Optional
 import networkx as nx
@@ -17,12 +23,16 @@ class BasicBlock:
         id: int,
         statements: Optional[List[nodes.SourceElement]] = None,
         kind: BlockKinds = "normal",
+        tag_on_empty="",
+        next_blocks: List["BasicBlock"] = None,
     ):
         self._id = id
         self.statements = statements if statements is not None else []
         self.kind: BlockKinds = kind
-        self.tag_on_empty = ""
-        self.next_blocks: List[BasicBlock] = []
+        self.tag_on_empty = tag_on_empty
+        self.next_blocks: List[BasicBlock] = (
+            next_blocks if next_blocks is not None else []
+        )
 
     @property
     def block_id(self):
@@ -49,13 +59,17 @@ class CFG:
     def __init__(
         self, all_blocks: List[BasicBlock], entry_block_id: int, return_block_id: int
     ) -> None:
-        self._all_blocks: List[BasicBlock] = all_blocks
+        # self._all_blocks: List[BasicBlock] = all_blocks
         self._block_id_map: Dict[int, BasicBlock] = {
-            block.block_id: block for block in self._all_blocks
+            block.block_id: block for block in all_blocks
         }
         self.entry_block = self._block_id_map[entry_block_id]
         self.exit_block = self._block_id_map[return_block_id]
         self._topology = self._calc_topology()
+
+    @property
+    def _all_blocks(self) -> List[BasicBlock]:
+        return list(self._block_id_map.values())
 
     @property
     def topology(self) -> nx.DiGraph:
@@ -132,6 +146,7 @@ class CFGBuilder:
         self.head_block = self.block
         self.return_block = self.new_block()
         self.return_block.kind = "method_return"
+        self.block_ast_mapping: Dict[int, str] = {}
 
         # Goto edges are from "goto" node and to the label
         # The edges should add in the last step
@@ -262,6 +277,7 @@ class CFGBuilder:
         # create condition block and append to the last block
         condition_block = self.new_block(node.predicate, kind="conditional")
         last_block.next_blocks.append(condition_block)
+        self.block_ast_mapping[condition_block.block_id] = node.id
 
         # replace the current block with a newly created basic block
         self.block = true_block = self.new_block()
@@ -345,6 +361,9 @@ class CFGBuilder:
         else:
             block_loop_head = self.new_block()
 
+        # Add ast mapping to this node
+        self.block_ast_mapping[block_loop_head.block_id] = node.id
+
         last_block.next_blocks.append(block_loop_head)
 
         # Build cfg from while body
@@ -375,6 +394,9 @@ class CFGBuilder:
             block_loop_predicate = self.new_block(node.predicate, kind="conditional")
         else:
             block_loop_predicate = self.new_block()
+    
+        # Add ast mapping to this node
+        self.block_ast_mapping[block_loop_predicate.block_id] = node.id
 
         block_do_while_body_start = self.block = self.new_block()
         block_before_do_while.next_blocks.append(block_do_while_body_start)
@@ -406,6 +428,9 @@ class CFGBuilder:
             block_loop_head = self.new_block(node.predicate, kind="conditional")
         else:
             block_loop_head = self.new_block()
+        
+        # Add ast mapping to this node
+        self.block_ast_mapping[block_loop_head.block_id] = node.id
 
         last_block.next_blocks.append(block_loop_head)
 
@@ -453,3 +478,59 @@ class CFGBuilder:
         self.loop_control_stmts.append(("continue", self.block))
         self.block.set_tag_on_empty("CONTINUE")
         return True
+
+
+def remove_empty_node_from_cfg(cfg: "CFG"):
+    """
+    zh:
+    移除CFG中的空节点。由于CFG各个节点的出边是有顺序的，因此不能直接使用networkx中移除节点的方法
+    """
+    # 获取所有空节点
+    empty_nodes: set[int] = set()
+    for node in cfg.topology.nodes:
+        if len(cfg.get_block(node).statements) == 0 and not (
+            cfg.entry_block.block_id == node or cfg.exit_block.block_id == node
+        ):
+            empty_nodes.add(node)
+    new_cfg = copy.deepcopy(cfg)
+    # new_topology: nx.DiGraph = new_cfg.topology.copy()
+    print("empty nodes", empty_nodes)
+    # 对每一个空节点采取操作
+    for node in empty_nodes:
+        print("removing", node)
+        predecessors, successors = list(new_cfg.topology.predecessors(node)), list(
+            new_cfg.topology.successors(node)
+        )
+
+        # 对于要移除的节点，后继节点一定只有一个
+        assert len(successors) == 1
+
+        # 获取后继节点
+        successor_block = new_cfg.get_block(successors[0])
+
+        # 获取要删除的节点
+        block_to_remove = new_cfg.get_block(node)
+
+        # 移除相应的节点
+        new_cfg._block_id_map.pop(block_to_remove._id)
+
+        # 将后继节点替换到各个前驱block的next_blocks中
+        for pred_id in predecessors:
+            pred_block = new_cfg.get_block(pred_id)
+            replace_index = pred_block.next_blocks.index(block_to_remove)
+            pred_block.next_blocks[replace_index] = successor_block
+
+        # 更新网络拓扑
+        new_cfg._topology = new_cfg._calc_topology()
+        print(list(new_cfg.topology.nodes))
+
+    return new_cfg
+
+
+def create_cdg_topology(cfg: CFG):
+    """
+    创建CDG的拓扑结构
+    """
+    fdt = get_forward_dominance_tree(cfg.topology)
+    merged = create_cdg(cfg.topology, fdt)
+    return merged.reverse()

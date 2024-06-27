@@ -3,7 +3,10 @@ from PyBirdViewCode.algorithms import reaching_definition_analysis, bool_list_to
 from PyBirdViewCode.algorithms.reaching_definition import RDAOp, RDAOpList
 import networkx as nx
 from PyBirdViewCode import FileManager, abspath_from_file
-from PyBirdViewCode.algorithms.domination_analysis import get_forward_dominance_tree, merge_fdt_and_cfg
+from PyBirdViewCode.algorithms.domination_analysis import (
+    get_forward_dominance_tree,
+    create_cdg,
+)
 
 fm = FileManager(
     abspath_from_file(
@@ -23,7 +26,16 @@ def test_dominator():
         "fdt.dot",
         fdt,
     )
-    merged = merge_fdt_and_cfg(G, fdt)
+    assert set(fdt.edges) == set([(6, 5), (5, 4), (5, 3), (5, 2), (2, 1)])
+    merged = create_cdg(G, fdt)
+    assert set(merged.edges) == {
+        (2, 3),
+        (2, 4),
+        ("CDG_ENTRY", 1),
+        ("CDG_ENTRY", 2),
+        ("CDG_ENTRY", 5),
+        ("CDG_ENTRY", 6),
+    }
     fm.dot_dump(
         "cdg.dot",
         merged,
