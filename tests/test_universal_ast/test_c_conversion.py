@@ -1,5 +1,5 @@
 from PyBirdViewCode.clang_utils.code_attributes.utils import parse_file
-from PyBirdViewCode.uast.c_cpp_converter import ClangASTConverter
+from PyBirdViewCode.uast import ClangASTConverter
 from PyBirdViewCode.uast import (
     universal_ast_nodes as nodes,
     universal_ast_types as types,

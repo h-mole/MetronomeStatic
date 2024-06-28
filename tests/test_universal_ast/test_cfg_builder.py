@@ -1,17 +1,18 @@
-import json
-import os
-from pprint import pprint
 from PyBirdViewCode.clang_utils.code_attributes.utils import get_func_decl, parse_file
-from PyBirdViewCode.uast.c_cpp_converter import ClangASTConverter
-from PyBirdViewCode.uast.universal_cfg_extractor import CFGBuilder
 from PyBirdViewCode.uast import (
-    universal_ast_nodes as nodes,
-    universal_ast_types as types,
+    ClangASTConverter,
+    extract_cfg_from_method,
+    UASTQuery,
+    extract_uast_from_file,
+)
+from PyBirdViewCode.uast.universal_cfg_extractor import (
+    CFGBuilder,
 )
 from PyBirdViewCode.utils.files import FileManager, abspath_from_file
 from tests.base import asset_path
 from PyBirdViewCode.clang_utils import beautified_print_ast
 import networkx as nx
+from tests.test_universal_ast.base import verify_topology
 
 file_manager = FileManager(abspath_from_file("output", __file__))
 
@@ -29,11 +30,9 @@ def test_cfg_extraction_1():
 
     beautified_print_ast(cursor, "out1.json")
     ret = evaluator.eval(cursor)
-    print(ret)
+
     cb = CFGBuilder()
     cfg = cb.build(ret)
-
-    print(cfg.print_graph())
 
     graph = cfg.to_networkx()
     nx.nx_pydot.write_dot(graph, "out1.dot")
@@ -52,12 +51,12 @@ def test_cfg_extraction_2():
 
     beautified_print_ast(cursor, "out.json")
     ret = evaluator.eval(cursor)
-    print(ret)
+
     cb = CFGBuilder()
-    cfg = cb.build(ret)
+    cfg = cb.build(ret, True, True)
 
     graph = cfg.to_networkx()
-    nx.nx_pydot.write_dot(graph, "out.dot")
+    file_manager.dot_dump("test_cfg_extraction_2.dot", graph)
 
 
 def test_cfg_extraction_3():
@@ -74,10 +73,6 @@ def test_cfg_extraction_3():
     beautified_print_ast(cursor, "out.json")
     ret = evaluator.eval(cursor)
 
-    # json_file = "cfg_extraction_3.json"
-    # file_manager.json_dump(json_file, ret.to_dict())
-    # ast = SourceElement.from_dict(file_manager.json_load(json_file))
-
     cb = CFGBuilder()
     cfg = cb.build(ret)
 
@@ -87,26 +82,48 @@ def test_cfg_extraction_3():
 
 def test_cfg_extraction_error_handling():
     file = asset_path("universal-ast-extraction/error-handling.c")
-    evaluator = ClangASTConverter()
-    cursor = get_func_decl(
-        parse_file(
-            file,
-        ).cursor,
-        "handle_error_demo",
+
+    uast = UASTQuery.get_method_by_name(
+        extract_uast_from_file(file), "handle_error_demo"
     )
-    assert cursor is not None
-
-    beautified_print_ast(cursor, "out.json")
-    ret = evaluator.eval(cursor)
-    print(ret)
-    cb = CFGBuilder()
-    cfg = cb.build(ret)
-
-    print(cfg.print_graph())
-    file_manager.json_dump("handle-error-demo.json", ret.to_dict())
+    cfg = extract_cfg_from_method(uast)
 
     graph = cfg.to_networkx()
     file_manager.dot_dump(
         "handling-errors.dot",
         graph,
+    )
+    verify_topology(
+        [(1, 4), (4, 8), (4, 3), (3, 2), (8, 7), (8, 3), (6, 3), (7, 8), (7, 6)], graph
+    )
+
+
+def test_expand_multi_stmt():
+    file = asset_path("universal-ast-extraction/control-flow-multi-stmt.c")
+    uast = UASTQuery.get_method_by_name(extract_uast_from_file(file), "main")
+    cfg = extract_cfg_from_method(uast)
+    expected_topology = [(4, 6), (4, 2), (6, 2), (7, 8), (8, 9), (9, 10), (10, 4)]
+
+    verify_topology(expected_topology, cfg.topology)
+
+    uast = UASTQuery.get_method_by_name(extract_uast_from_file(file), "main2")
+    cfg = extract_cfg_from_method(uast)
+    file_manager.dot_dump("cfg-not-expanded.dot", cfg.to_networkx())
+    verify_topology(
+        [
+            (1, 4),
+            (4, 11),
+            (4, 15),
+            (11, 12),
+            (15, 16),
+            (7, 8),
+            (8, 9),
+            (9, 10),
+            (10, 2),
+            (12, 13),
+            (13, 14),
+            (14, 7),
+            (16, 7),
+        ],
+        cfg.topology,
     )

@@ -155,6 +155,9 @@ class CFGBuilder:
         # Storing continue or Break statements to add
         self.loop_control_stmts: List[Tuple[LoopControlKinds, BasicBlock]] = []
 
+    def _remove_block(self, block: BasicBlock) -> None:
+        self.all_blocks.remove(block)
+
     def search_block_with_label(self, label: str) -> BasicBlock:
         """
         Search through all basic blocks, and get the first block with a label
@@ -210,13 +213,21 @@ class CFGBuilder:
         self.all_blocks.append(block)
         return block
 
-    def build(self, ast: nodes.MethodDecl):
+    def build(
+        self,
+        ast: nodes.MethodDecl,
+        remove_empty_nodes=True,
+        ensure_single_stmt_each_node=True,
+    ):
         assert isinstance(ast, nodes.MethodDecl)
 
         self.build_on_method_declaration(ast)
-        return CFG(
-            self.all_blocks, self.head_block.block_id, self.return_block.block_id
-        )
+        cfg = CFG(self.all_blocks, self.head_block.block_id, self.return_block.block_id)
+        if remove_empty_nodes:
+            remove_empty_node_from_cfg(cfg)
+        if ensure_single_stmt_each_node:
+            expand_multi_stmt_nodes(cfg)
+        return cfg
 
     def build_on_method_declaration(self, node: nodes.MethodDecl):
         assert node.body is not None
@@ -308,6 +319,8 @@ class CFGBuilder:
         #   and should not change current block.
         if endif_reachable:
             self.block = endif_block
+        else:
+            self._remove_block(endif_block)
         return False
 
     def build_on_switch(self, node: nodes.SwitchStmt) -> bool:
@@ -403,8 +416,9 @@ class CFGBuilder:
 
         self.block.next_blocks.append(block_loop_predicate)
 
-        block_loop_predicate.next_blocks.append(block_end_loop)
+        # Add next nodes for the loop predicate
         block_loop_predicate.next_blocks.append(block_do_while_body_start)
+        block_loop_predicate.next_blocks.append(block_end_loop)
 
         # Handle probable break
         self.add_loop_control_edges(block_end_loop, block_do_while_body_start)
@@ -479,10 +493,61 @@ class CFGBuilder:
         return True
 
 
+def expand_multi_stmt_nodes(cfg: "CFG"):
+    """
+    将CFG中有多个statement的节点进行展开
+    注意：**此方法不是纯函数**，会对传入的CFG进行修改
+    """
+    multi_stmt_nodes: set[int] = set()
+    for node in cfg.topology.nodes:
+        if len(cfg.get_block(node).statements) > 1:
+            multi_stmt_nodes.add(node)
+
+    _id = max(cfg.topology.nodes)
+
+    def new_id():
+        nonlocal _id
+        _id += 1
+        return _id
+
+    for node in multi_stmt_nodes:
+        block_to_split = cfg.get_block(node)
+        cfg._block_id_map.pop(block_to_split._id)
+        # 对每一个节点，创建语句链
+        first_block = None  # 保存头节点
+        prev_block = None  # 前一个节点
+
+        for stmt in block_to_split.statements:
+            new_block = BasicBlock(new_id(), [stmt], "normal", "")
+            if prev_block is not None:
+                prev_block.next_blocks.append(new_block)
+            if first_block is None:
+                first_block = new_block
+            prev_block = new_block
+            cfg._block_id_map[new_block._id] = new_block
+        assert first_block is not None
+        assert prev_block is not None
+        prev_block.next_blocks = block_to_split.next_blocks
+        prev_block.kind = block_to_split.kind
+
+        predecessors = list(cfg.topology.predecessors(node))
+
+        # 将后继节点替换到各个前驱block的next_blocks中
+        for pred_id in predecessors:
+            pred_block = cfg.get_block(pred_id)
+            replace_index = pred_block.next_blocks.index(block_to_split)
+            pred_block.next_blocks[replace_index] = first_block
+        if len(predecessors) == 0:
+            pass
+            # cfg._topology.add_edge(block_to_split, first_block)
+        cfg._topology = cfg._calc_topology()
+
+
 def remove_empty_node_from_cfg(cfg: "CFG"):
     """
     zh:
     移除CFG中的空节点。由于CFG各个节点的出边是有顺序的，因此不能直接使用networkx中移除节点的方法
+    注意：**此方法不是纯函数**，会对传入的CFG进行修改
     """
     # 获取所有空节点
     empty_nodes: set[int] = set()
@@ -491,38 +556,32 @@ def remove_empty_node_from_cfg(cfg: "CFG"):
             cfg.entry_block.block_id == node or cfg.exit_block.block_id == node
         ):
             empty_nodes.add(node)
-    new_cfg = copy.deepcopy(cfg)
-    # new_topology: nx.DiGraph = new_cfg.topology.copy()
-    print("empty nodes", empty_nodes)
+
     # 对每一个空节点采取操作
     for node in empty_nodes:
-        print("removing", node)
-        predecessors, successors = list(new_cfg.topology.predecessors(node)), list(
-            new_cfg.topology.successors(node)
+        predecessors, successors = list(cfg.topology.predecessors(node)), list(
+            cfg.topology.successors(node)
         )
 
         # 对于要移除的节点，后继节点一定只有一个
         assert len(successors) == 1
 
         # 获取后继节点
-        successor_block = new_cfg.get_block(successors[0])
+        successor_block = cfg.get_block(successors[0])
 
         # 获取要删除的节点
-        block_to_remove = new_cfg.get_block(node)
+        block_to_remove = cfg.get_block(node)
 
         # 移除相应的节点
-        new_cfg._block_id_map.pop(block_to_remove._id)
+        cfg._block_id_map.pop(block_to_remove._id)
 
         # 将后继节点替换到各个前驱block的next_blocks中
         for pred_id in predecessors:
-            pred_block = new_cfg.get_block(pred_id)
+            pred_block = cfg.get_block(pred_id)
             replace_index = pred_block.next_blocks.index(block_to_remove)
             pred_block.next_blocks[replace_index] = successor_block
 
         # 更新网络拓扑
-        new_cfg._topology = new_cfg._calc_topology()
-        print(list(new_cfg.topology.nodes))
+        cfg._topology = cfg._calc_topology()
 
-    return new_cfg
-
-
+    # return cfg

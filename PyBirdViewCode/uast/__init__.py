@@ -13,17 +13,5 @@ from .universal_code_property_graphs import (
     get_ddg_topology,
     CodePropertyGraphs,
 )
-
-try:
-    from .c_cpp_converter import ClangASTConverter
-except ModuleNotFoundError as e:
-    warnings.warn(
-        f"C/CPP to UAST converter cannot be imported due to an import error: {e.msg}"
-    )
-
-try:
-    from .python_converter import ParsoASTConverter
-except ModuleNotFoundError as e:
-    warnings.warn(
-        f"Python to UAST converter cannot be imported due to an import error: {e.msg}"
-    )
+from .builtin_converters import *
+from .uast_commands import extract_uast_from_file, extract_cpg_from_method, extract_cfg_from_method

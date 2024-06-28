@@ -2,27 +2,23 @@ int basic_control_structures(int a, int b[2])
 {
     if (a > 0)
     {
-        a = 1;
-    }
-    else if (a < 0)
-    {
-        a = 2;
+        return 1;
     }
     else
     {
-        a = 3;
+        return 2;
     }
 
-    if (a > 0)
-    {
-        return a;
-    }
-    else if (a < 0)
-    {
-        return -a;
-    }
-    else
-    {
-        return 0;
-    }
+    // if (a > 0)
+    // {
+    //     return a;
+    // }
+    // else if (a < 0)
+    // {
+    //     return -a;
+    // }
+    // else
+    // {
+    //     return 0;
+    // }
 }

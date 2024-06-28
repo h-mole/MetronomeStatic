@@ -3,7 +3,7 @@ import parso
 from parso.tree import NodeOrLeaf
 from parso.python.tree import PythonNode, Operator
 import parso.python.tree as parso_tree
-from ..uast import universal_ast_nodes as nodes
+from PyBirdViewCode.uast import universal_ast_nodes as nodes
 
 
 class ParsoASTConverter:
@@ -85,7 +85,9 @@ class ParsoASTConverter:
         # param.
         method_type = nodes.MethodType(
             [
-                nodes.ParamDecl(self.eval_single_node(param.name), nodes.UnknownType("any"))
+                nodes.ParamDecl(
+                    self.eval_single_node(param.name), nodes.UnknownType("any")
+                )
                 for param in c.get_params()
             ],
             nodes.UnknownType("any"),

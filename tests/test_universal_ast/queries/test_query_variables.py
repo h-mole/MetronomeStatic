@@ -1,5 +1,5 @@
 from PyBirdViewCode.clang_utils.code_attributes.utils import parse_file
-from PyBirdViewCode.uast.c_cpp_converter import ClangASTConverter
+from PyBirdViewCode.uast import ClangASTConverter
 from PyBirdViewCode.uast import (
     universal_ast_nodes as nodes,
     universal_ast_types as types,
@@ -8,10 +8,7 @@ from PyBirdViewCode.uast import (
 from PyBirdViewCode.utils.files import FileManager, abspath_from_file
 from tests.base import asset_path
 from PyBirdViewCode.clang_utils import beautified_print_ast
-from PyBirdViewCode.uast.uast_queries.query_variables import (
-    get_all_globals,
-    get_all_locals,
-)
+from PyBirdViewCode.uast.uast_queries import UASTQuery
 from MelodieFuncFlow import MelodieGenerator
 
 file_manager = FileManager(abspath_from_file("output", __file__))
@@ -28,7 +25,7 @@ def test_c_types_extraction():
     uast = converter.eval(cursor)
     # file_manager.json_dump("c-global-variables_uast.json", uast.to_dict())
     # print(uast)
-    global_vars = get_all_globals(uast)
+    global_vars = UASTQuery.get_all_globals(uast)
     print(global_vars)
     float_arr_decl = (
         MelodieGenerator(global_vars).filter(lambda decl: decl.location[0] == 11).head()
@@ -49,7 +46,9 @@ def test_extract_local():
 
     uast = converter.eval(cursor)
     all_locals = (
-        MelodieGenerator(get_all_locals(uast.filter_by(nodes.MethodDecl).head()))
+        MelodieGenerator(
+            UASTQuery.get_all_locals(uast.filter_by(nodes.MethodDecl).head())
+        )
         .map(lambda decl: BaseUASTUnparser().unparse(decl.variable))
         .s
     )

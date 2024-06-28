@@ -1,46 +1,31 @@
 import sys
 
 sys.path.append("../../")
-import networkx as nx
 from PyBirdViewCode.clang_utils import *
 
 # from PyBirdViewCode
 from PyBirdViewCode import (
-    universal_ast_nodes as nodes,
-    ClangASTConverter,
-    CFGBuilder,
     FileManager,
-    CodePropertyGraphs
+    extract_uast_from_file,
+    extract_cpg_from_method,
+    UASTQuery,
 )
 
 fm = FileManager(".")
-# 获取 Clang AST 的Cursor对象
-file_cursor = parse_file("demo.c").cursor
 
-# 获取函数main的Cursor对象
-cursor = get_func_decl(file_cursor, "main")
+file_uast = extract_uast_from_file("demo.c")
+func_uast = UASTQuery(file_uast).get_method_by_name("main")
 
-# 获取UAST
-ast = ClangASTConverter().eval(cursor)
+# 抽取代码属性图
+cpgs = extract_cpg_from_method(func_uast)
 
-# 使用CFGBuilder构建CFG
-cfg_builder = CFGBuilder()
-cfg = cfg_builder.build(ast)
-
-# 将CFG转换为networkx的网络，并且保存为dot
-g = cfg.to_networkx()
 fm.dot_dump(
     "cfg.dot",
-    g,
+    cpgs.cfg_nx,
 )
-
-
 
 # 得到.dot文件之后，可以用dot转化cfg.dot为图片
 os.system("dot -Tpng cfg.dot -o cfg.png")
-
-# 从cfg中抽取代码属性图
-cpgs = CodePropertyGraphs.create(cfg)
 
 # 控制依赖图（CDG）
 fm.dot_dump(

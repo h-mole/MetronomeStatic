@@ -26,12 +26,12 @@ from clang.cindex import (
     Type as CindexType,
 )
 
-from ..clang_utils.code_attributes.extract_data_structure import (
+from PyBirdViewCode.clang_utils.code_attributes.extract_data_structure import (
     FunctionDefModel,
 )
 
 
-from ..clang_utils.code_attributes import (
+from PyBirdViewCode.clang_utils.code_attributes import (
     UnaryOpPos,
     extract_literal_value,
     split_binary_operator,
@@ -41,10 +41,14 @@ from ..clang_utils.code_attributes import (
     traversal_with_callback,
     is_function_definition,
     beautified_print_ast,
+    parse_file,
 )
-from ..utils import MelodieGenerator
-from ..uast import universal_ast_nodes as nodes
-from ..uast import universal_ast_types as types
+from PyBirdViewCode.utils import MelodieGenerator
+from PyBirdViewCode.uast import (
+    universal_ast_nodes as nodes,
+    universal_ast_types as types,
+)
+from .converter_base import BaseASTExtractor, BaseUASTConverter
 
 if TYPE_CHECKING:
     CursorKind: Any = CursorKind
@@ -81,7 +85,24 @@ class LabelDesc(TypedDict):
     index: int
 
 
-class ClangASTConverter:
+class ClangASTExtractor(BaseASTExtractor):
+    def __init__(self, file: str, extra_args: List[str]) -> None:
+        super().__init__(file, extra_args)
+
+    @classmethod
+    def supported_file_types(cls) -> List[str]:
+        return [".c", ".cpp", ".i", ".ii"]
+
+    def extract_ast(self) -> tuple[Cursor, list[str]]:
+        """
+        调用Libclang，抽取Clang AST
+        """
+        tu = parse_file(self.file)
+        cursor = tu.cursor
+        return cursor, list(tu.diagnostics)
+
+
+class ClangASTConverter(BaseUASTConverter):
     def __init__(
         self,
     ) -> None:
@@ -241,6 +262,18 @@ class ClangASTConverter:
             TypeKind.DOUBLE: nodes.FloatType(double_bits),
             TypeKind.LONGDOUBLE: nodes.FloatType(64),
         }
+
+    @classmethod
+    def supported_ast_types(
+        cls,
+    ):
+        return [Cursor]
+
+    def convert_to_uast(self, original_ast: Cursor) -> nodes.SourceElement:
+        """
+        将Clang AST转换为UAST
+        """
+        return self.eval(original_ast)
 
     def convert_type(self, t: CindexType) -> nodes.DATA_TYPE:
         if 4 <= t.kind.value <= 20:

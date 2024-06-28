@@ -5,7 +5,7 @@ from PyBirdViewCode.algorithms.domination_analysis import (
     merge_cfg_and_fdt,
 )
 from PyBirdViewCode.clang_utils.code_attributes.utils import get_func_decl, parse_file
-from PyBirdViewCode.uast.c_cpp_converter import ClangASTConverter
+from PyBirdViewCode import ClangASTConverter
 from PyBirdViewCode.uast import (
     CFGBuilder,
     remove_empty_node_from_cfg,
@@ -47,31 +47,10 @@ def test_data_flow_analysis():
 
     graph = cfg.to_networkx()
     fm.dot_dump("dataflow-demo-cfg.dot", graph)
-    new_cfg = remove_empty_node_from_cfg(cfg)
-    # return
-    fm.dot_dump("cfg_purged.dot", new_cfg.to_networkx())
-    # return
-    cfg = new_cfg
-    result, var_refs = dataflow_analyse(cfg)
-    # print(result)
-    # ddg = nx.DiGraph()
-    # for node_id, vars_ref in var_refs.items():
-    #     for referenced_var in vars_ref:
-    #         print(node_id, referenced_var)
-    #         valid_vars = result[node_id]
-    #         for var_def, reachable in valid_vars.items():
-    #             if (
-    #                 referenced_var == var_def.modified_var
-    #                 and reachable
-    #                 and node_id != var_def.node_id
-    #             ):
-    #                 ddg.add_edge(node_id, var_def.node_id, label=referenced_var)
 
-    #         print(valid_vars)
+    fm.dot_dump("cfg_purged.dot", cfg.to_networkx())
 
-    # for node_id in ddg.nodes:
-    #     ddg.nodes[node_id]["label"] = graph.nodes[node_id]["label"]
-    ddg = get_ddg_topology(cfg)
+    ddg = get_ddg_topology(cfg, ["x", "y", "z"])
     fm.dot_dump("ddg.dot", ddg)
 
     # fdt = get_forward_dominance_tree(cfg.topology, cfg.exit_block.block_id)

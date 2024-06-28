@@ -30,7 +30,7 @@ class ReferencedRValueParser:
                 raise NotImplementedError(stmt)
 
 
-def dataflow_analyse(cfg: CFG):
+def dataflow_analyse(cfg: CFG, arg_variables: List[str]):
     unparser = BaseUASTUnparser()
     defs: dict[str, RDAOpList] = {}
     var_refs: dict[str, List[str]] = {}
@@ -40,7 +40,7 @@ def dataflow_analyse(cfg: CFG):
         defs[node] = RDAOpList([])
         var_refs[node] = []
         if node == 1:
-            defs[node].ops.extend([RDAOp("x"), RDAOp("y"), RDAOp("z")])
+            defs[node].ops.extend([RDAOp(var_name) for var_name in arg_variables])
         if len(block.statements) == 0:
             pass
         elif len(block.statements) == 1:
@@ -97,6 +97,3 @@ def dataflow_analyse(cfg: CFG):
 
     # print(var_defs_reachable)
     return var_defs_reachable, var_refs
-
-
-

@@ -1,5 +1,5 @@
 from PyBirdViewCode.clang_utils.code_attributes.utils import parse_file
-from PyBirdViewCode.uast.c_cpp_converter import ClangASTConverter
+from PyBirdViewCode.uast import ClangASTConverter
 from PyBirdViewCode.uast import (
     universal_ast_nodes as nodes,
     universal_ast_types as types,
@@ -8,7 +8,7 @@ from PyBirdViewCode.uast import (
 from PyBirdViewCode.utils.files import FileManager, abspath_from_file
 from tests.base import asset_path
 from PyBirdViewCode.clang_utils import beautified_print_ast
-from PyBirdViewCode.uast import uast_queries
+from PyBirdViewCode.uast import UASTQuery
 from MelodieFuncFlow import MelodieGenerator
 
 file_manager = FileManager(abspath_from_file("output", __file__))
@@ -25,7 +25,7 @@ def test_data_structure_unparse():
     uast = converter.eval(cursor)
     # file_manager.json_dump("c-global-variables_uast.json", uast.to_dict())
     # print(uast)
-    global_vars = uast_queries.get_all_globals(uast)
+    global_vars = UASTQuery.get_all_globals(uast)
     print(global_vars)
     unparsed = MelodieGenerator(global_vars).map(BaseUASTUnparser().unparse).l
     print(unparsed)

@@ -1,29 +1,35 @@
 import networkx as nx
-
-from .universal_cfg_extractor import CFG
+from .universal_ast_nodes import MethodDecl
+from .universal_cfg_extractor import CFG, CFGBuilder
 from ..algorithms import get_forward_dominance_tree, merge_cfg_and_fdt
 from .universal_dataflow_analysis import dataflow_analyse
+from .uast_queries import UASTQuery
 
 
 class CodePropertyGraphs:
-    def __init__(self, cfg: CFG) -> None:
-        self._cfg = cfg
-        self.cfg_nx = cfg.to_networkx()
+    def __init__(self, func_or_method_uast: MethodDecl) -> None:
+        self._cfg = CFGBuilder().build(func_or_method_uast)
+        self.cfg_nx = self._cfg.to_networkx()
         self.cdg_nx = get_cdg_topology(self._cfg)
-        self.ddg_nx = get_ddg_topology(self._cfg)
+        self.ddg_nx = get_ddg_topology(
+            self._cfg,
+            [param.name.id for param in UASTQuery.get_all_params(func_or_method_uast)],
+        )
         self.pdg_nx = compose_pdg_topology(self.cdg_nx, self.ddg_nx)
         # self.cfg_nx
         list(map(self.add_label, [self.cdg_nx, self.ddg_nx, self.pdg_nx]))
 
     def add_label(self, g: nx.DiGraph):
         for node in g.nodes:
-            
+
             if node != "CDG_ENTRY":
-                g.nodes[node]["label"] = self.cfg_nx.nodes[node].get("label", f"#{node}")
+                g.nodes[node]["label"] = self.cfg_nx.nodes[node].get(
+                    "label", f"#{node}"
+                )
 
     @classmethod
-    def create(cls, cfg: CFG):
-        return cls(cfg)
+    def create(cls, func_uast: MethodDecl):
+        return cls(func_uast)
 
 
 def get_cdg_topology(cfg: CFG):
@@ -35,11 +41,11 @@ def get_cdg_topology(cfg: CFG):
     return cdg
 
 
-def get_ddg_topology(cfg: CFG):
+def get_ddg_topology(cfg: CFG, arg_variables: list[str]):
     """
     创建DDG的拓扑结构
     """
-    result, var_refs = dataflow_analyse(cfg)
+    result, var_refs = dataflow_analyse(cfg, arg_variables)
     ddg_topology = nx.DiGraph()
     for node_id, vars_ref in var_refs.items():
         for referenced_var in vars_ref:
