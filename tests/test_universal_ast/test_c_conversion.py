@@ -39,7 +39,7 @@ def test_c_types_extraction():
         cursor, file_manager.get_abspath("c_types_extracted_clang.json")
     )
     print(ret)
-    file_manager.json_dump("c_types_uast.json", ret.to_dict())
+    file_manager.json_dump(ret.to_dict(), "c_types_uast.json")
 
 
 def test_conv_real_code():
@@ -51,7 +51,7 @@ def test_conv_real_code():
     assert cursor is not None
 
     ret = evaluator.eval(cursor)
-    file_manager.json_dump("real_code_lua_uast.json", ret.to_dict())
+    file_manager.json_dump(ret.to_dict(), "real_code_lua_uast.json")
 
 
 def test_variable_types():
@@ -64,14 +64,16 @@ def test_variable_types():
     beautified_print_ast(cursor, file_manager.get_abspath("variable-types-clang.json"))
 
     ret = evaluator.eval(cursor)
-    file_manager.json_dump("variable-types-uast.json", ret.to_dict())
+    file_manager.json_dump(ret.to_dict(), "variable-types-uast.json")
     node = ret.iter_nodes().filter(lambda c: isinstance(c, nodes.CallExpr)).head()
     assert node.name.id == "register_func"
 
     ret2 = ret.filter_by(nodes.VarDecl).filter(lambda c: c.variable == "g_func").head()
     assert isinstance(ret2.type, nodes.MethodType)
 
-    main_ast = ret.filter_by(nodes.MethodDecl).filter(lambda n: n.name.id == "main").head()
+    main_ast = (
+        ret.filter_by(nodes.MethodDecl).filter(lambda n: n.name.id == "main").head()
+    )
     compound_decls = main_ast.filter_by(nodes.CompoundDecl).l
     assert len(compound_decls) == 4
 

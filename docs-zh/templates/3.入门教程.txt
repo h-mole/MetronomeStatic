@@ -1,21 +1,23 @@
 入门教程
 =======
+这里是入门教程，注意，**所有的教程源代码都在`examples/`文件夹下，**
+**大家不用手动复制代码，到这个文件夹下找就可以了！**
 
-### 获取UAST & UAST 的保存与读取
+## 获取UAST & UAST 的保存与读取
 
 - UAST的文档见：[UAST Docs](https://hzy15610046011.gitee.io/metronome-static/html/api/universal_ast.html)
 
 - 该示例位于`examples/uast-conversion`下
 
-给定一个待分析的C文件:
+### 给定一个待分析的C文件:
 
 MACRO {"kind": "file", "path": "examples/uast-conversion/uast-demo.c", "language": "c", "with_path": true}
 
-可按如下步骤编程以进行分析:
+### 使用的Python文件：
 
 MACRO {"kind": "file", "path": "examples/uast-conversion/demo.py", "language": "python", "with_path": true}
 
-运行输出:
+### 运行输出:
 
 MACRO {"kind": "file", "path": "examples/uast-conversion/expected_out.txt", "language": "plaintext"}
 
@@ -29,11 +31,13 @@ MACRO {"kind": "file", "path": "examples/uast-conversion/dumped-ast.json", "lang
 
 MACRO {"kind": "file", "path": "examples/uast-conversion/load_uast.py", "language": "python"}
 
-### 遍历UAST
+## 遍历UAST
 
-给定一个C文件：
+### 待分析的C文件
 
 MACRO {"kind": "file", "path": "examples/uast-traverse/demo.c", "language": "c"}
+
+### Python分析脚本
 
 通过以下方法，可以遍历该C文件的所有FuncCall节点，并打印出其函数名：
 
@@ -43,18 +47,109 @@ MACRO {"kind": "file", "path": "examples/uast-traverse/demo.py", "language": "py
 
 MACRO {"kind": "file", "path": "examples/uast-traverse/out.txt", "language": "plaintext"}
 
-### 获取控制流图CFG
+## 用上层API获取代码属性图
+## （包括控制流图CFG、数据依赖图DDG、控制依赖图CDG和程序依赖图PDG）
 
-给定一个C文件：
+### 待分析的C文件：
 
-MACRO {"kind": "file", "path": "examples/cfg-extraction/demo.c", "language": "c"}
+MACRO {"kind": "file", "path": "examples/code-property-graph/demo.c", "language": "c", "with_path": true}
 
+运行如下Python文件，可抽取出代码属性图，输出Dot文件，并将dot转为PNG：
+
+### Python分析脚本
+MACRO {"kind": "file", "path": "examples/code-property-graph/demo.py", "language": "python", "with_path": true}
+
+### Python文件解读：
+#### 1. 使用PyBirdViewCode中的FileManager类，可以更方便的管理生成的代码属性图和JSON等文件。
+- 如下的语句，含义为创建一个FileManager对象fm，其管理的目录为PATH。
+```python
+fm = FileManager(PATH)
+```
+当用fm写入或读取文件时，fm会自动在传入的相对路径上添加PATH这个绝对路径。
+- 例如，如下的语句，含义为将networkx的图对象graph，写入`PATH/test.dot`下面
+```python
+fm.dot_dump(graph, "test.dot")
+```
+- FileManager还可以载入dot文件：
+```python
+graph = fm.dot_load("test.dot") # 加载了PATH/目录下的test.dot文件
+```
+- FileManager除了支持`dot_dump`和`dot_load`，
+还支持`json_dump`和`json_load`，用于序列化/反序列化Python内置对象为json格式。
+使用方法与标准库json中的dump/load相同
+```python
+fm.json_dump({"abc": "def"}, "test.json")
+a = fm.json_load("test.json") # a 为 {"abc": "def"}
+```
+#### 2. 抽取函数的UAST
+抽取函数的UAST需要两步，首先抽取文件的UAST，然后再通过`UASTQuery`里面的查询
+来获取func_uast
+```python
+file_uast = get_file_uast("demo.c") # 获取文件的UAST
+func_uast = UASTQuery.get_method(file_uast, "main") # 获取函数的UAST
+```
+
+#### 3. 获取代码属性图
+
+拿到函数的UAST之后，就可以获取代码属性图了，代码属性图简称为CPG，
+对应的类型为`CodePropertyGraph`类，通过`get_method_cpg`方法来获取。
+
+### 获取的各个CPG
+
+
+<div style="display:flex; flex-direction: row; height: 400px;">
+    <div style="width: 35%; height: 100%;" class="pic-container">
+        <img src="../examples/code-property-graph/cfg.png" alt="图片1" object-fit="contain">
+        <div class="v-spacer"></div>
+        <p><b>控制流图（CFG）</b></p>
+    </div>
+    <div style="width: 65%; height: 100%;" class="pic-container">
+        <img src="../examples/code-property-graph/cdg.png" alt="图片1" object-fit="contain">
+        <div class="v-spacer"></div>
+        <p><b>控制依赖图（CDG）</b></p>
+    </div>
+</div>
+
+<div style="display:flex; flex-direction: row; height: 400px">
+    <div style="width: 50%; height: 100%;" class="pic-container">
+        <img src="../examples/code-property-graph/ddg.png" alt="图片1" object-fit="contain">
+        <div class="v-spacer"></div>
+        <p><b>数据依赖图（DDG）</b></p>
+    </div>
+    <div style="width: 50%; height: 100%;" class="pic-container">
+        <img src="../examples/code-property-graph/pdg.png" alt="图片1" object-fit="contain">
+        <div class="v-spacer"></div>
+        <p><b>程序依赖图（PDG）</b></p>
+    </div>
+</div>
+
+## 用底层API获取控制流图CFG
+
+### 待分析的C文件
+
+MACRO {"kind": "file", "path": "examples/cfg-extraction/demo.c", "language": "c", "with_path": true}
+
+### Python文件
 运行如下Python文件将其转换为控制流图，并且输出Dot文件：
 
-MACRO {"kind": "file", "path": "examples/cfg-extraction/demo.py", "language": "python"}
+MACRO {"kind": "file", "path": "examples/cfg-extraction/demo.py", "language": "python", "with_path": true}
 
 得到.dot文件之后，可以用`dot -Tpng cfg.dot -o cfg.png`转化cfg.dot为png格式的图片，如下图：
 
 ![生成的控制流图](../examples/cfg-extraction/cfg.png)
 
 注意，如果提示没有安装dot，可以按照<https://graphviz.org/download/> 这里的方式进行安装
+
+
+<style>
+    .pic-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .v-spacer {
+        flex-grow: 1;
+    }
+
+</style>

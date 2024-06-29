@@ -3,7 +3,7 @@ from PyBirdViewCode.uast import (
     ClangASTConverter,
     extract_cfg_from_method,
     UASTQuery,
-    extract_uast_from_file,
+    get_file_uast,
 )
 from PyBirdViewCode.uast.universal_cfg_extractor import (
     CFGBuilder,
@@ -56,7 +56,10 @@ def test_cfg_extraction_2():
     cfg = cb.build(ret, True, True)
 
     graph = cfg.to_networkx()
-    file_manager.dot_dump("test_cfg_extraction_2.dot", graph)
+    file_manager.dot_dump(
+        graph,
+        "test_cfg_extraction_2.dot",
+    )
 
 
 def test_cfg_extraction_3():
@@ -83,15 +86,13 @@ def test_cfg_extraction_3():
 def test_cfg_extraction_error_handling():
     file = asset_path("universal-ast-extraction/error-handling.c")
 
-    uast = UASTQuery.get_method_by_name(
-        extract_uast_from_file(file), "handle_error_demo"
-    )
+    uast = UASTQuery.get_method(get_file_uast(file), "handle_error_demo")
     cfg = extract_cfg_from_method(uast)
 
     graph = cfg.to_networkx()
     file_manager.dot_dump(
-        "handling-errors.dot",
         graph,
+        "handling-errors.dot",
     )
     verify_topology(
         [(1, 4), (4, 8), (4, 3), (3, 2), (8, 7), (8, 3), (6, 3), (7, 8), (7, 6)], graph
@@ -100,15 +101,15 @@ def test_cfg_extraction_error_handling():
 
 def test_expand_multi_stmt():
     file = asset_path("universal-ast-extraction/control-flow-multi-stmt.c")
-    uast = UASTQuery.get_method_by_name(extract_uast_from_file(file), "main")
+    uast = UASTQuery.get_method(get_file_uast(file), "main")
     cfg = extract_cfg_from_method(uast)
     expected_topology = [(4, 6), (4, 2), (6, 2), (7, 8), (8, 9), (9, 10), (10, 4)]
 
     verify_topology(expected_topology, cfg.topology)
 
-    uast = UASTQuery.get_method_by_name(extract_uast_from_file(file), "main2")
+    uast = UASTQuery.get_method(get_file_uast(file), "main2")
     cfg = extract_cfg_from_method(uast)
-    file_manager.dot_dump("cfg-not-expanded.dot", cfg.to_networkx())
+    file_manager.dot_dump(cfg.to_networkx(), "cfg-not-expanded.dot")
     verify_topology(
         [
             (1, 4),

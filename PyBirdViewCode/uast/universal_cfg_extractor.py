@@ -215,13 +215,13 @@ class CFGBuilder:
 
     def build(
         self,
-        ast: nodes.MethodDecl,
+        method_decl_uast: nodes.MethodDecl,
         remove_empty_nodes=True,
         ensure_single_stmt_each_node=True,
     ):
-        assert isinstance(ast, nodes.MethodDecl)
+        assert isinstance(method_decl_uast, nodes.MethodDecl), method_decl_uast
 
-        self.build_on_method_declaration(ast)
+        self.build_on_method_declaration(method_decl_uast)
         cfg = CFG(self.all_blocks, self.head_block.block_id, self.return_block.block_id)
         if remove_empty_nodes:
             remove_empty_node_from_cfg(cfg)

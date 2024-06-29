@@ -42,8 +42,11 @@ def test_1():
         "B6": RDAOpList([RDAOp("z")]),
         "exit": RDAOpList([]),
     }
-    fm.dot_dump("rda-test1.dot", G)
-    inputs, outputs, _= reaching_definition_analysis(G, defs, [])
+    fm.dot_dump(
+        G,
+        "rda-test1.dot",
+    )
+    inputs, outputs, _ = reaching_definition_analysis(G, defs, [])
     assert bool_list_to_str(outputs["B1"]) == "111000000"
     assert bool_list_to_str(inputs["B1"]) == "000000000"
     assert bool_list_to_str(inputs["B2"]) == "111110110"

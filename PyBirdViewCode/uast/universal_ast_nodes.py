@@ -669,6 +669,7 @@ class ParamDecl(SourceElement):
 
     def __init__(self, name: "Name", type: DATA_TYPE):
         super(ParamDecl, self).__init__()
+        assert isinstance(name, Name)
         self.name = name
         self.type = type
 

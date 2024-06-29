@@ -13,7 +13,7 @@ from PyBirdViewCode.uast import (
     get_cdg_topology,
 )
 
-from PyBirdViewCode.uast.universal_dataflow_analysis import dataflow_analyse
+from PyBirdViewCode.uast.universal_dataflow_analysis import rda_on_cfg
 from PyBirdViewCode.utils.files import FileManager
 from PyBirdViewCode import abspath_from_file
 from tests.base import asset_path
@@ -46,12 +46,12 @@ def test_data_flow_analysis():
     print(cfg.print_graph())
 
     graph = cfg.to_networkx()
-    fm.dot_dump("dataflow-demo-cfg.dot", graph)
+    fm.dot_dump(graph, "dataflow-demo-cfg.dot")
 
-    fm.dot_dump("cfg_purged.dot", cfg.to_networkx())
+    fm.dot_dump(cfg.to_networkx(), "cfg_purged.dot")
 
     ddg = get_ddg_topology(cfg, ["x", "y", "z"])
-    fm.dot_dump("ddg.dot", ddg)
+    fm.dot_dump(ddg, "ddg.dot")
 
     # fdt = get_forward_dominance_tree(cfg.topology, cfg.exit_block.block_id)
     merged = get_cdg_topology(cfg)
@@ -59,10 +59,10 @@ def test_data_flow_analysis():
     for node_id in merged.nodes:
         if node_id != "CDG_ENTRY":
             merged.nodes[node_id]["label"] = graph.nodes[node_id]["label"]
-    fm.dot_dump("cdg.dot", merged)
+    fm.dot_dump(merged, "cdg.dot")
     pdg: nx.DiGraph = nx.compose(merged, ddg)
     pdg.remove_node("CDG_ENTRY")
-    fm.dot_dump("pdg.dot", pdg)
+    fm.dot_dump(pdg, "pdg.dot")
 
     # slicing
     # criteria: var z, line 15
@@ -72,7 +72,3 @@ def test_data_flow_analysis():
             if stmt.location[0] == 15:
                 # stmt.
                 break
-    # fm.dot_dump("fdt.dot", fdt)
-    # for node_id, vardefs in result.items():
-
-    #     VarDefItem(node_id)

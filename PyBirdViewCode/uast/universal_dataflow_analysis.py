@@ -30,7 +30,11 @@ class ReferencedRValueParser:
                 raise NotImplementedError(stmt)
 
 
-def dataflow_analyse(cfg: CFG, arg_variables: List[str]):
+def rda_on_cfg(cfg: CFG, arg_variables: List[str]):
+    """
+    在CFG对象上进行可达定义分析
+    注意，传入的CFG需要保证每个节点上只有一个语句
+    """
     unparser = BaseUASTUnparser()
     defs: dict[str, RDAOpList] = {}
     var_refs: dict[str, List[str]] = {}
@@ -80,7 +84,7 @@ def dataflow_analyse(cfg: CFG, arg_variables: List[str]):
         else:
             raise ValueError
 
-    print(defs)
+    # print(defs)
     _, _2, var_defs_reachable = reaching_definition_analysis(
         cfg.topology,
         {
@@ -90,10 +94,10 @@ def dataflow_analyse(cfg: CFG, arg_variables: List[str]):
         },
         [],
     )
-    for k, v in var_defs_reachable.items():
-        print(k)
-        print(v)
-        print(var_refs[k])
+    # for k, v in var_defs_reachable.items():
+    #     print(k)
+    #     print(v)
+    #     print(var_refs[k])
 
     # print(var_defs_reachable)
     return var_defs_reachable, var_refs

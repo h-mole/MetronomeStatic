@@ -23,8 +23,7 @@ def test_data_structure_unparse():
     assert cursor is not None
 
     uast = converter.eval(cursor)
-    # file_manager.json_dump("c-global-variables_uast.json", uast.to_dict())
-    # print(uast)
+
     global_vars = UASTQuery.get_all_globals(uast)
     print(global_vars)
     unparsed = MelodieGenerator(global_vars).map(BaseUASTUnparser().unparse).l

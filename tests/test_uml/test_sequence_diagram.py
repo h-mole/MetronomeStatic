@@ -28,12 +28,6 @@ def test_cfg_extraction_error_handling():
     ret = evaluator.eval(cursor)
 
     # print(cb.print_graph())
-    file_manager.json_dump("handle-error-demo.json", ret.to_dict())
-
-    # graph = cb.to_networkx()
-    # file_manager.dot_dump(
-    #     "handling-errors.dot",
-    #     graph,
-    # )
+    file_manager.json_dump(ret.to_dict(), "handle-error-demo.json")
 
     ast_to_diagram(ret, file_manager.get_abspath("handling-errors.plantuml"))

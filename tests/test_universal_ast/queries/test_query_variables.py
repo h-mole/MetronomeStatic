@@ -23,8 +23,7 @@ def test_c_types_extraction():
     assert cursor is not None
 
     uast = converter.eval(cursor)
-    # file_manager.json_dump("c-global-variables_uast.json", uast.to_dict())
-    # print(uast)
+    
     global_vars = UASTQuery.get_all_globals(uast)
     print(global_vars)
     float_arr_decl = (

@@ -45,7 +45,7 @@ def cpp_parse_routine(
         cursor, file_manager.get_abspath(clang_json_file_prefix + "_clang.json")
     )
     ret = evaluator.eval(cursor)
-    file_manager.json_dump(uast_file_prefix + "_uast.json", ret.to_dict())
+    file_manager.json_dump(ret.to_dict(), uast_file_prefix + "_uast.json")
     return ret
 
 
@@ -59,7 +59,7 @@ def test_conv_demo1():
     )
     ret = evaluator.eval(cursor)
     # print(ret)
-    file_manager.json_dump("cpp_demo1_uast.json", ret.to_dict())
+    file_manager.json_dump(ret.to_dict(), "cpp_demo1_uast.json")
     namespaces: List[nodes.NameSpaceDef] = (
         MelodieGenerator(ret.walk_preorder())
         .filter(lambda node: isinstance(node, nodes.NameSpaceDef))
@@ -91,7 +91,7 @@ def test_conv_cout_endl():
     beautified_print_ast(cursor, file_manager.get_abspath("cout-endl.json"))
     ret = evaluator.eval(cursor)
 
-    file_manager.json_dump("cout-endl-uast.json", ret.to_dict())
+    file_manager.json_dump(ret.to_dict(), "cout-endl-uast.json")
 
 
 def test_conv_cpp_class():
@@ -115,7 +115,7 @@ def test_conv_cpp_class():
     print(method_ast)
     assert method_ast.name.id == "set"
     assert MelodieGenerator(method_ast.type.pos_args).map(
-        lambda param: param.name
+        lambda param: param.name.id
     ).s == {
         "len",
         "bre",

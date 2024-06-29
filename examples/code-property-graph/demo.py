@@ -1,52 +1,35 @@
 import sys
 
 sys.path.append("../../")
-from PyBirdViewCode.clang_utils import *
 
 # from PyBirdViewCode
 from PyBirdViewCode import (
     FileManager,
-    extract_uast_from_file,
-    extract_cpg_from_method,
+    get_file_uast,
+    get_method_cpg,
     UASTQuery,
 )
 
+# 在当前路径下创建FileManager对象
 fm = FileManager(".")
 
-file_uast = extract_uast_from_file("demo.c")
-func_uast = UASTQuery(file_uast).get_method_by_name("main")
+# 获取文件的UAST
+file_uast = get_file_uast("demo.c")
+
+# 通过UASTQuery，获取函数的UAST
+func_uast = UASTQuery.get_method(file_uast, "main")
 
 # 抽取代码属性图
-cpgs = extract_cpg_from_method(func_uast)
+cpgs = get_method_cpg(func_uast)
 
-fm.dot_dump(
-    "cfg.dot",
-    cpgs.cfg_nx,
-)
-
-# 得到.dot文件之后，可以用dot转化cfg.dot为图片
-os.system("dot -Tpng cfg.dot -o cfg.png")
+# 控制流图 （CFG）
+fm.dot_dump(cpgs.cfg_nx, "cfg.dot", export_png=True)
 
 # 控制依赖图（CDG）
-fm.dot_dump(
-    "cdg.dot",
-    cpgs.cdg_nx,
-)
-# 转化为图片
-os.system("dot -Tpng cdg.dot -o cdg.png")
+fm.dot_dump(cpgs.cdg_nx, "cdg.dot", export_png=True)
 
 # 数据依赖图（DDG）
-fm.dot_dump(
-    "ddg.dot",
-    cpgs.ddg_nx,
-)
-# 转化为图片
-os.system("dot -Tpng ddg.dot -o ddg.png")
+fm.dot_dump(cpgs.ddg_nx, "ddg.dot", export_png=True)
 
 # 程序依赖图（PDG）
-fm.dot_dump(
-    "pdg.dot",
-    cpgs.pdg_nx,
-)
-# 转化为图片
-os.system("dot -Tpng pdg.dot -o pdg.png")
+fm.dot_dump(cpgs.pdg_nx, "pdg.dot", export_png=True)

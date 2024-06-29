@@ -1,4 +1,4 @@
-from typing import Callable, List, Union
+from typing import Callable, List, Optional, Union
 from MelodieFuncFlow import MelodieGenerator
 from .. import universal_ast_nodes as nodes
 
@@ -56,19 +56,34 @@ class UASTQuery:
         return uast.filter_by(nodes.VarDecl).l
 
     @classmethod
-    def get_method_by_name(
-        cls, uast: nodes.SourceElement, name: str
+    def get_method(
+        cls, uast: nodes.SourceElement, method_name: Optional[str] = None
     ) -> nodes.MethodDecl:
         """
-        Get method declaration by name
-        :param name: name of method
+        通过指定的条件，获取函数或方法的声明节点，并返回第一个
+
+        :method_name: 函数或方法的名称
         :return: MethodDecl
         """
         try:
-            return (
-                uast.filter_by(nodes.MethodDecl)
-                .filter(create_method_name_filter(name))
-                .head()
-            )
+            return cls.iter_methods(uast, method_name).head()
         except StopIteration:
-            raise ValueError(f"No method named `{name}` found in this uast")
+            raise ValueError(f"No method named `{method_name}` found in this uast")
+
+    @classmethod
+    def iter_methods(
+        cls, uast: nodes.SourceElement, method_name: Optional[str] = None
+    ) -> MelodieGenerator[nodes.MethodDecl]:
+        """
+        通过指定的条件，获取函数或方法的声明节点们，并返回一个生成器
+
+        :method_name: 函数或方法的名称
+        :return: MethodDecl
+        """
+
+        methods_generator = uast.filter_by(nodes.MethodDecl)
+        if method_name is not None:
+            methods_generator = methods_generator.filter(
+                create_method_name_filter(method_name)
+            )
+        return methods_generator

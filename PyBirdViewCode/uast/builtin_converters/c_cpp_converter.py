@@ -449,7 +449,9 @@ class ClangASTConverter(BaseUASTConverter):
         )
 
     def _handle_parm_decl(self, cursor: Cursor) -> nodes.ParamDecl:
-        return nodes.ParamDecl(cursor.spelling, self.convert_type(cursor.type))
+        return nodes.ParamDecl(
+            nodes.Name(cursor.spelling), self.convert_type(cursor.type)
+        )
 
     def _handle_var_decl(
         self, cursor: Cursor

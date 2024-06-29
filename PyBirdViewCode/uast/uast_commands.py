@@ -39,7 +39,7 @@ def register_converter(
         _uast_converters[ast_type] = uast_converter_type
 
 
-def extract_uast_from_file(file: str, extra_args: List[str] = []) -> CompilationUnit:
+def get_file_uast(file: str, extra_args: List[str] = []) -> CompilationUnit:
     """
     从文件中直接抽取UAST
     :file: 代码文件名
@@ -69,13 +69,11 @@ def extract_cfg_from_method(method_or_func: MethodDecl) -> CFG:
     return cfg
 
 
-def extract_cpg_from_method(method_or_func: MethodDecl) -> CodePropertyGraphs:
+def get_method_cpg(method_or_func: MethodDecl) -> CodePropertyGraphs:
     """
     从uast的Method中，抽取代码属性图（Code Property Graphs, CPG），包含CFG、DDG、CDG and PDG
     """
-    cfg_builder = CFGBuilder()
-    cfg = cfg_builder.build(method_or_func)
-    return CodePropertyGraphs(cfg)
+    return CodePropertyGraphs(method_or_func)
 
 
 def _register_builtin_converters():

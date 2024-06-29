@@ -14,4 +14,4 @@ from .universal_code_property_graphs import (
     CodePropertyGraphs,
 )
 from .builtin_converters import *
-from .uast_commands import extract_uast_from_file, extract_cpg_from_method, extract_cfg_from_method
+from .uast_commands import get_file_uast, get_method_cpg, extract_cfg_from_method

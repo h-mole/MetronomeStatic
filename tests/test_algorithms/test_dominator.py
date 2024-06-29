@@ -23,8 +23,8 @@ def test_dominator():
 
     fdt = get_forward_dominance_tree(G)
     fm.dot_dump(
-        "fdt.dot",
         fdt,
+        "fdt.dot",
     )
     assert set(fdt.edges) == set([(6, 5), (5, 4), (5, 3), (5, 2), (2, 1)])
     merged = merge_cfg_and_fdt(G, fdt)
@@ -37,6 +37,6 @@ def test_dominator():
         ("CDG_ENTRY", 6),
     }
     fm.dot_dump(
-        "cdg.dot",
         merged,
+        "cdg.dot",
     )

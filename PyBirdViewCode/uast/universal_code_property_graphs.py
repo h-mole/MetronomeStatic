@@ -2,7 +2,7 @@ import networkx as nx
 from .universal_ast_nodes import MethodDecl
 from .universal_cfg_extractor import CFG, CFGBuilder
 from ..algorithms import get_forward_dominance_tree, merge_cfg_and_fdt
-from .universal_dataflow_analysis import dataflow_analyse
+from .universal_dataflow_analysis import rda_on_cfg
 from .uast_queries import UASTQuery
 
 
@@ -45,11 +45,10 @@ def get_ddg_topology(cfg: CFG, arg_variables: list[str]):
     """
     创建DDG的拓扑结构
     """
-    result, var_refs = dataflow_analyse(cfg, arg_variables)
+    result, var_refs = rda_on_cfg(cfg, arg_variables)
     ddg_topology = nx.DiGraph()
     for node_id, vars_ref in var_refs.items():
         for referenced_var in vars_ref:
-            print(node_id, referenced_var)
             valid_vars = result[node_id]
             for var_def, reachable in valid_vars.items():
                 if (
@@ -60,8 +59,6 @@ def get_ddg_topology(cfg: CFG, arg_variables: list[str]):
                     ddg_topology.add_edge(
                         node_id, var_def.node_id, label=referenced_var
                     )
-
-            print(valid_vars)
 
     return ddg_topology
 

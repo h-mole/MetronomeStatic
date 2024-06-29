@@ -93,7 +93,7 @@ def convert_encodings(
                     converted_data = raw_data.decode(
                         _src_encoding, errors=errors
                     ).encode(_dst_encoding, errors=errors)
-                    
+
                     # 若输出路径不存在，则创建
                     if not os.path.exists(dst_file_dir):
                         os.makedirs(dst_file_dir)
@@ -134,11 +134,15 @@ def abspath_from_file(rel_path: str, file: str) -> str:
 
 
 def decorator_path_ensure(func):
-    def wrapper(self: "FileManager", file_relpath, *args, **kwargs):
+    """
+    装饰器，确保路径存在。如果路径不存在，就创建一个文件夹
+    """
+
+    def wrapper(self: "FileManager", obj: Any, file_relpath, *args, **kwargs):
         dirname = os.path.dirname(self.get_abspath(file_relpath))
         if not os.path.exists(dirname) and self.auto_create_folder:
             os.makedirs(dirname)
-        result = func(self, file_relpath, *args, **kwargs)
+        result = func(self, obj, file_relpath, *args, **kwargs)
         return result
 
     return wrapper
@@ -170,7 +174,7 @@ class FileManager:
             return json.load(f)
 
     @decorator_path_ensure
-    def json_dump(self, file_relpath: str, data: Any, indent=2, ensure_ascii=False):
+    def json_dump(self, data: Any, file_relpath: str, indent=2, ensure_ascii=False):
         """
         Dump json to file.
         Be careful that the `ensure_ascii` parameter was `False` by default,
@@ -182,14 +186,28 @@ class FileManager:
             json.dump(data, f, indent=indent, ensure_ascii=ensure_ascii)
 
     @decorator_path_ensure
-    def dot_dump(self, file_relpath: str, graph: nx.Graph):
+    def dot_dump(
+        self,
+        graph: nx.Graph,
+        file_relpath: str,
+        export_png: bool = False,
+        export_svg: bool = False,
+    ):
         """
         Dump networkx graph to dot file.
+
+        :export_png: Export `DOT_FILENAME.dot` to `DOT_FILENAME.png` file.
+        :export_svg: Export `DOT_FILENAME.dot` to `DOT_FILENAME.svg` file.
         """
         assert file_relpath.endswith(".dot"), "extension should be *.dot"
         file = self.get_abspath(file_relpath)
         nx.nx_pydot.write_dot(graph, file)
-        
+        if export_png:
+            png_abspath = self.get_abspath(file_relpath[:-4] + ".png")
+            os.system(f"dot -Tpng {file_relpath} -o {png_abspath}")
+        if export_svg:
+            svg_abspath = self.get_abspath(file_relpath[:-4] + ".svg")
+            os.system(f"dot -Tsvg {file_relpath} -o {svg_abspath}")
 
     @decorator_path_ensure
     def dot_load(self, file_relpath: str):
