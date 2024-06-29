@@ -128,4 +128,4 @@ for file in os.listdir(TEMPLATES_PATH):
         format_md_templates(
             os.path.join(TEMPLATES_PATH, file), os.path.join(OUTPUT_PATH, name + ".md")
         )
-shutil.copy("docs-zh/1.项目简介.md", "README_zh.md")
+# shutil.copy("docs-zh/1.项目简介.md", "README_zh.md")
