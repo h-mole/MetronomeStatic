@@ -96,32 +96,22 @@ func_uast = UASTQuery.get_method(file_uast, "main") # 获取函数的UAST
 
 ### 获取的各个CPG
 
+#### 控制流图（CFG）
 
-<div style="display:flex; flex-direction: row; height: 400px;">
-    <div style="width: 35%; height: 100%;" class="pic-container">
-        <img src="../examples/code-property-graph/cfg.png" alt="图片1" object-fit="contain">
-        <div class="v-spacer"></div>
-        <p><b>控制流图（CFG）</b></p>
-    </div>
-    <div style="width: 65%; height: 100%;" class="pic-container">
-        <img src="../examples/code-property-graph/cdg.png" alt="图片1" object-fit="contain">
-        <div class="v-spacer"></div>
-        <p><b>控制依赖图（CDG）</b></p>
-    </div>
-</div>
+<img src="../examples/code-property-graph/cfg.png" alt="图片1" object-fit="contain">
 
-<div style="display:flex; flex-direction: row; height: 400px">
-    <div style="width: 50%; height: 100%;" class="pic-container">
-        <img src="../examples/code-property-graph/ddg.png" alt="图片1" object-fit="contain">
-        <div class="v-spacer"></div>
-        <p><b>数据依赖图（DDG）</b></p>
-    </div>
-    <div style="width: 50%; height: 100%;" class="pic-container">
-        <img src="../examples/code-property-graph/pdg.png" alt="图片1" object-fit="contain">
-        <div class="v-spacer"></div>
-        <p><b>程序依赖图（PDG）</b></p>
-    </div>
-</div>
+#### 控制依赖图（CFG）
+
+<img src="../examples/code-property-graph/cdg.png" alt="图片1" object-fit="contain">
+
+#### 数据依赖图（DDG）
+
+<img src="../examples/code-property-graph/ddg.png" alt="图片1" object-fit="contain">
+
+#### 程序依赖图（PDG）
+
+<img src="../examples/code-property-graph/pdg.png" alt="图片1" object-fit="contain">
+       
 
 ## 用底层API获取控制流图CFG
 
@@ -140,16 +130,3 @@ MACRO {"kind": "file", "path": "examples/cfg-extraction/demo.py", "language": "p
 
 注意，如果提示没有安装dot，可以按照<https://graphviz.org/download/> 这里的方式进行安装
 
-
-<style>
-    .pic-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .v-spacer {
-        flex-grow: 1;
-    }
-
-</style>
