@@ -1,3 +1,4 @@
+import uuid
 from abc import ABCMeta, abstractmethod
 from typing import Any, Type
 from PyBirdViewCode import uast
@@ -49,3 +50,6 @@ class BaseUASTConverter(metaclass=ABCMeta):
     def convert_to_uast(self, original_ast: Any) -> uast.SourceElement:
         """将某个语言的AST转换为UAST"""
         pass
+
+    def create_temporary_variable_name(self, prefix: str) -> str:
+        return prefix + str(uuid.uuid4())[:5]

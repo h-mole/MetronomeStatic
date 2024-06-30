@@ -287,7 +287,7 @@ class CFGBuilder:
         # create condition block and append to the last block
         condition_block = self.new_block(node.predicate, kind="conditional")
         last_block.next_blocks.append(condition_block)
-        self.block_ast_mapping[condition_block.block_id] = node.id
+        # self.block_ast_mapping[condition_block.block_id] = node.id
 
         # replace the current block with a newly created basic block
         self.block = true_block = self.new_block()

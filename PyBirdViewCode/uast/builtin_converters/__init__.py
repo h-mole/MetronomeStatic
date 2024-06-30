@@ -7,7 +7,7 @@ except ModuleNotFoundError as e:
     )
 
 try:
-    from .python_converter import ParsoASTConverter
+    from .python_converter import ParsoASTConverter, ParsoASTExtractor
 except ModuleNotFoundError as e:
     warnings.warn(
         f"Python to UAST converter cannot be imported due to an import error: {e.msg}"

@@ -3,13 +3,15 @@
 """
 
 import os
-from typing import List, Type, cast
+from typing import List, Type, Union, cast
 from .universal_ast_nodes import CompilationUnit, MethodDecl
 from .builtin_converters import (
     BaseASTExtractor,
     BaseUASTConverter,
     ClangASTConverter,
     ClangASTExtractor,
+    ParsoASTConverter,
+    ParsoASTExtractor,
 )
 from .universal_cfg_extractor import CFGBuilder, CFG
 from .universal_code_property_graphs import CodePropertyGraphs
@@ -48,7 +50,7 @@ def get_file_uast(file: str, extra_args: List[str] = []) -> CompilationUnit:
     # splitext产生的文件名一定会有.开头
     _, ext = os.path.splitext(file)
     if ext not in _ast_extractors:
-        raise ValueError(f"Unsupported file extension: {file}")
+        raise ValueError(f"Unsupported file extension: {ext}")
     extractor = _ast_extractors[ext](file, extra_args)
     ast, diags = extractor.extract_ast()
     for item in diags:
@@ -78,6 +80,7 @@ def get_method_cpg(method_or_func: MethodDecl) -> CodePropertyGraphs:
 
 def _register_builtin_converters():
     register_converter("c/cpp", ClangASTExtractor, ClangASTConverter)
+    register_converter("python3", ParsoASTExtractor, ParsoASTConverter)
 
 
 _register_builtin_converters()

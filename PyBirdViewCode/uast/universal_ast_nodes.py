@@ -59,6 +59,8 @@ STANDARD_BINARY_OPERATORS: set[str] = {
     "==",  # Equal
     ">=",  # Greater than or equal
     ">",  # Greater than
+    "is", # Is same address
+    "in", # a is contained in b
 }
 
 STANDARD_UNARY_OPERATORS: set[tuple[str, bool]] = {
@@ -156,7 +158,7 @@ class SourceElement(object):
         def __len__(self):
             return len(self.hierarchy)
 
-    _common_fields: List[str] = ["id", "location"]
+    _common_fields: List[str] = ["location"]
     _fields: List[str] = []
 
     def __init__(self):
@@ -165,7 +167,7 @@ class SourceElement(object):
             None,
             None,
         )  # line, column
-        self.id = uuid.uuid4().hex
+        # self.id = uuid.uuid4().hex
 
     def __repr__(self):
         # try:
@@ -345,7 +347,7 @@ class PackageDecl(SourceElement):
 class ImportDecl(SourceElement):
     _fields = ["name", "static", "on_demand", "path"]
 
-    def __init__(self, name, path="", static=False, on_demand=False):
+    def __init__(self, name: "Name", path="", static=False, on_demand=False):
         super(ImportDecl, self).__init__()
         self.name = name
         self.static = static
@@ -404,8 +406,8 @@ class ClassDecl(SourceElement):
             type_parameters = []
         if implements is None:
             implements = []
-        self.name = name
-        self.body = body
+        self.name: str = name
+        self.body: list[SourceElement] = body
         self.modifiers = modifiers
         self.type_parameters = type_parameters
         self.extends = extends
@@ -910,7 +912,8 @@ class BinaryExpr(Expr):
         self.rhs = rhs
         if self.__class__ == BinaryExpr:
             assert operator in STANDARD_BINARY_OPERATORS, operator
-
+        assert isinstance(self.lhs, SourceElement)
+        assert isinstance(self.rhs, SourceElement)
 
 class Assignment(Expr):
     _fields = ["operator", "lhs", "rhs"]
@@ -990,6 +993,8 @@ class BlockStmt(Stmt):
         super(Stmt, self).__init__()
         if statements is None:
             statements = []
+        for item in statements:
+            assert isinstance(item, SourceElement)
         self.statements = statements
 
     def __iter__(self):
@@ -1037,6 +1042,7 @@ class CallExpr(Expr):
 
     def __init__(self, name, arguments=None, type_arguments=None, target=None):
         super(CallExpr, self).__init__()
+        assert isinstance(name, SourceElement)
         if arguments is None:
             arguments = []
         if type_arguments is None:
@@ -1050,11 +1056,13 @@ class CallExpr(Expr):
 class IfThenElseStmt(Stmt):
     _fields = ["predicate", "if_true", "if_false"]
 
-    def __init__(self, predicate, if_true, if_false=None):
+    def __init__(
+        self, predicate, if_true: BlockStmt, if_false: Optional[BlockStmt] = None
+    ):
         super(IfThenElseStmt, self).__init__()
         self.predicate = predicate
-        self.if_true = if_true
-        self.if_false = if_false
+        self.if_true: BlockStmt = if_true
+        self.if_false: BlockStmt = if_false
 
 
 class WhileStmt(Stmt):
@@ -1345,6 +1353,13 @@ class Name(SourceElement):
     def __init__(self, name: str):
         super(Name, self).__init__()
         self.id = name
+
+
+class Null(SourceElement):
+    _fields = []
+
+    def __init__(self):
+        super().__init__()
 
 
 # class ExpressionStatement(Stmt):
