@@ -119,7 +119,9 @@ class CFG:
                     stmts = [uast_unparser.unparse(stmt) for stmt in block.statements]
                 else:
                     stmts = [str(stmt) for stmt in block.statements]
-                g.nodes[block._id]["label"] = label_base + "\n".join(stmts)
+                g.nodes[block._id]["label"] = (
+                    '"' + label_base + escape("\n".join(stmts)) + '"'
+                )
             else:
                 g.nodes[block._id]["label"] = label_base
         return g
@@ -372,9 +374,6 @@ class CFGBuilder:
             block_loop_head = self.new_block(node.predicate, kind="conditional")
         else:
             block_loop_head = self.new_block()
-
-        # Add ast mapping to this node
-        self.block_ast_mapping[block_loop_head.block_id] = node.id
 
         last_block.next_blocks.append(block_loop_head)
 

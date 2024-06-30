@@ -44,7 +44,7 @@ class BaseUASTUnparser:
             nodes.AssertStmt: self.unparse_assert_stmt,
             nodes.ThrowStmt: self.unparse_throw_stmt,
             nodes.NotImplementedItem: lambda x: "notimplemented-" + x.kind,
-            nodes.Conditional: lambda expr: f"{expr.predicate}?{expr.if_true}:{expr.if_false}",
+            nodes.Conditional: lambda expr: f"{self.unparse(expr.predicate)}?{self.unparse(expr.if_true)}:{self.unparse(expr.if_false)}",
             # nodes.ArrayType: self.unparse_arr
         }
 
@@ -209,7 +209,7 @@ class BaseUASTUnparser:
             return head
 
     def unparse_literal(self, expr: nodes.Literal):
-        return str(expr.value)
+        return repr(expr.value)
 
     def unparse_name(self, expr: nodes.Name):
         return expr.id

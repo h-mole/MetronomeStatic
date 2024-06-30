@@ -12,6 +12,30 @@ class ReferencedRValueParser:
     def __init__(self) -> None:
         self.r_values: set[str] = set()
 
+    def parse_single(self, stmt: nodes.SourceElement) -> str:
+        match stmt:
+            case nodes.FieldAccessExpr(name=name, target=target):
+                target_str = self.parse_single(target)
+                return f"{target_str}.{name}"
+            case nodes.Name():
+                return stmt.id
+            case _:
+                raise NotImplementedError(stmt)
+
+    def parse_value(self, stmt: nodes.SourceElement) -> set[str]:
+        match stmt:
+            case nodes.Null():
+                return set()
+            case nodes.FieldAccessExpr() | nodes.Name():
+                return {self.parse_single(stmt)}
+            case nodes.Literal():
+                return set()
+            case nodes.BinaryExpr(lhs=lhs, rhs=rhs):
+
+                return self.parse_value(lhs) | self.parse_value(rhs)
+            case _:
+                raise NotImplementedError(stmt)
+
     def parse_referenced_values(self, stmt: nodes.SourceElement):
         match stmt:
             case nodes.Assignment(rhs=rhs):
@@ -22,10 +46,18 @@ class ReferencedRValueParser:
                 self.parse_referenced_values(rhs)
             case nodes.UnaryExpr(expression=expr):
                 self.parse_referenced_values(expr)
-            case nodes.Literal():
+            case nodes.Literal() | nodes.Null():
                 return None
             case nodes.Name():
                 self.r_values.add(stmt.id)
+            case nodes.FieldAccessExpr():
+                self.r_values.update(self.parse_value(stmt))
+            case nodes.CallExpr(arguments=arguments):
+                for arg in arguments:
+                    self.r_values.update(self.parse_value(arg))
+            case nodes.AssertStmt():
+                ret = self.parse_value(stmt.predicate)
+                self.r_values.update(ret)
             case _:
                 raise NotImplementedError(stmt)
 
@@ -83,7 +115,7 @@ def rda_on_cfg(cfg: CFG, arg_variables: List[str]):
             # defs[node].ops[0].used_var = list(parser.r_values)
         else:
             raise ValueError
-
+    # import pdb; pdb.set_trace()
     # print(defs)
     _, _2, var_defs_reachable = reaching_definition_analysis(
         cfg.topology,

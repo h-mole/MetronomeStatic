@@ -49,6 +49,7 @@ def get_ddg_topology(cfg: CFG, arg_variables: list[str]):
     ddg_topology = nx.DiGraph()
     for node_id, vars_ref in var_refs.items():
         for referenced_var in vars_ref:
+            print(referenced_var)
             valid_vars = result[node_id]
             for var_def, reachable in valid_vars.items():
                 if (
