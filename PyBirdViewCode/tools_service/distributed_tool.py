@@ -12,6 +12,7 @@ import threading
 import time
 import uuid
 from typing import Generator, Generic, Optional, Tuple, Type, Union
+import warnings
 
 import websocket
 from dataclasses_json import DataClassJsonMixin
@@ -71,10 +72,11 @@ class DistributedTool(Generic[RestRespDataType]):
 
         self.process_mgr = SubprocessManager(self.on_task_finish)
 
-        self.current_context: Optional[
-            ProcessContext
-        ] = None  # ProcessContext(self.root_folder)
-
+        self.current_context: Optional[ProcessContext] = (
+            None  # ProcessContext(self.root_folder)
+        )
+        # Record the data for current task
+        self.data_current_task: Optional[RestRespDataType] = None
         self._connect()
 
     def _connect(self):
@@ -110,12 +112,10 @@ class DistributedTool(Generic[RestRespDataType]):
                 raise e
             try:
                 data: WSSchedulerRawMsgType = json.loads(msg)
-                print(data)
                 parsed = parser.parse_scheduler_msg(data)
-                print("received command", parsed)
                 raise NotImplementedError(parsed)
             except json.JSONDecodeError:
-                print("Cannot parse:", msg)
+                warnings.warn(f"Cannot parse: {msg}")
                 continue
 
     def _send_msg(self, type: ToolMsgTypes, data: DataClassJsonMixin):
@@ -124,11 +124,11 @@ class DistributedTool(Generic[RestRespDataType]):
             self._ws.send(json.dumps(raw_msg))
         except Exception:
             # TODO: Optimize the code for re-connect!
-            print("trying to reconnect...")
+            logger.info("trying to reconnect...")
             try:
                 self._connect()
             except Exception:
-                print("connection refused, retrying again...")
+                logger.info("connection refused, retrying again...")
                 import traceback
 
                 traceback.print_exc()
@@ -162,12 +162,13 @@ class DistributedTool(Generic[RestRespDataType]):
                 time.sleep(2)
                 continue
             time.sleep(2)
-            print("before getting task!")
+            logger.info("before getting task!")
             try:
                 status, resp = self._task_req.get({"tool_name": self.name})
-                print("fetching task", status, resp)
+                logger.info(f"fetching task {status} {resp}")
                 if status < 299:
                     task_data = resp.data
+                    self.data_current_task = task_data
                     self._task_start(task_data)
 
                 else:
@@ -233,17 +234,23 @@ class DistributedTool(Generic[RestRespDataType]):
         """
         assert self.current_context is not None
         result_file = self.result_file()
-        if not os.path.isabs(result_file):
-            result_file = os.path.join(self.current_context.data_folder, result_file)
+        if result_file is not None:
+            if not os.path.isabs(result_file):
+                result_file = os.path.join(
+                    self.current_context.data_folder, result_file
+                )
+            file_base64 = file_to_dataurl(result_file)
+        else:
+            file_base64 = "data:text/plain;base64,"  # empty file url
         return Result(
             info=self.current_context.info,
             problems=self.current_context.found_problems,
-            raw_file=file_to_dataurl(result_file),
+            raw_file=file_base64,
             additional_data=self.get_result_additional_data(),
         )
 
-    def result_file(self) -> str:
-        raise NotImplementedError
+    def result_file(self) -> Optional[str]:
+        return None
 
     def handle_results(self):
         return self.results().map(lambda x: x.to_json()).l
@@ -294,7 +301,6 @@ class DistributedTool(Generic[RestRespDataType]):
         raise NotImplementedError
 
     def _start_tasks(self):
-        print("started tasks!")
         self._thread_tasks_fetch.start()
         self._thread_status_push.start()
 

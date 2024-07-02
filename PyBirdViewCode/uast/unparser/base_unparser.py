@@ -1,5 +1,6 @@
 from textwrap import indent, dedent
 from typing import Callable, Dict, Type
+import warnings
 
 from ...uast import universal_ast_nodes as nodes
 
@@ -218,7 +219,7 @@ class BaseUASTUnparser:
         try:
             return self.handler[stmt.__class__](stmt)
         except KeyError as e:
-            print(stmt)
+            warnings.warn(f"cannot unparse {stmt}")
             raise e
 
     def unparse_indented(self, stmt: nodes.SourceElement):

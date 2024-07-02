@@ -30,7 +30,6 @@ def variable_liveness_analysis(
                 bb_out = [False] * len(vars)
             else:
                 bb_out = lists_of_bool_union(outs)
-            print(bb, bb_out)
             bb_def = block_defs[bb]
             bb_use = block_uses[bb]
             bb_in = [
@@ -41,7 +40,6 @@ def variable_liveness_analysis(
             output.extend(bb_in)
 
         tup = tuple(output)
-        print(hash(tup), hash(last_tuple))
         if could_break:
             break
         if tup == last_tuple:
@@ -86,6 +84,3 @@ if __name__ == "__main__":
         "B5": ["z"],
         "exit": [],
     }
-
-    # for node, in_edge in in_edges.items():
-    #     print(f"{node}: 活跃入边： {in_edge}, 活跃出边： {out_edges[node]}")

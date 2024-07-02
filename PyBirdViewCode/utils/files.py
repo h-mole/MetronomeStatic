@@ -209,7 +209,6 @@ class FileManager:
             svg_abspath = self.get_abspath(file_relpath[:-4] + ".svg")
             os.system(f"dot -Tsvg {file_relpath} -o {svg_abspath}")
 
-    @decorator_path_ensure
     def dot_load(self, file_relpath: str):
         """
         Load networkx graph from dot file.

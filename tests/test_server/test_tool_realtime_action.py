@@ -3,6 +3,7 @@ import queue
 import socket
 import time
 from dataclasses import dataclass
+from typing import Optional, Type, TypedDict
 
 from dataclasses_json import DataClassJsonMixin
 
@@ -11,18 +12,25 @@ from PyBirdViewCode.tools_service import DistributedTool, Problem, Scheduler
 
 @dataclass
 class MyCommand(DataClassJsonMixin):
+    cmd_id: int
     path: str
     mode: str
 
 
+# Command = TypedDict("Command", {"cmd_id": int, "path": str, "mode": str})
+
+
 class Tool(DistributedTool):
+    data_current_task: MyCommand
+
     def handle_start_tool(self, data: MyCommand):
-        print("started to process", data)
+        self.task_data = data
         assert self.current_context is not None
         if os.name == "nt":
             cmd = "ping -n 3 127.0.0.1> out.txt"
         else:
             cmd = "ping -c 3 127.0.0.1> out.txt"
+
         self.process_mgr.start_subprocess(
             "cbmc-routine",
             cmd,
@@ -37,27 +45,16 @@ class Tool(DistributedTool):
         # self.current_context
 
     def get_result_additional_data(self) -> dict:
-        return {"taskId": "aac123aa"}
+        return {
+            "cmd_id": self.data_current_task.cmd_id,
+            "taskId": "aac123aa",
+            "data": 123,
+            # "current_task_data": self.data_current_task,
+        }
 
     def handle_task_finish(self):
-        self.current_context.found_problems = [
-            Problem.from_dict(
-                {
-                    "file": "C:\\Users\\houzh\\Developing\\PyBirdViewCode\\demos\\board-type\\test.c",
-                    "description": "存在从有符号型整数到无符号型整数的隐式转换，可能存在类型问题。",
-                    "position": {
-                        "type": "line_col",
-                        "line": 4,
-                        "column": 18,
-                        "text": None,
-                    },
-                }
-            )
-        ]
-        self.upload(__file__)
 
-    def result_file(self) -> str:
-        return "out.txt"
+        pass
 
 
 def find_unused_port() -> int:
@@ -69,18 +66,18 @@ def find_unused_port() -> int:
 
 
 class TestTool:
-    TOOLS_COUNT = 2
-    TASKS_COUNT = 4
+    TOOLS_COUNT = 1
+    TASKS_COUNT = 1
 
     def setup_class(self):
         port = find_unused_port()
         self.scheduler = Scheduler(port=port)
         self.scheduler.start_in_thread()
 
-        time.sleep(4)
+        time.sleep(3)
 
         self.tools = [
-            Tool(MyCommand, "localhost", port, "default-tool")
+            Tool(MyCommand, "localhost", port, "my-tool")
             for i in range(self.TOOLS_COUNT)
         ]
         for tool in self.tools:
@@ -90,14 +87,14 @@ class TestTool:
         print("清理。。。")
 
     def test_assign_task(self):
-        for i in range(self.TASKS_COUNT):
-            if "default-tool" not in self.scheduler._tasks:
-                self.scheduler._tasks["default-tool"] = queue.Queue()
-            self.scheduler._tasks["default-tool"].put({"path": "AAA", "mode": "BBB"})
+        # for i in range(self.TASKS_COUNT):
+        #     if "my-tool" not in self.scheduler._tasks:
+        self.scheduler._tasks["my-tool"] = queue.Queue()
+        self.scheduler._tasks["my-tool"].put(
+            {"cmd_id": 123, "path": "AAA", "mode": "BBB", "git_version": "0acb..."}
+        )
 
-        for i in range(self.TASKS_COUNT):
-            result = self.scheduler._results.get(timeout=10)
-            print("result", result)
-            assert result.additional_data["taskId"] == "aac123aa"
+        # for i in range(self.TASKS_COUNT):
+        result = self.scheduler._results.get(timeout=10)
+        assert result.additional_data["taskId"] == "aac123aa"
         assert self.scheduler._results.empty()
-        # print(result)

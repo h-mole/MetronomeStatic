@@ -145,9 +145,9 @@ class Scheduler(Generic[C]):
         self.app.config["SOCK_SERVER_OPTIONS"] = {"ping_interval": 25}
         sock = Sock(self.app)
 
-        self._ws_recv_msg_queue: queue.Queue[
-            Tuple[ToolRemoteRef, WSToolRawMsgType]
-        ] = queue.Queue()
+        self._ws_recv_msg_queue: queue.Queue[Tuple[ToolRemoteRef, WSToolRawMsgType]] = (
+            queue.Queue()
+        )
         sock.route("/api/websocket/<path:tool_name>/<path:uuid>")(self.handle_websocket)
         self._message_handling_thread = threading.Thread(
             target=self._task_handle_message
@@ -230,48 +230,6 @@ class Scheduler(Generic[C]):
         """
         return ""
 
-    # def _task_schedule_tool_tasks(self):
-    #     """
-    #     Continuously get tool task from the queue, then dispatch it to corresponding tools by tools' name.
-    #     """
-    #     while 1:
-    #         try:
-    #             for task in self._tasks.copy():
-    #                 task_assigned = False
-
-    #                 # print(f"all tools:", self._tools.tools.keys())
-    #                 for tool_ref in self._tools.get_tools_by_name(task.tool_name):
-    #                     if tool_ref.status is None:
-    #                         continue
-    #                     elif not tool_ref.status.status in (
-    #                         Status.READY,
-    #                         Status.STOPPED,
-    #                     ):
-    #                         continue
-
-    #                     msg, status = tool_ref.send_command(Trigger.START, task.data)
-    #                     if status:
-    #                         task_assigned = True
-    #                         print(
-    #                             f"assigned task {id(task)} to {tool_ref.uuid} succeeded"
-    #                         )
-    #                         break
-    #                     else:
-    #                         print(
-    #                             f"trying to assign task {id(task)} to {tool_ref.uuid} failed due to {msg}"
-    #                         )
-    #                 if task_assigned:
-    #                     self._tasks.remove(task)
-    #                 else:
-    #                     print(f"all tools for {task.tool_name} are busy, waiting...")
-
-    #         except Exception as e:
-    #             import traceback
-
-    #             traceback.print_exc()
-    #         finally:
-    #             time.sleep(1)
-
     def _task_handle_message(self):
         """
         Handle websocket messages
@@ -292,13 +250,11 @@ class Scheduler(Generic[C]):
                 self._results.put(tool_msg)
             elif isinstance(tool_msg, SchedulerCommandResponse):
                 tool_ref.put_response(tool_msg)
-                print(tool_msg, "scheduler-command-resp")
             else:
                 raise NotImplementedError(tool_msg)
 
     def _start_tasks(self):
         self._message_handling_thread.start()
-        # self._tasks_scheduling_thread.start()
 
     def start(self, debug=False):
         self._start_tasks()

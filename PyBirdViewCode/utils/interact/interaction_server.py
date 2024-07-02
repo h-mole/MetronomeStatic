@@ -1,6 +1,7 @@
 import json
 import threading
 import time
+import warnings
 
 import tornado.ioloop
 import tornado.web
@@ -11,7 +12,6 @@ import tornado.web
 class TableSelectionHandler(tornado.web.RequestHandler):
     def post(self):
         data = self.request.body.decode("utf-8")
-        print("data", data)
         json_data = json.loads(data)
         self.write(json.dumps(json_data))
 
@@ -56,7 +56,7 @@ _thread = None
 def start_interaction_app():
     global _app
     if _app is not None:
-        print("app already started!")
+        warnings.warn("app already started!")
         return
     _app = make_app()
     _app.listen(8114)

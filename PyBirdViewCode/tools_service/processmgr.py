@@ -6,7 +6,9 @@ import time
 from typing import Callable, Dict
 
 import psutil
+import logging
 
+logger = logging.getLogger(__file__)
 
 class SubprocessManager:
     _instance = None
@@ -22,7 +24,6 @@ class SubprocessManager:
         self._bg_th.start()
 
     def start_subprocess(self, name: str, cmd: str, cwd: str):
-        # print("request to start process!!", self)
         if name in self.processes:
             p = self.processes[name]
             if p.poll() is None:
@@ -41,14 +42,13 @@ class SubprocessManager:
     def on_sigint(self, sig, frame):
         for p in self.processes.values():
             if not p.poll():
-                print(f"command {p.args} terminated!")
+                logger.info(f"command {p.args} terminated!")
                 p.terminate()
         time.sleep(0.2)
         sys.exit(0)
 
     def task(self):
         while 1:
-            print("task!", self.processes)
             stopped = []
             for task_name, p in self.processes.items():
                 if p.poll() is not None:
@@ -56,5 +56,4 @@ class SubprocessManager:
             for stopped_task in stopped:
                 self.processes.pop(stopped_task)
                 self.on_task_finish(stopped_task)
-                print("task finished!")
             time.sleep(0.5)

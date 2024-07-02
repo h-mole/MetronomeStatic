@@ -55,7 +55,6 @@ class StateMachine(Generic[S, T]):
             }
             for outer_t in transitions
         }
-        print(self.transitions)
 
     def process(self, trigger: T, data: Any) -> Tuple[TransitionStatus, str]:
         """
@@ -83,16 +82,3 @@ class StateMachine(Generic[S, T]):
             TransitionStatus.SUCCEEDED,
             f"Transitioned from {transition.source} to {transition.dest}",
         )
-
-
-# # Serialize the state machine to JSON
-# sm_json = json.dumps(
-#     {
-#         "state": str(sm.state),
-#         "transitions": [
-#             {"trigger": str(t.trigger), "source": str(t.source), "dest": str(t.dest)}
-#             for t in transitions
-#         ],
-#     }
-# )
-# print(sm_json)

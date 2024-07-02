@@ -3,7 +3,7 @@
 """
 
 import os
-from typing import List, Type, Union, cast
+from typing import List, Type, Union, cast, Optional
 from .universal_ast_nodes import CompilationUnit, MethodDecl
 from .builtin_converters import (
     BaseASTExtractor,
@@ -71,11 +71,16 @@ def extract_cfg_from_method(method_or_func: MethodDecl) -> CFG:
     return cfg
 
 
-def get_method_cpg(method_or_func: MethodDecl) -> CodePropertyGraphs:
+def get_method_cpg(
+    method_or_func: MethodDecl, extra_variables: Optional[list[str]] = None
+) -> CodePropertyGraphs:
     """
     从uast的Method中，抽取代码属性图（Code Property Graphs, CPG），包含CFG、DDG、CDG and PDG
+
+    :extra_variables: 在进行数据依赖分析时，除了函数的参数，还要额外考虑的变量。比如全局变量或者类的属性等。
     """
-    return CodePropertyGraphs(method_or_func)
+    extra_variables = extra_variables or []
+    return CodePropertyGraphs(method_or_func, extra_variables)
 
 
 def _register_builtin_converters():

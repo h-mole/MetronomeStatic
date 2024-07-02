@@ -104,8 +104,7 @@ def reaching_definition_analysis(
         ]
         for bb_id in bb_list
     }
-    print(kills)
-    print(defs_list)
+    
     inputs: Dict[str, List[bool]] = {
         bb_id: create_empty_vector(vector_length) for bb_id in bb_list
     }
@@ -147,7 +146,6 @@ def reaching_definition_analysis(
             last_tup = tup
     input_vardefs_reachable = {}
     for node in defs.keys():
-        print("node #", node)
         input_vardefs_reachable[node] = get_defs(defs_list, defs, inputs[node])
 
     return inputs, outputs, input_vardefs_reachable

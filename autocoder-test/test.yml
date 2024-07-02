@@ -1,7 +1,0 @@
-source_dir: C:/Users/houzh/Developing/PyBirdViewCode/PyBirdViewCode
-target_file: ./output.txt 
-
-py_packages: PyBirdViewCode
-
-query: |
-    阅读 PyBirdViewCode 源码，并解释reaching_definition.py的作用

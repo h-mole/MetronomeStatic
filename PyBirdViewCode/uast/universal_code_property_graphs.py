@@ -7,13 +7,17 @@ from .uast_queries import UASTQuery
 
 
 class CodePropertyGraphs:
-    def __init__(self, func_or_method_uast: MethodDecl) -> None:
+    def __init__(
+        self, func_or_method_uast: MethodDecl, extra_variables: list[str]
+    ) -> None:
         self._cfg = CFGBuilder().build(func_or_method_uast)
+        self._extra_variables = extra_variables
         self.cfg_nx = self._cfg.to_networkx()
         self.cdg_nx = get_cdg_topology(self._cfg)
         self.ddg_nx = get_ddg_topology(
             self._cfg,
-            [param.name.id for param in UASTQuery.get_all_params(func_or_method_uast)],
+            [param.name.id for param in UASTQuery.get_all_params(func_or_method_uast)]
+            + self._extra_variables,
         )
         self.pdg_nx = compose_pdg_topology(self.cdg_nx, self.ddg_nx)
         # self.cfg_nx
@@ -49,8 +53,8 @@ def get_ddg_topology(cfg: CFG, arg_variables: list[str]):
     ddg_topology = nx.DiGraph()
     for node_id, vars_ref in var_refs.items():
         for referenced_var in vars_ref:
-            print(referenced_var)
             valid_vars = result[node_id]
+
             for var_def, reachable in valid_vars.items():
                 if (
                     referenced_var == var_def.modified_var

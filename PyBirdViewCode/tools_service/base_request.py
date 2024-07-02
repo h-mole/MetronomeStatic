@@ -22,7 +22,6 @@ class Request(Generic[RestRespDataType]):
         self.log = log
         self._resp_cls = resp_cls
         self.timeout = timeout
-        print("request created to url:", self.url)
 
     def _convert_response(
         self, response: requests.Response

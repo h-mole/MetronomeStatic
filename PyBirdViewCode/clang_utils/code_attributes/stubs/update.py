@@ -6,7 +6,6 @@ class FunctionDeclVisitor(ast.NodeVisitor):
         self.function_decl_nodes = []
 
     def visit_Assign(self, node):
-        print(ast.dump(node))
         if (
             isinstance(node.targets[0], ast.Attribute)
             and isinstance(node.targets[0].value, ast.Name)
@@ -29,15 +28,3 @@ def extract_function_decl_nodes(code):
     visitor = FunctionDeclVisitor()
     visitor.visit(tree)
     return visitor.function_decl_nodes
-
-
-# def unparse_function_decl_nodes(nodes):
-#     return [astunparse.unparse(node).strip() for node in nodes]
-
-if __name__ == "__main__":
-    import clang.cindex as cindex
-
-    print(cindex.__file__)
-    with open(cindex.__file__) as f:
-        function_decl_nodes = extract_function_decl_nodes(f.read())
-        print(function_decl_nodes)

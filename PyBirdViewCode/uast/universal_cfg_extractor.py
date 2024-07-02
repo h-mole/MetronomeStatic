@@ -10,7 +10,7 @@ from ..uast import universal_ast_nodes as nodes
 from typing import Dict, List, Literal, Tuple, Union, Optional
 import networkx as nx
 from .exceptions import OnBreakStatement
-from ..algorithms import ValidNodeKinds
+from ..algorithms import ValidNodeKinds, graph_algorithms
 from .unparser.base_unparser import BaseUASTUnparser
 
 BlockKinds = Literal["normal", "conditional", "switch", "method_return"]
@@ -102,7 +102,9 @@ class CFG:
             elif block.kind == "switch":
                 for i, nb in enumerate(block.next_blocks):
                     g.add_edge(block._id, nb._id, cond=i, label=f"case #{i+1}")
-
+        entry_id, exit_id =  graph_algorithms.get_entry_and_exit(g)
+        self.entry_block = self.get_block(entry_id)
+        self.exit_block = self.get_block(exit_id)
         return g
 
     def to_networkx(self, unparse=True):
@@ -147,7 +149,6 @@ class CFGBuilder:
         self.head_block = self.block
         self.return_block = self.new_block()
         self.return_block.kind = "method_return"
-        self.block_ast_mapping: Dict[int, str] = {}
 
         # Goto edges are from "goto" node and to the label
         # The edges should add in the last step
@@ -165,8 +166,6 @@ class CFGBuilder:
         Search through all basic blocks, and get the first block with a label
         """
         for block in self.all_blocks:
-            if block._id == 13:
-                print(block.statements)
             if (
                 (len(block.statements) > 0)
                 and isinstance(block.statements[0], nodes.Label)
@@ -188,12 +187,6 @@ class CFGBuilder:
             kind, block_with_control_stmt = self.loop_control_stmts.pop()
             if kind == "break":
                 block_with_control_stmt.next_blocks.append(block_end_loop)
-                # print("added break! for ")
-                print(
-                    "added break! for ",
-                    block_with_control_stmt._id,
-                    block_with_control_stmt.next_blocks,
-                )
             elif kind == "continue":
                 block_with_control_stmt.next_blocks.append(block_loop_head)
             else:
@@ -289,7 +282,6 @@ class CFGBuilder:
         # create condition block and append to the last block
         condition_block = self.new_block(node.predicate, kind="conditional")
         last_block.next_blocks.append(condition_block)
-        # self.block_ast_mapping[condition_block.block_id] = node.id
 
         # replace the current block with a newly created basic block
         self.block = true_block = self.new_block()
@@ -406,9 +398,6 @@ class CFGBuilder:
         else:
             block_loop_predicate = self.new_block()
 
-        # Add ast mapping to this node
-        self.block_ast_mapping[block_loop_predicate.block_id] = node.id
-
         block_do_while_body_start = self.block = self.new_block()
         block_before_do_while.next_blocks.append(block_do_while_body_start)
         self.build_on_block_or_stmt(node.body)
@@ -441,9 +430,6 @@ class CFGBuilder:
         else:
             block_loop_head = self.new_block()
 
-        # Add ast mapping to this node
-        self.block_ast_mapping[block_loop_head.block_id] = node.id
-
         last_block.next_blocks.append(block_loop_head)
 
         loop_body_block = self.block = self.new_block()
@@ -456,7 +442,7 @@ class CFGBuilder:
 
         # add back edge
         self.block.next_blocks.append(block_loop_head)
-        print(self.loop_control_stmts)
+        
         # handle probable break
         self.add_loop_control_edges(block_end_for, block_loop_head)
 

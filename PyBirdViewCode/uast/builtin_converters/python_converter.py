@@ -1,4 +1,5 @@
 from typing import Any, Callable, Dict, Union, Type
+import warnings
 import parso
 from parso.tree import NodeOrLeaf
 from parso.python.tree import PythonNode, Operator
@@ -16,8 +17,6 @@ class ParsoASTExtractor(BaseASTExtractor):
     def extract_ast(self) -> tuple[PythonNode, list[str]]:
         with open(self.file, "r") as f:
             module: parso_tree.Module = ast.parse(f.read())
-            # print(module.children)
-            # print(type(module))
             return module, []
 
 
@@ -52,7 +51,7 @@ class ParsoASTConverter(BaseUASTConverter):
             # "string": self._handle_string,
             # "expr_stmt": self._handle_expr_stmt,
             # "atom_expr": self._handle_atom_expr,
-            # "yield_expr": self._handle_yield_expr,
+            ast.Yield: self._handle_yield,
             # "trailer": self._handle_trailer,
             ast.If: self._handle_if_stmt,
             ast.For: self._handle_for_stmt,
@@ -113,7 +112,6 @@ class ParsoASTConverter(BaseUASTConverter):
 
     # def _handle_is(self, expr: ast.Is) -> nodes.Is
     def _handle_call(self, call: ast.Call) -> nodes.CallExpr:
-        print(ast.dump(call, indent=4))
         func_ast = self.eval_single_node(call.func)
 
         return nodes.CallExpr(func_ast, self.eval_list(call.args))
@@ -144,22 +142,24 @@ class ParsoASTConverter(BaseUASTConverter):
         )
 
     def _handle_assignment(self, assign: ast.Assign) -> nodes.Assignment:
-        match assign:
-            case ast.Assign(value=list()):
-                return nodes.Assignment(
-                    "=", self.eval_list(assign.targets), self.eval_list(assign.value)
-                )
-            case ast.Assign():
-                return nodes.Assignment(
+        expr = None
+        for target in reversed(assign.targets):
+            if expr is None:
+                expr = nodes.Assignment(
                     "=",
-                    self.eval_list(assign.targets),
+                    [self.eval_single_node(target)],
                     [self.eval_single_node(assign.value)],
                 )
-            case _:
-                raise NotImplementedError
+            else:
+                expr = nodes.Assignment(
+                    "=",
+                    [target],
+                    [expr],
+                )
+
+        return expr
 
     def _handle_atom_expr(self, c: parso_tree.PythonNode) -> nodes.FieldAccessExpr:
-        print(c.children)
         field_name = c.children[0]
         target = c.children[-1]
         return nodes.FieldAccessExpr(
@@ -173,9 +173,6 @@ class ParsoASTConverter(BaseUASTConverter):
         return nodes.UnknownType("From...import... to be implemented")
 
     def _handle_import_name(self, c: ast.Import) -> nodes.ImportDecl:
-        # print(ast.dump(c, indent=2))
-        # name = [self.eval_single_node(name) for name in c.names]
-        # print(name)
         return nodes.UnknownType("import... to be implemented")
         return nodes.ImportDecl(name=name, path=".")
 
@@ -235,15 +232,9 @@ class ParsoASTConverter(BaseUASTConverter):
 
     def _handle_function_def(self, node: ast.FunctionDef) -> nodes.MethodDecl:
         arguments = node.args
-        # print(ast.dump(node))
-        # raise NotImplementedError
         args_list = []
         for arg in arguments.args:
             args_list.append(nodes.ParamDecl(nodes.Name(arg.arg), None))
-        # self.eval_list()
-        # print(node.body)
-        print("AAAAA", lst := self.eval_list(node.body))
-        print("BBBBB", node.body)
         return nodes.MethodDecl(
             nodes.Name(node.name),
             nodes.MethodType(args_list, nodes.UnknownType("UNKNOWN")),
@@ -259,13 +250,10 @@ class ParsoASTConverter(BaseUASTConverter):
         #  "+" (values)
         return nodes.Literal("Notimplemented joined str", "string")
 
-    def _handle_yield_expr(self, node: parso_tree.YieldExpr) -> nodes.Yield:
-        _, value = node.children
-        return nodes.Yield(self.eval_single_node(value))
+    def _handle_yield(self, node: ast.Yield) -> nodes.Yield:
+        return nodes.Yield(self.eval_single_node(node.value))
 
     def _handle_if_stmt(self, node: ast.If) -> nodes.IfThenElseStmt:
-        # print(node.children)
-
         stmt = nodes.IfThenElseStmt(
             self.eval_single_node(node.test),
             nodes.BlockStmt(self.eval_list(node.body)),
@@ -295,8 +283,6 @@ class ParsoASTConverter(BaseUASTConverter):
         loop_times_counter_decl = nodes.VarDecl(
             loop_times_counter, nodes.Literal(0, "int")
         )
-
-        print(ast.dump(node))
         target_var_uast = self.eval_single_node(node.target)
         assert isinstance(target_var_uast, nodes.Name)
         target_var_decl = nodes.VarDecl(target_var_uast)
@@ -383,12 +369,6 @@ class ParsoASTConverter(BaseUASTConverter):
         for i in range(len(node.values) - 1):
             operand1 = node.values[i]
             operand2 = node.values[i + 1]
-            print(
-                operand1,
-                operand2,
-                self.eval_single_node(operand1),
-                self.eval_single_node(operand2),
-            )
             if expr is None:
                 expr = nodes.BinaryExpr(
                     mapping[type(node.op)],
@@ -474,10 +454,7 @@ class ParsoASTConverter(BaseUASTConverter):
         try:
             return self._handlers_map[type(node)](node)
         except KeyError as e:
-            if hasattr(node, "lineno"):
-                print("line：", node.lineno)
-            print("node:", ast.dump(node))
-            # print(e)
+            warnings.warn(f"node:{ ast.dump(node)}")
             raise ValueError
 
     def eval_list(self, nodes: list[ast.AST]) -> list[nodes.SourceElement]:

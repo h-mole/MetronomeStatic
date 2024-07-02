@@ -1,5 +1,6 @@
 import json
 import os
+import warnings
 from typing import Any, Callable, Dict, Generator, List, Optional, Set, Tuple, Union
 
 from clang.cindex import Cursor, CursorKind, SourceLocation, Type, TypeKind
@@ -180,15 +181,13 @@ class FunctionDefModel(DefModel):
         children = list(node.walk_preorder())
         _nodes_call_visited = set()
         for child in children:
-            
+
             if child.kind == CursorKind.PARM_DECL:
                 fdm.params.append(ParamDefModel.from_cursor(child))
             elif child.kind == CursorKind.VAR_DECL:
                 fdm.locals.append(VarDefModel.from_cursor(child))
             elif child.kind == CursorKind.COMPOUND_STMT:
-                exprs = _extract_call_exprs_and_mark_visited(
-                    node, _nodes_call_visited
-                )
+                exprs = _extract_call_exprs_and_mark_visited(node, _nodes_call_visited)
                 for i, call_node in enumerate(exprs):
                     fdm.callings.append(call_node.spelling)
         global_refs = (
@@ -198,7 +197,6 @@ class FunctionDefModel(DefModel):
             .to_set()
         )
         fdm.referenced_globals = list(global_refs)
-        # print('var_refs', var_refs)
         return fdm
 
 
@@ -375,7 +373,9 @@ class ClassDefModel(DefModel):
                 method_def_model = FunctionDefModel.from_cursor(child)
                 m.methods.append(method_def_model)
             else:
-                print("cannot parse", [t.spelling for t in child.get_tokens()])
+                warnings.warn(
+                    f"cannot parse {[t.spelling for t in child.get_tokens()]}"
+                )
         return m
 
 
@@ -394,7 +394,7 @@ def data_structure_from_file(
     tu = parse_file(filename, args)
     c = tu.cursor
     for diag in tu.diagnostics:
-        print(diag)
+        warnings.warn(str(diag))
     models = {
         CursorKind.FUNCTION_DECL: FunctionDefModel,
         CursorKind.FIELD_DECL: FieldDefModel,
@@ -404,11 +404,8 @@ def data_structure_from_file(
         CursorKind.CLASS_DECL: ClassDefModel,
     }
     context.global_vars = all_globals(c).attributes("spelling").to_set()
-    print("c", c, c.kind, "tu", tu, len(list(c.get_children())), filename, args)
     for child in c.get_children():
-        print(child.kind, child.spelling, child.location.file.name)
         if os.path.samefile(child.location.file.name, filename):
-            # print(child.kind, child.spelling, child.location.file.name)
             if child.kind in models:
                 try:
                     method = models[child.kind].from_cursor

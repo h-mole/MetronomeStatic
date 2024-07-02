@@ -17,6 +17,7 @@ from typing import (
     TypedDict,
     Union,
 )
+import warnings
 
 from clang.cindex import (
     Cursor,
@@ -291,7 +292,6 @@ class ClangASTConverter(BaseUASTConverter):
         elif t.kind == TypeKind.VOID:
             return nodes.VoidType()
         else:
-            print("kind", t.kind, t.spelling)
             return nodes.UnknownType(t.spelling)
 
     def _handle_notimplemented(self, c: Cursor) -> nodes.NotImplementedItem:
@@ -317,11 +317,8 @@ class ClangASTConverter(BaseUASTConverter):
             return ret
         except Exception as e:
             if cursor is not None:
-                print(
-                    "error occurred in cursor",
-                    cursor.location.file,
-                    cursor.location.line,
-                    cursor.location.column,
+                warnings.warn(
+                    f"error occurred in cursor: {cursor.location.file}:{cursor.location.line}",
                 )
             raise e
 
