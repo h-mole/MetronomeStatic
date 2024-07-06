@@ -63,15 +63,13 @@ def get_defs(
     d = {}
     for i, reachable in enumerate(def_list):
         node_id, op_index, var = defs[i]
-        d[VarDefItem(node_id, var)] = (
-            reachable
-        )
+        d[VarDefItem(node_id, var)] = reachable
     return d
 
 
 def reaching_definition_analysis(
     cfg: nx.DiGraph,
-    defs: Dict[str, RDAOpList],
+    defs: Dict[int, RDAOpList],
     ignored_basic_blocks: List[str] = [],
 ) -> Tuple[
     Dict[str, List[bool]], Dict[str, List[bool]], Dict[str, Dict[VarDefItem, bool]]
@@ -85,7 +83,7 @@ def reaching_definition_analysis(
 
     输出：参数1和2为语句的变量定义可否到达每一个节点的输入/输出；
     参数3代表在每一个节点上，变量定义(类型为VarDefItem)能否到达该节点
-    
+
     """
     bb_list = list(filter(lambda n: n not in ignored_basic_blocks, cfg.nodes))
     defs_list: List[Tuple[str, int, str]] = [
@@ -104,7 +102,7 @@ def reaching_definition_analysis(
         ]
         for bb_id in bb_list
     }
-    
+
     inputs: Dict[str, List[bool]] = {
         bb_id: create_empty_vector(vector_length) for bb_id in bb_list
     }

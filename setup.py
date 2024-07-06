@@ -5,7 +5,7 @@ with open("README.md", encoding="utf8") as f:
 
 setuptools.setup(
     name="PyBirdViewCode",
-    version="0.1.0",
+    version="0.1.0.alpha4",
     description="A pure-python (Python>=3.10) static analysis library providing various interfaces.",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -50,7 +50,7 @@ setuptools.setup(
         "strenum ; python_version<='3.11'",
         "websocket-client",
         "requests",
-        "termcolor"
+        "termcolor",
     ],
     python_requires=">=3.10",
     include_package_data=True,

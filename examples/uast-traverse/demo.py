@@ -7,8 +7,6 @@ class UniASTVisitor(nodes.Visitor):
         print(node.name)
 
 
-
-
 # 获取 Clang AST 的Cursor对象
 file_cursor = parse_file("demo.c").cursor
 

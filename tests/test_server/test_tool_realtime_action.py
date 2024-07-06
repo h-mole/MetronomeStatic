@@ -12,12 +12,9 @@ from PyBirdViewCode.tools_service import DistributedTool, Problem, Scheduler
 
 @dataclass
 class MyCommand(DataClassJsonMixin):
-    cmd_id: int
+    task_id: str
     path: str
     mode: str
-
-
-# Command = TypedDict("Command", {"cmd_id": int, "path": str, "mode": str})
 
 
 class Tool(DistributedTool):
@@ -27,9 +24,9 @@ class Tool(DistributedTool):
         self.task_data = data
         assert self.current_context is not None
         if os.name == "nt":
-            cmd = "ping -n 3 127.0.0.1> out.txt"
+            cmd = "dir"
         else:
-            cmd = "ping -c 3 127.0.0.1> out.txt"
+            cmd = "ls"
 
         self.process_mgr.start_subprocess(
             "cbmc-routine",
@@ -46,7 +43,7 @@ class Tool(DistributedTool):
 
     def get_result_additional_data(self) -> dict:
         return {
-            "cmd_id": self.data_current_task.cmd_id,
+            "cmd_id": self.data_current_task.task_id,
             "taskId": "aac123aa",
             "data": 123,
             # "current_task_data": self.data_current_task,
@@ -66,8 +63,8 @@ def find_unused_port() -> int:
 
 
 class TestTool:
-    TOOLS_COUNT = 1
-    TASKS_COUNT = 1
+    TOOLS_COUNT = 2
+    TASKS_COUNT = 4
 
     def setup_class(self):
         port = find_unused_port()
@@ -87,14 +84,37 @@ class TestTool:
         print("清理。。。")
 
     def test_assign_task(self):
-        # for i in range(self.TASKS_COUNT):
-        #     if "my-tool" not in self.scheduler._tasks:
         self.scheduler._tasks["my-tool"] = queue.Queue()
-        self.scheduler._tasks["my-tool"].put(
-            {"cmd_id": 123, "path": "AAA", "mode": "BBB", "git_version": "0acb..."}
-        )
+        tasks = []
+        for i in range(self.TASKS_COUNT):
+            task = self.scheduler.execute_task(
+                "my-tool",
+                {
+                    "task_id": f"{i}aac123aa",
+                    "path": "AAA",
+                    "mode": "BBB",
+                    "git_version": "0acb...",
+                },
+            )
+            tasks.append(task)
+        for i in range(self.TASKS_COUNT):
+            assert tasks[i].result().task_id == f"{i}aac123aa"
 
-        # for i in range(self.TASKS_COUNT):
-        result = self.scheduler._results.get(timeout=10)
-        assert result.additional_data["taskId"] == "aac123aa"
-        assert self.scheduler._results.empty()
+        print("trying to put another task..")
+        self.scheduler.put_task(
+            "my-tool", {"task_id": "0aac123aa", "path": "AAA", "mode": "acb"}
+        )
+        time.sleep(3)
+        self.scheduler.get_result_with_id(f"0aac123aa")
+
+        print("trying to put two tasks at the same time......")
+        self.scheduler.put_task(
+            "my-tool", {"task_id": "0aac123ab", "path": "AAA", "mode": "acb"}
+        )
+        self.scheduler.put_task(
+            "my-tool", {"task_id": "1aac123ab", "path": "AAA", "mode": "acb"}
+        )
+        time.sleep(10)
+        print(self.scheduler._results.qsize())
+        results = self.scheduler.get_task_results({f"0aac123aa", f"1aac123ab"})
+        assert len(results) == 2

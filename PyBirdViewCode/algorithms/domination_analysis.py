@@ -36,7 +36,7 @@ def merge_cfg_and_fdt(cfg_topology: nx.DiGraph, fdt: nx.DiGraph) -> nx.DiGraph:
 
     具体融合规则为：两图的各个有向边取并集；方向相反的有向边互相抵消。
 
-    生成的CDG的根节点名称为`CDG_ENTRY`
+    生成的CDG的根节点名称为`ENTRY`
 
     :cfg_topology: ....
     """
@@ -58,7 +58,7 @@ def merge_cfg_and_fdt(cfg_topology: nx.DiGraph, fdt: nx.DiGraph) -> nx.DiGraph:
         .filter(lambda n: new_graph.in_degree(n) == 0)
         .l
     )
-    new_graph.add_node("CDG_ENTRY")
+    new_graph.add_node("ENTRY")
     for dangling_node in dangling_nodes:
-        new_graph.add_edge("CDG_ENTRY", dangling_node)
+        new_graph.add_edge("ENTRY", dangling_node)
     return new_graph

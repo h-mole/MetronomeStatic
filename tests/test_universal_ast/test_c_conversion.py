@@ -69,7 +69,7 @@ def test_variable_types():
     assert node.name.id == "register_func"
 
     ret2 = ret.filter_by(nodes.VarDecl).filter(lambda c: c.variable == "g_func").head()
-    assert isinstance(ret2.type, nodes.MethodType)
+    assert isinstance(ret2.type, nodes.MethodInfo)
 
     main_ast = (
         ret.filter_by(nodes.MethodDecl).filter(lambda n: n.name.id == "main").head()

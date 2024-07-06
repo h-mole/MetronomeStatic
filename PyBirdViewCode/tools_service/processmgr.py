@@ -10,6 +10,7 @@ import logging
 
 logger = logging.getLogger(__file__)
 
+
 class SubprocessManager:
     _instance = None
     _sighandler = None

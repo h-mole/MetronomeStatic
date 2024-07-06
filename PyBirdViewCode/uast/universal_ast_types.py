@@ -12,6 +12,7 @@ class NotSpecificallyHandledType(TypeElement):
     def __init__(self, name):
         self.name = name
 
+
 class ParamType(TypeElement):
     _fields = ["name", "type"]
 

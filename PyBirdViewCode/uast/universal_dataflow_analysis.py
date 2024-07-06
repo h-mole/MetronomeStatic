@@ -2,7 +2,7 @@ from typing import List
 
 import networkx as nx
 
-from .universal_cfg_extractor import CFG
+from .universal_cfg_extractor import CFG, BasicBlock
 from .unparser import BaseUASTUnparser
 from ..uast import universal_ast_nodes as nodes
 from ..algorithms import (
@@ -80,6 +80,10 @@ class ReferencedRValueParser:
             case nodes.AssertStmt() | nodes.CallExpr():
                 ret = self.parse_value(stmt)
                 self.r_values.update(ret)
+            case nodes.ReturnStmt():
+                if stmt.result is not None:
+                    for ret in stmt.result:
+                        self.parse_referenced_values(ret)
             case _:
                 raise NotImplementedError(stmt)
 
@@ -87,18 +91,33 @@ class ReferencedRValueParser:
 def rda_on_cfg(cfg: CFG, arg_variables: List[str]):
     """
     在CFG对象上进行可达定义分析
-    注意，传入的CFG需要保证每个节点上只有一个语句
+    注意:
+
+    1. 传入的CFG需要保证每个节点上只有一个语句
+    2. 会对外部传入的CFG进行修改
     """
     unparser = BaseUASTUnparser()
-    defs: dict[str, RDAOpList] = {}
+    defs: dict[int, RDAOpList] = {}
     var_refs: dict[str, List[str]] = {}
+
+    # 为CFG添加一个进入块ENTRY，block_id为-1。
+    # 进入块中定义函数的各个参数
+    NODE = "ENTRY"
+
+    cfg._block_id_map[NODE] = BasicBlock(
+        id=NODE, statements=[], next_blocks=[cfg.entry_block]
+    )
+
+    cfg._update_topology()
 
     for node in cfg.topology.nodes:
         block = cfg.get_block(node)
-        defs[node] = RDAOpList([])
-        var_refs[node] = []
-        if node == cfg.entry_block.block_id:
-            defs[node].ops.extend([RDAOp(var_name) for var_name in arg_variables])
+        if node != NODE:
+            defs[node] = RDAOpList([])
+            var_refs[node] = []
+        else:
+            defs[NODE] = RDAOpList([RDAOp(var_name) for var_name in arg_variables])
+            var_refs[NODE] = []
 
         if len(block.statements) == 0:
             pass
@@ -111,22 +130,20 @@ def rda_on_cfg(cfg: CFG, arg_variables: List[str]):
             match stmt:
                 case nodes.Assignment(lhs=[lhs_item]):
                     assigned_variable = (
-                        0,
                         unparser.unparse(lhs_item),
                         lhs_item.location,
                     )
 
                 case nodes.UnaryExpr(sign="++" | "--"):
                     assigned_variable = (
-                        0,
                         unparser.unparse(stmt.expression),
                         stmt.location,
                     )
                 case _:
                     pass
-            
+
             if assigned_variable is not None:
-                stmt_index_, assigned_var_name_, loc = assigned_variable
+                assigned_var_name_, loc = assigned_variable
                 op = RDAOp(
                     assigned_var_name_,
                     used_var=list(parser.r_values),
@@ -138,7 +155,7 @@ def rda_on_cfg(cfg: CFG, arg_variables: List[str]):
             # defs[node].ops[0].used_var = list(parser.r_values)
         else:
             raise ValueError
-    
+
     _, _2, var_defs_reachable = reaching_definition_analysis(
         cfg.topology,
         {

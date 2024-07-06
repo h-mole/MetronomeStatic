@@ -1,4 +1,5 @@
-from typing import Any, Callable, Dict, Union, Type
+from dataclasses import dataclass
+from typing import Any, Callable, Dict, Literal, Optional, Union, Type
 import warnings
 import parso
 from parso.tree import NodeOrLeaf
@@ -7,6 +8,13 @@ import parso.python.tree as parso_tree
 from PyBirdViewCode.uast import universal_ast_nodes as nodes
 from .converter_base import BaseASTExtractor, BaseUASTConverter
 import ast
+from inspect import isclass
+
+
+def extract_classes(global_vals: dict) -> dict:
+    d = {k for k, v in global_vals.items() if k != "__builtins__" and isclass(v)}
+    d.update({k for k, v in global_vals["__builtins__"].items() if isclass(v)})
+    return d
 
 
 class ParsoASTExtractor(BaseASTExtractor):
@@ -14,16 +22,145 @@ class ParsoASTExtractor(BaseASTExtractor):
     def supported_file_types(cls):
         return [".py", ".pyi"]
 
-    def extract_ast(self) -> tuple[PythonNode, list[str]]:
+    def extract_ast(self) -> tuple[tuple[ast.AST, dict], list[str]]:
         with open(self.file, "r") as f:
-            module: parso_tree.Module = ast.parse(f.read())
-            return module, []
+            file_content = f.read()
+            module: ast.AST = ast.parse(file_content)
+            globals_to_exec = {}
+            exec(file_content, globals_to_exec)
+            # import pdb;pdb.set_trace()
+            return (
+                module,
+                {"classes_names": extract_classes(globals_to_exec)},
+            ), []
+
+
+@dataclass
+class VarScope:
+    name: str
+    kind: Literal["class", "function", "global"]
+    variables: dict[str, nodes.DATA_TYPE]
+
+
+class VarScopeMgr:
+    class VarScopeCtxMgr:
+        def __init__(self, var_scope_mgr, name, kind) -> None:
+            self.var_scope_mgr: VarScopeMgr = var_scope_mgr
+            self.kind = kind
+            self.name = name
+
+        def __enter__(self):
+            self.var_scope_mgr.scopes_stack.append(VarScope(self.name, self.kind, {}))
+
+        def __exit__(self, exc_type, exc_value, traceback):
+            self.var_scope_mgr.scopes_stack.pop()
+
+    def __init__(self) -> None:
+        self.scopes_stack: list[VarScope] = [VarScope("", "global", {})]
+
+    @property
+    def top_scope(self):
+        return self.scopes_stack[-1]
+
+    def add_var(self, name: str, type: nodes.DATA_TYPE) -> None:
+        self.top_scope.variables[name] = type
+
+    def get_context_manager(
+        self, name: str, kind: Literal["class", "function", "global"]
+    ):
+        """
+        :name: 类/函数/方法的名称。如果是方法, 则写C.id
+        :kind: 该变量管理的类型
+        """
+        return VarScopeMgr.VarScopeCtxMgr(self, name, kind)
+
+    def lookup_variable_type(self, name: str) -> Optional[nodes.DATA_TYPE]:
+        for scope in reversed(self.scopes_stack):
+            if name in scope.variables:
+                return scope.variables[name]
+
+
+class UASTTypeInfer:
+    """
+    用于推断出UAST中每一个函数或作用域下的变量类型
+    """
+
+    def __init__(self, full_uast) -> None:
+        # Record the current variable scope
+        # The first element records the global scope
+        self.scopes = VarScopeMgr()
+        self.full_uast: nodes.CompilationUnit = full_uast
+        self.method_scopes = {}
+
+    def infer(self, node: nodes.CompilationUnit):
+        self._infer_scopes(node)
+
+    def _infer_type(self, node: nodes.SourceElement) -> nodes.DATA_TYPE:
+        match node:
+            case nodes.InstanceCreationExpr(type=type):
+                return nodes.ClassType(type.name)
+            case nodes.CallExpr(name=callee):
+                callee_type = self._infer_type(callee)
+                raise NotImplementedError
+            case nodes.FieldAccessExpr(name=name, target=target):
+                target_type = self._infer_type(target)
+                print(target_type, name)
+                match target_type:
+                    case nodes.ClassType(name=class_name):
+                        cls_uast = self.full_uast.filter_by(
+                            nodes.ClassDecl, name=class_name
+                        ).head()
+                        methods = cls_uast.filter_by(nodes.MethodDecl, name=name).l
+                        if len(methods) == 1:
+                            method = methods[0]
+                            return nodes.MethodType(
+                                [
+                                    nodes.UnknownType("any")
+                                    for arg in method.type.pos_args
+                                ],
+                                methods[0].type.return_type,
+                            )
+                        raise NotImplementedError(target)
+                    case _:
+                        raise NotImplementedError
+            case nodes.Name(id=name):
+                var_type = self.scopes.lookup_variable_type(name)
+                assert var_type is not None, f"variable {name} is not defined"
+                return var_type
+            case _:
+                raise NotImplementedError(node)
+
+    def _infer_list(self, nodes_to_infer: list):
+        for stmt in nodes_to_infer:
+            self._infer_scopes(stmt)
+
+    def _infer_scopes(self, node: nodes.SourceElement):
+        match node:
+            case nodes.CompilationUnit():
+                self._infer_list(node.children)
+            case nodes.BlockStmt():
+                self._infer_list(node.statements)
+            case nodes.MethodDecl():
+                with self.scopes.get_context_manager("function"):
+                    self._infer_scopes(node.body)
+            case nodes.ClassDecl():
+                with self.scopes.get_context_manager("class"):
+                    self._infer_scopes(node.body)
+            case nodes.Assignment(lhs=lhs, rhs=rhs):
+                for lvalue, rvalue in zip(lhs, rhs):
+                    if isinstance(lvalue, nodes.Name):
+                        self.scopes.add_var(lvalue.id, self._infer_type(rvalue))
+            case nodes.CallExpr():
+                pass
+            case _:
+                raise NotImplementedError(node)
+
+    # def _infer_stmts(self, node: nodes.SourceElement):
+    #     pass
 
 
 class ParsoASTConverter(BaseUASTConverter):
-    def __init__(
-        self,
-    ) -> None:
+    def __init__(self, classes_names: set[str]) -> None:
         # self.source_location_filter: Optional[Callable[[SourceLocation], bool]] = None
         self._handlers_map: Dict[Type, Callable[[NodeOrLeaf], Any]] = {
             ast.Expr: lambda expr: self.eval_single_node(expr.value),
@@ -77,7 +214,7 @@ class ParsoASTConverter(BaseUASTConverter):
 
         # Return value of execution
         self._ret_value = None
-        # self._labels: Dict[str, LabelDesc] = {}
+        self.classes = classes_names
 
     @classmethod
     def supported_ast_types(cls) -> list[Type]:
@@ -111,10 +248,22 @@ class ParsoASTConverter(BaseUASTConverter):
         )
 
     # def _handle_is(self, expr: ast.Is) -> nodes.Is
-    def _handle_call(self, call: ast.Call) -> nodes.CallExpr:
-        func_ast = self.eval_single_node(call.func)
-
-        return nodes.CallExpr(func_ast, self.eval_list(call.args))
+    def _handle_call(
+        self, call: ast.Call
+    ) -> Union[nodes.CallExpr, nodes.InstanceCreationExpr]:
+        """
+        This method may return calls or instance creations.
+        """
+        called_func_ast = self.eval_single_node(call.func)
+        match called_func_ast:
+            case nodes.Name(id=callee_name) if callee_name in self.classes:
+                return nodes.InstanceCreationExpr(
+                    nodes.ClassType(callee_name),
+                    arguments=self.eval_list(call.args),
+                )
+            case _:
+                return nodes.CallExpr(called_func_ast, self.eval_list(call.args))
+        # return nodes.CallExpr(called_func_ast, self.eval_list(call.args))
 
     def _handle_attribute(self, attr: ast.Attribute) -> nodes.FieldAccessExpr:
 
@@ -144,19 +293,20 @@ class ParsoASTConverter(BaseUASTConverter):
     def _handle_assignment(self, assign: ast.Assign) -> nodes.Assignment:
         expr = None
         for target in reversed(assign.targets):
+            target_uast = self.eval_single_node(target)
             if expr is None:
                 expr = nodes.Assignment(
                     "=",
-                    [self.eval_single_node(target)],
+                    [target_uast],
                     [self.eval_single_node(assign.value)],
                 )
             else:
                 expr = nodes.Assignment(
                     "=",
-                    [target],
+                    [target_uast],
                     [expr],
                 )
-
+            # self.scopes.add_var(target_uast, expr)
         return expr
 
     def _handle_atom_expr(self, c: parso_tree.PythonNode) -> nodes.FieldAccessExpr:
@@ -228,7 +378,7 @@ class ParsoASTConverter(BaseUASTConverter):
     #     return method_decl
 
     def _handle_class_def(self, node: ast.ClassDef) -> nodes.ClassDecl:
-        return nodes.ClassDecl(node.name, self.eval_list(node.body))
+        return nodes.ClassDecl(node.name, nodes.BlockStmt(self.eval_list(node.body)))
 
     def _handle_function_def(self, node: ast.FunctionDef) -> nodes.MethodDecl:
         arguments = node.args
@@ -237,8 +387,8 @@ class ParsoASTConverter(BaseUASTConverter):
             args_list.append(nodes.ParamDecl(nodes.Name(arg.arg), None))
         return nodes.MethodDecl(
             nodes.Name(node.name),
-            nodes.MethodType(args_list, nodes.UnknownType("UNKNOWN")),
-            nodes.BlockStmt(lst),
+            nodes.MethodInfo(args_list, nodes.UnknownType("UNKNOWN")),
+            nodes.BlockStmt(self.eval_list(node.body)),
             # self.eval_single_node(node.returns) if node.returns is not None else None,
             # self.eval_single_node(node.decorator_list),
         )

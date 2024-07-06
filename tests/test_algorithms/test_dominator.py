@@ -31,10 +31,10 @@ def test_dominator():
     assert set(merged.edges) == {
         (2, 3),
         (2, 4),
-        ("CDG_ENTRY", 1),
-        ("CDG_ENTRY", 2),
-        ("CDG_ENTRY", 5),
-        ("CDG_ENTRY", 6),
+        ("ENTRY", 1),
+        ("ENTRY", 2),
+        ("ENTRY", 5),
+        ("ENTRY", 6),
     }
     fm.dot_dump(
         merged,

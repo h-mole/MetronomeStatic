@@ -8,7 +8,12 @@ from typing import Dict, Optional
 from clang.cindex import Cursor
 
 from ..utils import MelodieFrozenGenerator
-from ..clang_utils.code_attributes import DefModel, FieldDefModel, FunctionDefModel, StructDefModel
+from ..clang_utils.code_attributes import (
+    DefModel,
+    FieldDefModel,
+    FunctionDefModel,
+    StructDefModel,
+)
 from .models import StructValue, Variable
 
 

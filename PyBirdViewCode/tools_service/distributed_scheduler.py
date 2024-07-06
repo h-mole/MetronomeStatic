@@ -12,10 +12,11 @@ import json
 import os
 import queue
 import threading
+import time
 import uuid
 from contextlib import contextmanager
-from typing import Dict, Generator, Generic, List, Optional, Tuple, Union
-
+from typing import Callable, Dict, Generator, Generic, List, Optional, Tuple, Union
+from concurrent.futures import ThreadPoolExecutor, Future
 from flask import Flask, request
 from flask_sock import ConnectionClosed as WSConnectionClosed
 from flask_sock import Server as WSServer
@@ -174,6 +175,81 @@ class Scheduler(Generic[C]):
         self.app.add_url_rule(
             "/api/files/upload", view_func=self.handle_file_upload, methods=["POST"]
         )
+        # 每一个等待响应的任务都对应一个线程
+        self.executors = ThreadPoolExecutor(
+            thread_name_prefix="scheduler_executor_threads"
+        )
+        self.results_queue_lock = threading.Lock()
+
+    def put_task(self, tool_name: str, task: dict):
+        assert "task_id" in task
+        self._tasks[tool_name].put(task)
+
+    def execute_task(
+        self,
+        tool_name: str,
+        task: dict,
+        callback: Optional[Callable[[Result], None]] = None,
+    ) -> Future[Result]:
+        def _task_wrapper():
+            self.put_task(tool_name, task)
+            result = self.wait_result_with_id(task["task_id"])
+            if callback is not None:
+                callback(result)
+            return result
+
+        return self.executors.submit(_task_wrapper)
+
+    def get_task_results(self, task_ids: set[str]) -> list[Result]:
+        """
+        从队列中获取task_id在task_ids范围内的所有结果
+        如果没有，则返回的列表为空
+        """
+        with self.results_queue_lock:
+            results = []
+            for _ in range(self._results.qsize()):
+                result = self._results.get_nowait()
+                if result.task_id in task_ids:
+                    results.append(result)
+                else:
+                    self._results.put(result)
+            return results
+
+    def get_result_with_id(self, task_id: str) -> Optional[Result]:
+        """
+        从队列中获取指定task_id的结果
+        如果不含指定的task_id，则返回None
+        """
+        with self.results_queue_lock:
+            exists_task_result = False  # 是否存在task_id对应的结果
+            for elem in self._results.queue:
+                if elem.task_id == task_id:
+                    exists_task_result = True
+                    break
+            if exists_task_result:
+                while True:
+                    result = self._results.get_nowait()
+                    if result.task_id == task_id:
+                        break
+                    else:
+                        self._results.put(result)
+                return result
+            else:
+                return None
+
+    def wait_result_with_id(self, task_id: str) -> Result:
+        """
+        从队列中获取指定task_id的结果
+        如果不含指定的task_id，则继续等待
+        """
+        while True:
+            try:
+                if (result := self.get_result_with_id(task_id)) is not None:
+                    return result
+                else:
+                    time.sleep(1)
+            except queue.Empty:
+                continue
 
     @property
     def tools_manager(self) -> RemoteTools:

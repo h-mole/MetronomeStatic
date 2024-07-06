@@ -57,11 +57,10 @@ def test_data_flow_analysis():
     merged = get_cdg_topology(cfg)
     pdg = nx.DiGraph()
     for node_id in merged.nodes:
-        if node_id != "CDG_ENTRY":
+        if node_id != "ENTRY":
             merged.nodes[node_id]["label"] = graph.nodes[node_id]["label"]
     fm.dot_dump(merged, "cdg.dot")
     pdg: nx.DiGraph = nx.compose(merged, ddg)
-    pdg.remove_node("CDG_ENTRY")
     fm.dot_dump(pdg, "pdg.dot")
 
     # slicing

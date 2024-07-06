@@ -26,7 +26,7 @@ class CodePropertyGraphs:
     def add_label(self, g: nx.DiGraph):
         for node in g.nodes:
 
-            if node != "CDG_ENTRY":
+            if node != "ENTRY":
                 g.nodes[node]["label"] = self.cfg_nx.nodes[node].get(
                     "label", f"#{node}"
                 )

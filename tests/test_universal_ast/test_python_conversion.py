@@ -7,7 +7,7 @@ from PyBirdViewCode.uast import ParsoASTConverter, universal_ast_nodes as nodes
 def parse_py_code(code: str, version="3.9"):
     module = ast.parse(code)
     expr = module.body[0]
-    ret = ParsoASTConverter().eval(expr)
+    ret = ParsoASTConverter(set()).eval(expr)
     return ret
 
 

@@ -24,17 +24,21 @@ class BaseASTExtractor(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def extract_ast(self) -> tuple[Any, list[str]]:
+    def extract_ast(self) -> tuple[tuple[Any, dict], list[str]]:
         """
         从源代码中提取AST
 
-        :return: 两个参数，第一个是AST对象，第二个是错误信息列表
+        :return: 两个参数，第一个是一个元组，为 `(AST对象, 用于UASTConverter其他辅助信息)`，
+            第二个是错误信息的列表
         """
         pass
 
 
 class BaseUASTConverter(metaclass=ABCMeta):
     """Base converter class from original AST to UAST"""
+
+    def __init__(self, **kwargs) -> None:
+        pass
 
     @classmethod
     @abstractmethod

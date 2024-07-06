@@ -210,7 +210,11 @@ class BaseUASTUnparser:
             return head
 
     def unparse_literal(self, expr: nodes.Literal):
-        return repr(expr.value)
+        match expr.kind:
+            case "string":
+                return repr(expr.value)
+            case _:
+                return str(expr.value)
 
     def unparse_name(self, expr: nodes.Name):
         return expr.id

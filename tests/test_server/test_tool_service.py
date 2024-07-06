@@ -11,6 +11,7 @@ from PyBirdViewCode.tools_service import DistributedTool, Problem, Scheduler
 
 @dataclass
 class MyCommand(DataClassJsonMixin):
+    task_id: str
     path: str
     mode: str
 
@@ -93,11 +94,13 @@ class TestTool:
         for i in range(self.TASKS_COUNT):
             if "default-tool" not in self.scheduler._tasks:
                 self.scheduler._tasks["default-tool"] = queue.Queue()
-            self.scheduler._tasks["default-tool"].put({"path": "AAA", "mode": "BBB"})
+            self.scheduler._tasks["default-tool"].put(
+                {"task_id": f"aac123aa{i}", "path": "AAA", "mode": "BBB"}
+            )
 
         for i in range(self.TASKS_COUNT):
             result = self.scheduler._results.get(timeout=10)
             print("result", result)
-            assert result.additional_data["taskId"] == "aac123aa"
+            assert result.task_id.startswith(f"aac123aa")
         assert self.scheduler._results.empty()
         # print(result)

@@ -1,5 +1,5 @@
 int input();
-int function(int x, int y, int z)
+int main(int x, int y, int z)
 {
     x = x + input();
     if (x > 1)
@@ -17,5 +17,4 @@ int function(int x, int y, int z)
             z++;
         }
     }
-    return x + y + z;
 }

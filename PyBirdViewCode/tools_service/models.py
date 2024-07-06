@@ -134,18 +134,21 @@ class Problem(DataClassJsonMixin):
 
 @dataclass
 class Result(DataClassJsonMixin):
+    task_id: str
     info: StatusInfo
     problems: List[Problem]
     raw_file: str  # 原始文件，以url的形式
     additional_data: dict  # carrying some additional data
+    error: str = ""  # The error occurred in the tool
 
 
 class ProcessContext:
-    def __init__(self, root_folder: str, ctx_id: str) -> None:
+    def __init__(self, root_folder: str, task_id: str, ctx_id: str) -> None:
         self.root_folder = root_folder
         self.info = StatusInfo(
             uuid=ctx_id, start_time=time.time(), end_time=-1, status=Status.READY
         )
+        self.task_id = task_id
         self.data_folder = os.path.join(root_folder, ctx_id)
         if not os.path.exists(self.data_folder):
             os.makedirs(self.data_folder)

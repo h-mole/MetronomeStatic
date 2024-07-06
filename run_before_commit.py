@@ -14,7 +14,7 @@ for label in filter(lambda line: line.startswith("MACRO"), content.splitlines())
             file_content = f.read()
             if (lang := payload.get("language")) is not None:
                 file_content = (
-                    (f"`{payload['path']}`\n" )
+                    (f"`{payload['path']}`\n")
                     + f"\n```{lang}\n"
                     + file_content
                     + "\n```"

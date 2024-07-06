@@ -64,6 +64,9 @@ class CFG:
         }
         self.entry_block = self._block_id_map[entry_block_id]
         self.exit_block = self._block_id_map[return_block_id]
+        self._update_topology()
+
+    def _update_topology(self):
         self._topology = self._calc_topology()
 
     @property
@@ -102,7 +105,7 @@ class CFG:
             elif block.kind == "switch":
                 for i, nb in enumerate(block.next_blocks):
                     g.add_edge(block._id, nb._id, cond=i, label=f"case #{i+1}")
-        entry_id, exit_id =  graph_algorithms.get_entry_and_exit(g)
+        entry_id, exit_id = graph_algorithms.get_entry_and_exit(g)
         self.entry_block = self.get_block(entry_id)
         self.exit_block = self.get_block(exit_id)
         return g
@@ -442,7 +445,7 @@ class CFGBuilder:
 
         # add back edge
         self.block.next_blocks.append(block_loop_head)
-        
+
         # handle probable break
         self.add_loop_control_edges(block_end_for, block_loop_head)
 

@@ -94,19 +94,17 @@ class ClangASTExtractor(BaseASTExtractor):
     def supported_file_types(cls) -> List[str]:
         return [".c", ".cpp", ".i", ".ii"]
 
-    def extract_ast(self) -> tuple[Cursor, list[str]]:
+    def extract_ast(self) -> tuple[tuple[Cursor, dict], list[str]]:
         """
         调用Libclang，抽取Clang AST
         """
         tu = parse_file(self.file)
         cursor = tu.cursor
-        return cursor, list(tu.diagnostics)
+        return (cursor, {}), list(tu.diagnostics)
 
 
 class ClangASTConverter(BaseUASTConverter):
-    def __init__(
-        self,
-    ) -> None:
+    def __init__(self, **kwargs) -> None:
         self.source_location_filter: Optional[Callable[[SourceLocation], bool]] = None
         self.platform_default_bits: Dict[
             Literal["int", "char", "short", "long", "longlong", "float", "double"], int
@@ -156,6 +154,7 @@ class ClangASTConverter(BaseUASTConverter):
             CursorKind.DLLIMPORT_ATTR: self._handle_notimplemented,
             CursorKind.PURE_ATTR: self._handle_notimplemented,
             # EXPRESSIONS
+            CursorKind.CXX_THIS_EXPR: lambda c: nodes.Name("this"),
             CursorKind.DECL_REF_EXPR: lambda c: (
                 nodes.Name(c.spelling) if c.spelling else self.eval_children(c)[0]
             ),
@@ -181,6 +180,7 @@ class ClangASTConverter(BaseUASTConverter):
             ),
             CursorKind.OVERLOADED_DECL_REF: lambda c: nodes.Name(c.spelling),
             CursorKind.NAMESPACE_REF: lambda c: nodes.NameSpaceRef(c.spelling),
+            CursorKind.CXX_NEW_EXPR: self._handle_new_expr,
             # TYPES
             CursorKind.TYPE_REF: lambda c: nodes.Type(c.spelling),
             # LITERALS
@@ -344,6 +344,9 @@ class ClangASTConverter(BaseUASTConverter):
         else:
             return nodes.SpecialExpr("unexposed", children_values)
 
+    def _handle_new_expr(self, cursor: Cursor) -> nodes.InstanceCreationExpr:
+        return nodes.InstanceCreationExpr(cursor.type.spelling, [])
+
     def _handle_cxx_access_spec_decl(self, cursor: Cursor) -> nodes.AccessSpecfier:
         tokens = [t.spelling for t in cursor.get_tokens()]
         assert tokens[0] in ("public", "private", "protected")
@@ -373,7 +376,7 @@ class ClangASTConverter(BaseUASTConverter):
         return_type = self.convert_type(cursor.type.get_result())
         return nodes.MethodDecl(
             nodes.Name(cursor.spelling),
-            nodes.MethodType(params_ast, return_type, []),
+            nodes.MethodInfo(params_ast, return_type, []),
             body_ast,
         )
 
@@ -391,7 +394,7 @@ class ClangASTConverter(BaseUASTConverter):
     def _handle_class_decl(self, cursor: Cursor) -> Optional[nodes.ClassDecl]:
         # class_name = curs
         cls_decl = nodes.ClassDecl(
-            cursor.spelling, self.eval_children(cursor), [], [], []
+            cursor.spelling, nodes.BlockStmt(self.eval_children(cursor)), [], [], []
         )
         return cls_decl
 
@@ -409,7 +412,7 @@ class ClangASTConverter(BaseUASTConverter):
         m = nodes.StructDecl(cursor.spelling, [])
 
         for child in cursor.get_children():
-            m.fields.append(self.eval_single_cursor(child))
+            m.members.append(self.eval_single_cursor(child))
 
         return m
 
@@ -419,7 +422,7 @@ class ClangASTConverter(BaseUASTConverter):
         m = nodes.UnionDecl(cursor.spelling, [])
 
         for child in cursor.get_children():
-            m.children.append(self.eval_single_cursor(child))
+            m.members.append(self.eval_single_cursor(child))
 
         return m
 
@@ -469,7 +472,7 @@ class ClangASTConverter(BaseUASTConverter):
                 return nodes.VarDecl(
                     cursor.spelling,
                     None,
-                    nodes.MethodType(children_parsed, return_type),
+                    nodes.MethodInfo(children_parsed, return_type),
                 )
         if len(children_asts) >= 1:
             l_value = nodes.Name(cursor.spelling)

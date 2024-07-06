@@ -1,5 +1,5 @@
 """
-This file is copied from plyj package.
+This file is derived from plyj package.
 """
 
 from typing import (
@@ -30,8 +30,10 @@ DATA_TYPE = Union[
     "IntType",
     "VoidType",
     "FloatType",
+    "ClassType",
     "UnknownType",
     "AddrReferenceType",
+    "NewMethodType",
 ]
 
 STANDARD_BINARY_OPERATORS: set[str] = {
@@ -59,8 +61,8 @@ STANDARD_BINARY_OPERATORS: set[str] = {
     "==",  # Equal
     ">=",  # Greater than or equal
     ">",  # Greater than
-    "is", # Is same address
-    "in", # a is contained in b
+    "is",  # Is same address
+    "in",  # a is contained in b
 }
 
 STANDARD_UNARY_OPERATORS: set[tuple[str, bool]] = {
@@ -322,6 +324,10 @@ T = TypeVar("T", bound=SourceElement)
 
 
 class CompilationUnit(SourceElement):
+    """
+    UAST表示每一个代码文件的节点
+    """
+
     _fields = ["children"]
 
     def __init__(
@@ -333,6 +339,10 @@ class CompilationUnit(SourceElement):
 
 
 class PackageDecl(SourceElement):
+    """
+    声明当前代码文件的包名的UAST节点
+    """
+
     _fields = ["name", "modifiers"]
 
     def __init__(self, name, modifiers=None):
@@ -345,6 +355,10 @@ class PackageDecl(SourceElement):
 
 
 class ImportDecl(SourceElement):
+    """
+    声明导入子模块的节点
+    """
+
     _fields = ["name", "static", "on_demand", "path"]
 
     def __init__(self, name: "Name", path="", static=False, on_demand=False):
@@ -356,30 +370,42 @@ class ImportDecl(SourceElement):
 
 
 class StructDecl(SourceElement):
+    """
+    结构体声明
+    """
+
     _fields = [
         "name",
-        "fields",
+        "members",
     ]
 
-    def __init__(self, name, fields: List["FieldDecl"]):
+    def __init__(self, name: str, members: List["FieldDecl"]):
         super().__init__()
         self.name = name
-        self.fields = fields
+        self.members = members
 
 
 class UnionDecl(SourceElement):
+    """
+    联合声明
+    """
+
     _fields = [
         "name",
-        "children",
+        "members",
     ]
 
-    def __init__(self, name, children: List["FieldDecl"]):
+    def __init__(self, name, members: List["FieldDecl"]):
         super().__init__()
         self.name = name
-        self.children = children
+        self.members = members
 
 
 class ClassDecl(SourceElement):
+    """
+    类声明
+    """
+
     _fields = [
         "name",
         "body",
@@ -407,61 +433,68 @@ class ClassDecl(SourceElement):
         if implements is None:
             implements = []
         self.name: str = name
-        self.body: list[SourceElement] = body
+        self.body: BlockStmt = body
+        assert isinstance(body, BlockStmt)
         self.modifiers = modifiers
         self.type_parameters = type_parameters
         self.extends = extends
         self.implements = implements
 
 
-class ClassInitializer(SourceElement):
-    _fields = ["block", "static"]
+# class ClassInitializer(SourceElement):
+#     """
+#     类初始化
+#     """
+#     _fields = ["block", "static"]
 
-    def __init__(self, block, static=False):
-        super(ClassInitializer, self).__init__()
-        self.block = block
-        self.static = static
-
-
-class ConstructorDecl(SourceElement):
-    _fields = [
-        "name",
-        "block",
-        "modifiers",
-        "type_parameters",
-        "parameters",
-        "throws",
-    ]
-
-    def __init__(
-        self,
-        name,
-        block,
-        modifiers=None,
-        type_parameters=None,
-        parameters=None,
-        throws=None,
-    ):
-        super(ConstructorDecl, self).__init__()
-        if modifiers is None:
-            modifiers = []
-        if type_parameters is None:
-            type_parameters = []
-        if parameters is None:
-            parameters = []
-        self.name = name
-        self.block = block
-        self.modifiers = modifiers
-        self.type_parameters = type_parameters
-        self.parameters = parameters
-        self.throws = throws
+#     def __init__(self, block, static=False):
+#         super(ClassInitializer, self).__init__()
+#         self.block = block
+#         self.static = static
 
 
-class EmptyDecl(SourceElement):
-    pass
+# class ConstructorDecl(SourceElement):
+#     """
+
+#     """
+#     _fields = [
+#         "name",
+#         "block",
+#         "modifiers",
+#         "type_parameters",
+#         "parameters",
+#         "throws",
+#     ]
+
+#     def __init__(
+#         self,
+#         name,
+#         block,
+#         modifiers=None,
+#         type_parameters=None,
+#         parameters=None,
+#         throws=None,
+#     ):
+#         super(ConstructorDecl, self).__init__()
+#         if modifiers is None:
+#             modifiers = []
+#         if type_parameters is None:
+#             type_parameters = []
+#         if parameters is None:
+#             parameters = []
+#         self.name = name
+#         self.block = block
+#         self.modifiers = modifiers
+#         self.type_parameters = type_parameters
+#         self.parameters = parameters
+#         self.throws = throws
 
 
 class FieldDecl(SourceElement):
+    """
+    声明结构体的字段，或者类的属性
+    """
+
     _fields = ["name", "type", "modifiers"]
 
     def __init__(self, name: str, type: DATA_TYPE, init_value=None, modifiers=None):
@@ -475,7 +508,11 @@ class FieldDecl(SourceElement):
         self.modifiers = modifiers
 
 
-class MethodType(SourceElement):
+class MethodInfo(SourceElement):
+    """
+    方法的子节点，存储方法的参数类型、返回值类型等
+    """
+
     _fields = ["pos_args", "return_type", "modifiers"]
 
     def __init__(
@@ -490,14 +527,30 @@ class MethodType(SourceElement):
         self.modifiers = modifiers if modifiers is not None else []
 
 
-class VoidType(SourceElement):
+class BaseType(SourceElement):
+    """
+    继承BaseType的UAST节点，表示的是类型
+    """
+
+    pass
+
+
+class VoidType(BaseType):
+    """
+    Void类型
+    """
+
     _fields = []
 
     def __init__(self):
         super().__init__()
 
 
-class IntType(SourceElement):
+class IntType(BaseType):
+    """
+    整数类型
+    """
+
     _fields = ["bits", "signed"]
 
     def __init__(self, bits: int = 0, signed=True):
@@ -511,7 +564,11 @@ class IntType(SourceElement):
         self.signed = signed
 
 
-class FloatType(SourceElement):
+class FloatType(BaseType):
+    """
+    浮点类型
+    """
+
     _fields = ["bits"]
 
     def __init__(self, bits: int = 64):
@@ -519,7 +576,35 @@ class FloatType(SourceElement):
         self.bits = bits
 
 
-class UserDefinedType(SourceElement):
+class UserDefinedType(BaseType):
+    """
+    用户自定义类型
+    """
+
+    _fields = ["name"]
+
+    def __init__(self, name: str):
+        super().__init__()
+        self.name = name
+
+
+class ClassType(BaseType):
+    """
+    类的类型节点（TODO Deprecate）
+    """
+
+    _fields = ["name"]
+
+    def __init__(self, name: str):
+        super().__init__()
+        self.name = name
+
+
+class StructType(BaseType):
+    """
+    结构体的类型节点（TODO Deprecate）
+    """
+
     _fields = ["name"]
 
     def __init__(self, name: str):
@@ -528,6 +613,10 @@ class UserDefinedType(SourceElement):
 
 
 class AddrReferenceType(SourceElement):
+    """
+    取地址的类型（也就是C语言中的int* , float* 等）
+    """
+
     _fields = ["referee"]
 
     def __init__(self, referee: DATA_TYPE):
@@ -536,6 +625,10 @@ class AddrReferenceType(SourceElement):
 
 
 class ArrayType(SourceElement):
+    """
+    数组类型
+    """
+
     _fields = ["elem_type", "length"]
 
     def __init__(self, elem_type: DATA_TYPE, length: Optional[SourceElement] = None):
@@ -544,7 +637,28 @@ class ArrayType(SourceElement):
         self.length = length
 
 
+class MethodType(SourceElement):
+    """
+    方法的类型
+    """
+
+    _fields = ["pos_args", "return_type"]
+
+    def __init__(
+        self,
+        pos_args: List[DATA_TYPE],
+        return_type: List[DATA_TYPE],
+    ) -> None:
+        super().__init__()
+        self.pos_args = pos_args
+        self.return_type = return_type
+
+
 class UnknownType(SourceElement):
+    """
+    未知类型
+    """
+
     _fields = ["type"]
 
     def __init__(self, type_str: str):
@@ -567,11 +681,7 @@ class MethodDecl(SourceElement):
 
     _fields = [
         "name",  # Name of method
-        # "modifiers",
         "type",  # Return type of method
-        # "type_parameters",
-        # "parameters",
-        # "return_type",
         "body",
         "abstract",
         "extended_dims",
@@ -582,11 +692,7 @@ class MethodDecl(SourceElement):
     def __init__(
         self,
         name: Optional["Name"],
-        type: MethodType,
-        # modifiers=None,
-        # type_parameters=None,
-        # parameters=None,
-        # return_type="void",
+        type: MethodInfo,
         body: Optional["BlockStmt"] = None,
         abstract=False,
         extended_dims=0,
@@ -594,19 +700,8 @@ class MethodDecl(SourceElement):
         type_ref=None,
     ):
         super(MethodDecl, self).__init__()
-        # if modifiers is None:
-        #     modifiers = []
-        # if type_parameters is None:
-        #     type_parameters = []
-        # if parameters is None:
-        #     parameters = []
-        # if type_ref is Non
         self.name = name
         self.type = type
-        # self.modifiers = modifiers
-        # self.type_parameters = type_parameters
-        # self.parameters = parameters
-        # self.return_type = return_type
         self.body = body
         self.abstract = abstract
         self.extended_dims = extended_dims
@@ -614,42 +709,48 @@ class MethodDecl(SourceElement):
         self.type_ref = type_ref
 
 
-class FormalParameter(SourceElement):
-    _fields = ["variable", "type", "modifiers", "vararg"]
+# class FormalParameter(SourceElement):
+#     _fields = ["variable", "type", "modifiers", "vararg"]
 
-    def __init__(self, variable, type, modifiers=None, vararg=False):
-        super(FormalParameter, self).__init__()
-        if modifiers is None:
-            modifiers = []
-        self.variable = variable
-        self.type = type
-        self.modifiers = modifiers
-        self.vararg = vararg
+#     def __init__(self, variable, type, modifiers=None, vararg=False):
+#         super(FormalParameter, self).__init__()
+#         if modifiers is None:
+#             modifiers = []
+#         self.variable = variable
+#         self.type = type
+#         self.modifiers = modifiers
+#         self.vararg = vararg
 
 
-class Variable(SourceElement):
-    # I would like to remove this class. In theory, the dimension could be added
-    # to the type but this means variable declarations have to be changed
-    # somehow. Consider 'int i, j[];'. In this case there currently is only one
-    # type with two variable declarators;This closely resembles the source code.
-    # If the variable is to go away, the type has to be duplicated for every
-    # variable...
-    _fields = ["name", "dimensions"]
+# class Variable(SourceElement):
+#     # I would like to remove this class. In theory, the dimension could be added
+#     # to the type but this means variable declarations have to be changed
+#     # somehow. Consider 'int i, j[];'. In this case there currently is only one
+#     # type with two variable declarators;This closely resembles the source code.
+#     # If the variable is to go away, the type has to be duplicated for every
+#     # variable...
+#     _fields = ["name", "dimensions"]
 
-    def __init__(self, name, dimensions=0):
-        super(Variable, self).__init__()
-        self.name = name
-        self.dimensions = dimensions
+#     def __init__(self, name, dimensions=0):
+#         super(Variable, self).__init__()
+#         self.name = name
+#         self.dimensions = dimensions
 
 
 class VarDecl(SourceElement):
+    """
+    变量的声明节点
+    """
+
     _fields = ["variable", "initializer", "type"]
 
-    def __init__(self, variable: "Name", initializer=None, type=None):
+    def __init__(
+        self, variable: "Name", initializer=None, type: Optional[DATA_TYPE] = None
+    ):
         super(VarDecl, self).__init__()
         self.variable = variable
         self.initializer = initializer
-        self.type = type
+        self.type: Optional[DATA_TYPE] = type
 
 
 class CompoundDecl(SourceElement):
@@ -915,6 +1016,7 @@ class BinaryExpr(Expr):
         assert isinstance(self.lhs, SourceElement)
         assert isinstance(self.rhs, SourceElement)
 
+
 class Assignment(Expr):
     _fields = ["operator", "lhs", "rhs"]
     operator: str
@@ -987,6 +1089,10 @@ class EmptyStmt(Stmt):
 
 
 class BlockStmt(Stmt):
+    """
+    代码块节点
+    """
+
     _fields = ["statements"]
 
     def __init__(self, statements=None):
@@ -1002,11 +1108,11 @@ class BlockStmt(Stmt):
             yield s
 
 
-# class VarDecl(Stmt, FieldDecl):
-#     pass
-
-
 class ArrayInitializer(SourceElement):
+    """
+    数组初始化节点
+    """
+
     _fields = ["elements"]
 
     def __init__(self, elements: Optional[List[SourceElement]] = None):
@@ -1038,6 +1144,10 @@ class StructInitializer(SourceElement):
 
 
 class CallExpr(Expr):
+    """
+    函数或方法的调用节点
+    """
+
     _fields = ["name", "arguments", "type_arguments", "target"]
 
     def __init__(self, name, arguments=None, type_arguments=None, target=None):
@@ -1054,6 +1164,10 @@ class CallExpr(Expr):
 
 
 class IfThenElseStmt(Stmt):
+    """
+    IF-Else结构的节点
+    """
+
     _fields = ["predicate", "if_true", "if_false"]
 
     def __init__(
@@ -1268,10 +1382,19 @@ class ConstructorCallStmt(Stmt):
 
 
 class InstanceCreationExpr(Expr):
+    """
+    Expression like `a = new A()`
+    """
+
     _fields = ["type", "type_arguments", "arguments", "body", "enclosed_in"]
 
     def __init__(
-        self, type, type_arguments=None, arguments=None, body=None, enclosed_in=None
+        self,
+        type: ClassType,
+        type_arguments=None,
+        arguments=None,
+        body=None,
+        enclosed_in=None,
     ):
         super(InstanceCreationExpr, self).__init__()
 
@@ -1438,10 +1561,10 @@ class SpecialExpr(SourceElement):
 class Label(SourceElement):
     _fields = ["name", "statement"]
 
-    def __init__(self, name: str, stmt: Optional[SourceElement] = None):
+    def __init__(self, name: str, statement: Optional[SourceElement] = None):
         super(Label, self).__init__()
         self.name = name
-        self.statement = stmt
+        self.statement = statement
 
 
 class AddressLabel(SourceElement):
@@ -1572,19 +1695,17 @@ __ALL__ = [
     "StructDecl",
     "UnionDecl",
     "ClassDecl",
-    "ClassInitializer",
-    "ConstructorDecl",
-    "EmptyDecl",
     "FieldDecl",
     "MethodType",
     "IntType",
     "VoidType",
     "FloatType",
     "ArrayType",
+    "ClassType",
+    "StructType",
     "UnknownType",
     "MethodDecl",
     "FormalParameter",
-    "Variable",
     "VarDecl",
     "CompoundDecl",
     "ParamDecl",

@@ -52,12 +52,14 @@ def get_file_uast(file: str, extra_args: List[str] = []) -> CompilationUnit:
     if ext not in _ast_extractors:
         raise ValueError(f"Unsupported file extension: {ext}")
     extractor = _ast_extractors[ext](file, extra_args)
-    ast, diags = extractor.extract_ast()
+    (ast, converter_kwargs), diags = extractor.extract_ast()
     for item in diags:
         logger.warning(item)
     for ast_type, converter_cls in _uast_converters.items():
         if isinstance(ast, ast_type):
-            uast = cast(CompilationUnit, converter_cls().convert_to_uast(ast))
+            uast = cast(
+                CompilationUnit, converter_cls(**converter_kwargs).convert_to_uast(ast)
+            )
             return uast
     raise TypeError(f"No converter found for AST type: {type(ast)}")
 

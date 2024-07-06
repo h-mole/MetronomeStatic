@@ -37,7 +37,7 @@ extensions = [
     "sphinx_markdown_tables",
     "sphinx.ext.autosectionlabel",
     "enum_tools.autoenum",
-    "sphinxcontrib.mermaid"
+    "sphinxcontrib.mermaid",
 ]
 # autosectionlabel_prefix_document = True
 

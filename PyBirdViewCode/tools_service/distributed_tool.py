@@ -8,6 +8,7 @@ Distributed tool must know the endpoint of the scheduler.
 
 import json
 import os
+import sys
 import threading
 import time
 import uuid
@@ -15,11 +16,13 @@ from typing import Generator, Generic, Optional, Tuple, Type, Union
 import warnings
 
 import websocket
+from dataclasses import fields
 from dataclasses_json import DataClassJsonMixin
 
 from ..utils.files import file_to_dataurl
 from ..utils import MelodieFrozenGenerator, melodie_generator
-from .base_request import Request, RequestFactory, RestRespDataType
+from .messages import RestRespDataType
+from .base_request import Request, RequestFactory
 from .log import logger
 from .messages import FileUploadResponse, WSSchedulerMsgParser
 from .models import (
@@ -36,10 +39,14 @@ from .models import (
 from .processmgr import SubprocessManager
 
 
+def dataclass_has_field(cls, field_name):
+    return any(f.name == field_name for f in fields(cls))
+
+
 class DistributedTool(Generic[RestRespDataType]):
     def __init__(
         self,
-        cmd_data_type: Type[RestRespDataType],
+        cmd_data_type: Type[RestRespDataType],  # must have field `task_id`
         scheduler_addr: str,
         scheduler_port: int,
         name="default",
@@ -48,7 +55,9 @@ class DistributedTool(Generic[RestRespDataType]):
         self.root_folder = root_folder
         if not os.path.exists(self.root_folder):
             os.makedirs(self.root_folder)
+        assert dataclass_has_field(cmd_data_type, "task_id"), cmd_data_type
         self._cmd_data_type: Type[RestRespDataType] = cmd_data_type
+
         self.scheduler_endpoint = f"{scheduler_addr}:{scheduler_port}"
         self.name = name
         self._uuid = uuid.uuid4().hex
@@ -170,7 +179,6 @@ class DistributedTool(Generic[RestRespDataType]):
                     task_data = resp.data
                     self.data_current_task = task_data
                     self._task_start(task_data)
-
                 else:
                     logger.debug(f"status: {status}, got msg: {resp.msg}")
             except Exception as e:
@@ -182,20 +190,18 @@ class DistributedTool(Generic[RestRespDataType]):
     def on_task_finish(self, task_id: str):
         assert self.current_context is not None
         self.current_context.info.status = Status.STOPPED
-        self.handle_task_finish()
-        self._send_msg("result", self.get_result())
+        try:
+            self.handle_task_finish()
+            self._send_msg("result", self.get_result())
+        except Exception:
+            import traceback
+
+            exc = traceback.format_exc()
+            sys.stderr.write(exc)
+            self.send_error(self.current_context, f"Finish task error: \n{exc}")
 
     def handle_task_finish(self):
         return
-
-    def handle_rules(self):
-        return self.rules()
-
-    def rules(self):
-        return [
-            {"type": "input", "field": "goods_name", "title": "商品名称"},
-            {"type": "datePicker", "field": "created_at", "title": "创建时间"},
-        ]
 
     def handle_status(self) -> StatusInfo:
         if self.current_context is not None:
@@ -243,6 +249,7 @@ class DistributedTool(Generic[RestRespDataType]):
         else:
             file_base64 = "data:text/plain;base64,"  # empty file url
         return Result(
+            task_id=self.current_context.task_id,
             info=self.current_context.info,
             problems=self.current_context.found_problems,
             raw_file=file_base64,
@@ -256,9 +263,33 @@ class DistributedTool(Generic[RestRespDataType]):
         return self.results().map(lambda x: x.to_json()).l
 
     def _task_start(self, task_data: RestRespDataType):
-        self.current_context = ProcessContext(self.root_folder, uuid.uuid4().hex)
-        self.handle_start_tool(task_data)
-        self.current_context.info.status = Status.RUNNING
+        try:
+            self.current_context = ProcessContext(
+                self.root_folder, task_data.task_id, uuid.uuid4().hex
+            )
+            self.handle_start_tool(task_data)
+            self.current_context.info.status = Status.RUNNING
+        except Exception as e:
+            import traceback
+
+            exc = traceback.format_exc()
+            sys.stderr.write(exc)
+
+            self.current_context.info.status = Status.FAILED
+            self.send_error(self.current_context, str(e))
+
+    def send_error(self, context: ProcessContext, msg: str):
+        self._send_msg(
+            "result",
+            Result(
+                context.task_id,
+                info=context.info,
+                problems=[],
+                raw_file="",
+                additional_data={},
+                error=msg,
+            ),
+        )
 
     def process_command(self, cmd_uuid: str, cmd) -> SchedulerCommandResponse:
         """
@@ -266,20 +297,6 @@ class DistributedTool(Generic[RestRespDataType]):
         """
         if cmd.type == Trigger.START:
             raise NotImplementedError
-            # if (
-            #     self.current_context is not None
-            #     and self.current_context.info.status == Status.RUNNING
-            # ):
-            #     return SchedulerCommandResponse(
-            #         cmd_uuid, False, "tool is already running"
-            #     )
-            # self.current_context = ProcessContext(self.root_folder, uuid.uuid4().hex)
-            # logger.info(
-            #     f"current tool {self._uuid} status: { self.current_context.info.status}"
-            # )
-            # self.handle_start_tool(cmd)
-            # self.current_context.info.status = Status.RUNNING
-            # return SchedulerCommandResponse(cmd_uuid, True)
 
         elif cmd.type == Trigger.STOP:
             if self.current_context is None:
@@ -295,6 +312,9 @@ class DistributedTool(Generic[RestRespDataType]):
             raise NotImplementedError
 
     def handle_start_tool(self, cmd: RestRespDataType):
+        """
+        如果此方法中抛出异常，则会返回工具启动失败
+        """
         raise NotImplementedError
 
     def handle_stop_tool(self, cmd: RestRespDataType):
