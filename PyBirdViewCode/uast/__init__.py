@@ -4,6 +4,7 @@ from .universal_cfg_extractor import (
     CFGBuilder,
     CFG,
     BasicBlock,
+    BasicBlockData,
     remove_empty_node_from_cfg,
 )
 from .unparser import *
@@ -11,6 +12,7 @@ from .uast_queries import *
 from .universal_code_property_graphs import (
     get_cdg_topology,
     get_ddg_topology,
+    get_pdg_from_cfg,
     CodePropertyGraphs,
 )
 from .builtin_converters import *

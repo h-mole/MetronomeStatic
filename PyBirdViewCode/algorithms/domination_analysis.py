@@ -1,8 +1,10 @@
+from collections import defaultdict
 import networkx as nx
 from MelodieFuncFlow import MelodieGenerator
+from .graph_algorithms import graph_algorithms
 
 
-def get_forward_dominance_tree(cfg_topology: nx.DiGraph):
+def get_forward_dominance_tree(cfg_topology: nx.DiGraph, reverse=True):
     """
     获取CFG拓扑结构的前向支配树
 
@@ -10,19 +12,15 @@ def get_forward_dominance_tree(cfg_topology: nx.DiGraph):
 
     :cfg_topology: CFG的拓扑结构
     """
-    reversed = cfg_topology.reverse()
+    if reverse:
+        cfg_topology = cfg_topology.reverse()
     dom_tree = nx.DiGraph()
 
-    # 获取CFG拓扑结构的出口节点
-    end_nodes = list(
-        filter(lambda node: cfg_topology.out_degree(node) == 0, cfg_topology.nodes)
-    )
-    assert len(end_nodes) == 1
-    cfg_end_node = end_nodes[0]
-
+    # 获取反向后CFG拓扑结构的入口节点(该节点的名称为exit，但反向后就是入口了)
+    cfg_entry_node = graph_algorithms.get_entry(cfg_topology)
     # 遍历直接支配节点列表，重新构建支配树
     for node, immediate_dominator in nx.immediate_dominators(
-        reversed, cfg_end_node
+        cfg_topology, cfg_entry_node
     ).items():
         if node != immediate_dominator:
             dom_tree.add_edge(immediate_dominator, node)
@@ -62,3 +60,63 @@ def merge_cfg_and_fdt(cfg_topology: nx.DiGraph, fdt: nx.DiGraph) -> nx.DiGraph:
     for dangling_node in dangling_nodes:
         new_graph.add_edge("ENTRY", dangling_node)
     return new_graph
+
+
+def dominance_frontier(cfg, idom):
+    """
+    计算控制流图 cfg 的支配边界
+    """
+
+    # 初始化支配边界
+    df = defaultdict(set)
+
+    # 遍历每个节点,计算其支配边界
+    for node in cfg.nodes:
+        predecessors = list(cfg.predecessors(node))
+        # print(predecessors)
+        if len(predecessors) > 1:
+            for p in predecessors:
+                runner = p
+                print(runner, type(runner), type(node), node, idom)
+                # if node
+                while runner != idom[node]:
+                    df[runner].add(node)
+                    runner = idom[runner]
+
+    return df
+
+
+def control_dependence_graph(G, dominance_frontier):
+    """
+    构建控制依赖图
+    """
+    cdg = nx.DiGraph()
+    for node in G.nodes:
+        for frontier_node in dominance_frontier[node]:
+            if node != frontier_node:
+                cdg.add_edge(frontier_node, node)
+    return cdg
+
+
+def build_control_dependence_graph(cfg: nx.DiGraph):
+    """
+    使用支配边界法构建控制依赖图
+
+    https://blog.csdn.net/Dong_HFUT/article/details/121492818
+    https://blog.csdn.net/Dong_HFUT/article/details/121510224?spm=1001.2014.3001.5501
+
+    """
+    original_entry, original_exit = graph_algorithms.get_entry_and_exit(cfg)
+    reversed_cfg = cfg.reverse()
+    reversed_cfg.add_edge("exit", "ENTRY")
+    reversed_cfg.add_edge(original_entry, "ENTRY")
+    reversed_cfg.add_edge("exit", original_exit)
+
+    dominance_tree = get_forward_dominance_tree(reversed_cfg, False)
+
+    dom = defaultdict()
+    for src, dst in dominance_tree.edges:
+        dom[dst] = src
+    dominance_frontiers = dominance_frontier(reversed_cfg, dom)
+    cdg = control_dependence_graph(cfg, dominance_frontiers)
+    return cdg

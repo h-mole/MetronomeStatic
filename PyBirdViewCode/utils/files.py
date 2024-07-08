@@ -204,15 +204,19 @@ class FileManager:
         nx.nx_pydot.write_dot(graph, file)
         if export_png:
             png_abspath = self.get_abspath(file_relpath[:-4] + ".png")
-            os.system(f"dot -Tpng {file_relpath} -o {png_abspath}")
+            os.system(f"dot -Tpng {file} -o {png_abspath}")
         if export_svg:
             svg_abspath = self.get_abspath(file_relpath[:-4] + ".svg")
-            os.system(f"dot -Tsvg {file_relpath} -o {svg_abspath}")
+            os.system(f"dot -Tsvg {file} -o {svg_abspath}")
 
-    def dot_load(self, file_relpath: str):
+    def dot_load(self, file_relpath: str, convert_to_digraph=True):
         """
         Load networkx graph from dot file.
         """
         assert file_relpath.endswith(".dot"), "extension should be *.dot"
         file = self.get_abspath(file_relpath)
-        return nx.nx_pydot.read_dot(file)
+        g = nx.nx_pydot.read_dot(file)
+        if convert_to_digraph:
+            return nx.DiGraph(g)
+        else:
+            return g

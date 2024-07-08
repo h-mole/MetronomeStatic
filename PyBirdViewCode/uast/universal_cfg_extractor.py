@@ -17,22 +17,16 @@ BlockKinds = Literal["normal", "conditional", "switch", "method_return"]
 LoopControlKinds = Literal["break", "continue"]
 
 
-class BasicBlock:
+class BasicBlockData:
     def __init__(
         self,
-        id: int,
+        id: ValidNodeKinds,
         statements: Optional[List[nodes.SourceElement]] = None,
         kind: BlockKinds = "normal",
-        tag_on_empty="",
-        next_blocks: List["BasicBlock"] = None,
     ):
         self._id = id
         self.statements = statements if statements is not None else []
         self.kind: BlockKinds = kind
-        self.tag_on_empty = tag_on_empty
-        self.next_blocks: List[BasicBlock] = (
-            next_blocks if next_blocks is not None else []
-        )
 
     @property
     def block_id(self):
@@ -41,14 +35,38 @@ class BasicBlock:
     def add_statement(self, statement: nodes.SourceElement):
         self.statements.append(statement)
 
+    def __repr__(self) -> str:
+        return f"<BasicBlock #{self._id} {self.statements}>"
+
+    @classmethod
+    def from_block(cls, block: "BasicBlock"):
+        return BasicBlockData(
+            block._id,
+            block.statements,
+            block.kind,
+        )
+
+
+class BasicBlock(BasicBlockData):
+    def __init__(
+        self,
+        id: int,
+        statements: List[nodes.SourceElement] | None = None,
+        kind: BlockKinds = "normal",
+        tag_on_empty="",
+        next_blocks: Optional[List["BasicBlock"]] = None,
+    ):
+        super().__init__(id, statements, kind)
+        self.tag_on_empty = tag_on_empty
+        self.next_blocks: List[BasicBlock] = (
+            next_blocks if next_blocks is not None else []
+        )
+
     def set_tag_on_empty(self, tag: str):
         self.tag_on_empty = tag
 
     def text_on_empty(self):
         return f"<Block>" if self.tag_on_empty == "" else f"<{self.tag_on_empty}>"
-
-    def __repr__(self) -> str:
-        return f"<BasicBlock #{self._id} {self.statements}>"
 
 
 class CFG:
@@ -56,38 +74,58 @@ class CFG:
     控制流图
     """
 
-    def __init__(
-        self, all_blocks: List[BasicBlock], entry_block_id: int, return_block_id: int
-    ) -> None:
-        self._block_id_map: Dict[int, BasicBlock] = {
+    def __init__(self, all_blocks: List[BasicBlockData], topology: nx.DiGraph) -> None:
+        self._block_id_map: Dict[ValidNodeKinds, BasicBlockData] = {
             block.block_id: block for block in all_blocks
         }
-        self.entry_block = self._block_id_map[entry_block_id]
-        self.exit_block = self._block_id_map[return_block_id]
-        self._update_topology()
+        self.topology = topology
+        self._block_id_max = 0  # 节点号最大为多少，用来生成新节点id
 
-    def _update_topology(self):
-        self._topology = self._calc_topology()
+    def add_block(self, block: BasicBlockData):
+        self._block_id_map[block._id] = block
+        self.topology.add_node(block._id)
+
+    def add_edge(self, src: ValidNodeKinds, dst: ValidNodeKinds):
+        self.topology.add_edge(src, dst)
 
     @property
-    def _all_blocks(self) -> List[BasicBlock]:
+    def entry_block(self):
+        entry_id = graph_algorithms.get_entry(self.topology)
+        return self._block_id_map[entry_id]
+
+    @property
+    def exit_block(self):
+        exit_id = graph_algorithms.get_exit(self.topology)
+        return self._block_id_map[exit_id]
+
+    @classmethod
+    def from_basic_blocks(cls, basic_blocks: List[BasicBlock]):
+        topology = cls._calc_topology(basic_blocks)
+        blocks_data = [BasicBlockData.from_block(block) for block in basic_blocks]
+        return CFG(blocks_data, topology)
+
+    @property
+    def _all_blocks(self) -> List[BasicBlockData]:
         return list(self._block_id_map.values())
 
-    @property
-    def topology(self) -> nx.DiGraph:
-        """
-        The topology of graph.
-        """
-        return self._topology
+    # @property
+    # def topology(self) -> nx.DiGraph:
+    #     """
+    #     The topology of graph.
+    #     """
+    #     return self._topology
 
-    def _calc_topology(self) -> nx.DiGraph:
+    @staticmethod
+    def _calc_topology(
+        blocks: List[BasicBlock],
+    ) -> nx.DiGraph:
         """
         Calculate the topology of the cfg.
 
         :return: a nx.DiGraph with same edges while nodes just contain theirs id.
         """
         g = nx.DiGraph()
-        for block in self._all_blocks:
+        for block in blocks:
             g.add_node(block._id)
             if block.kind == "normal":
                 for nb in block.next_blocks:
@@ -105,9 +143,6 @@ class CFG:
             elif block.kind == "switch":
                 for i, nb in enumerate(block.next_blocks):
                     g.add_edge(block._id, nb._id, cond=i, label=f"case #{i+1}")
-        entry_id, exit_id = graph_algorithms.get_entry_and_exit(g)
-        self.entry_block = self.get_block(entry_id)
-        self.exit_block = self.get_block(exit_id)
         return g
 
     def to_networkx(self, unparse=True):
@@ -118,7 +153,7 @@ class CFG:
         uast_unparser = BaseUASTUnparser()
 
         for block in self._all_blocks:
-            label_base = f"#{block._id} {escape(block.text_on_empty())}\n"
+            label_base = f"#{block._id} {escape(block.kind)}\n"
             if len(block.statements) > 0:
                 if unparse:
                     stmts = [uast_unparser.unparse(stmt) for stmt in block.statements]
@@ -132,16 +167,16 @@ class CFG:
         return g
 
     def print_graph(self):
-        edges = []
-
-        for block in self._all_blocks:
-            edges.extend([(block._id, nb._id) for nb in block.next_blocks])
-            print(block)
-            print("\n")
-        print(edges)
+        print(self.topology.edges)
 
     def get_block(self, block_id: int):
         return self._block_id_map[block_id]
+
+    def new_node_id(self):
+        self._block_id_max += 1
+        while self._block_id_max in self.topology.nodes:
+            self._block_id_max += 1
+        return self._block_id_max
 
 
 class CFGBuilder:
@@ -220,7 +255,7 @@ class CFGBuilder:
         assert isinstance(method_decl_uast, nodes.MethodDecl), method_decl_uast
 
         self.build_on_method_declaration(method_decl_uast)
-        cfg = CFG(self.all_blocks, self.head_block.block_id, self.return_block.block_id)
+        cfg = CFG.from_basic_blocks(self.all_blocks)
         if remove_empty_nodes:
             remove_empty_node_from_cfg(cfg)
         if ensure_single_stmt_each_node:
@@ -501,34 +536,44 @@ def expand_multi_stmt_nodes(cfg: "CFG"):
     for node in multi_stmt_nodes:
         block_to_split = cfg.get_block(node)
         cfg._block_id_map.pop(block_to_split._id)
-        # 对每一个节点，创建语句链
-        first_block = None  # 保存头节点
-        prev_block = None  # 前一个节点
 
-        for stmt in block_to_split.statements:
-            new_block = BasicBlock(new_id(), [stmt], "normal", "")
-            if prev_block is not None:
-                prev_block.next_blocks.append(new_block)
-            if first_block is None:
-                first_block = new_block
-            prev_block = new_block
-            cfg._block_id_map[new_block._id] = new_block
-        assert first_block is not None
-        assert prev_block is not None
-        prev_block.next_blocks = block_to_split.next_blocks
-        prev_block.kind = block_to_split.kind
-
+        # 获取前驱节点
         predecessors = list(cfg.topology.predecessors(node))
 
-        # 将后继节点替换到各个前驱block的next_blocks中
+        # 将所有语句都存入单独的节点内
+        # 然后形成一个链状结构
+        all_created_blocks: list[BasicBlockData] = []  # 创建的全部节点
+        for stmt in block_to_split.statements:
+            # 创建新的语句节点
+            new_block = BasicBlockData(new_id(), [stmt], "normal")
+
+            # 如果存在前驱节点，就将链状结构的前驱节点连接到新节点
+            if len(all_created_blocks) > 0:
+                cfg.topology.add_edge(all_created_blocks[-1]._id, new_block._id)
+
+            # 保存到列表内
+            all_created_blocks.append(new_block)
+
+            # 添加CFG中节点id到控制流节点数据的映射
+            cfg._block_id_map[new_block._id] = new_block
+
+        # 最后一个节点的kind应当与被分拆的节点一致
+        all_created_blocks[-1].kind = block_to_split.kind
+
+        # 获取block_to_split的所有后继节点
+        # 并且创建从节点链最后一个节点，到所有后继节点的链接
+        # 顺序应当与block_to_split的后继节点一致
+        for next_block_to_connect in cfg.topology.neighbors(block_to_split._id):
+            cfg.topology.add_edge(all_created_blocks[-1]._id, next_block_to_connect)
+
+        # 用节点链的第一个节点
+        # 替换到各个前驱节点指向block_to_split的边
         for pred_id in predecessors:
-            pred_block = cfg.get_block(pred_id)
-            replace_index = pred_block.next_blocks.index(block_to_split)
-            pred_block.next_blocks[replace_index] = first_block
-        if len(predecessors) == 0:
-            pass
-            # cfg._topology.add_edge(block_to_split, first_block)
-        cfg._topology = cfg._calc_topology()
+            graph_algorithms.update_out_edge_with_order(
+                cfg.topology, pred_id, node, all_created_blocks[0]._id
+            )
+        # 最后移除被分割的节点，卸磨杀驴
+        cfg.topology.remove_node(block_to_split._id)
 
 
 def remove_empty_node_from_cfg(cfg: "CFG"):
@@ -551,11 +596,12 @@ def remove_empty_node_from_cfg(cfg: "CFG"):
             cfg.topology.successors(node)
         )
 
-        # 对于要移除的节点，后继节点一定只有一个
+        # 对于空节点的后继节点一定只有一个
+        # 否则就存在问题
         assert len(successors) == 1
 
         # 获取后继节点
-        successor_block = cfg.get_block(successors[0])
+        successor_block_id = successors[0]
 
         # 获取要删除的节点
         block_to_remove = cfg.get_block(node)
@@ -563,13 +609,10 @@ def remove_empty_node_from_cfg(cfg: "CFG"):
         # 移除相应的节点
         cfg._block_id_map.pop(block_to_remove._id)
 
-        # 将后继节点替换到各个前驱block的next_blocks中
+        # 将后继节点替换到各个前驱block的后继节点中
         for pred_id in predecessors:
-            pred_block = cfg.get_block(pred_id)
-            replace_index = pred_block.next_blocks.index(block_to_remove)
-            pred_block.next_blocks[replace_index] = successor_block
-
-        # 更新网络拓扑
-        cfg._topology = cfg._calc_topology()
-
-    # return cfg
+            graph_algorithms.update_out_edge_with_order(
+                cfg.topology, pred_id, node, successor_block_id
+            )
+        # 在拓扑结构中也移除相应的节点
+        cfg.topology.remove_node(block_to_remove._id)

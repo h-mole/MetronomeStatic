@@ -104,7 +104,7 @@ def test_expand_multi_stmt():
     uast = UASTQuery.get_method(get_file_uast(file), "main")
     cfg = extract_cfg_from_method(uast)
     expected_topology = [(4, 6), (4, 2), (6, 2), (7, 8), (8, 9), (9, 10), (10, 4)]
-
+    file_manager.dot_dump(cfg.to_networkx(), "cfg-not-expanded-main.dot")
     verify_topology(expected_topology, cfg.topology)
 
     uast = UASTQuery.get_method(get_file_uast(file), "main2")

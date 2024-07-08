@@ -1,0 +1,23 @@
+strict digraph  {
+4 [label="#4 conditional
+i &lt; 11"];
+2 [label="#2 method_return\n"];
+7 [label="#7 conditional
+A(&amp; sum, &amp; i)"];
+9 [label="#9 normal
+i += 1"];
+10 [label="#10 normal
+i ++"];
+11 [label="#11 normal
+int sum = 0"];
+12 [label="#12 normal
+int i = 1"];
+4 -> 7;
+4 -> 2;
+7 -> 9;
+7 -> 4;
+9 -> 10;
+10 -> 4;
+11 -> 12;
+12 -> 4;
+}

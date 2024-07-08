@@ -6,7 +6,11 @@ from PyBirdViewCode import FileManager, abspath_from_file
 from PyBirdViewCode.algorithms.domination_analysis import (
     get_forward_dominance_tree,
     merge_cfg_and_fdt,
+    build_control_dependence_graph,
 )
+
+from tests.base import asset_path
+from tests.test_universal_ast.base import verify_topology
 
 fm = FileManager(
     abspath_from_file(
@@ -39,4 +43,23 @@ def test_dominator():
     fm.dot_dump(
         merged,
         "cdg.dot",
+    )
+
+
+def test_dom_multi_stmts():
+    dot_file = asset_path(r"algorithms-demo\cdg_extraction_demo.dot")
+    g: nx.DiGraph = fm.dot_load(dot_file)
+    cdg = build_control_dependence_graph(g)
+    fm.dot_dump(cdg, "cdg-new.dot", True)
+    verify_topology(
+        [
+            ("ENTRY", "4"),
+            ("ENTRY", "2"),
+            ("ENTRY", "11"),
+            ("ENTRY", "12"),
+            ("4", "7"),
+            ("7", "9"),
+            ("7", "10"),
+        ],
+        cdg,
     )

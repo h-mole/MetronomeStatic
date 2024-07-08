@@ -92,6 +92,8 @@ STANDARD_ASSIGNMENTS: set[str] = {
     "^=",
 }
 
+LocationType = Tuple[Optional[int], Optional[int]]
+
 
 class SourceElement(object):
     """
@@ -165,7 +167,7 @@ class SourceElement(object):
 
     def __init__(self):
         super(SourceElement, self).__init__()
-        self.location: Tuple[Optional[int], Optional[int]] = (
+        self.location: LocationType = (
             None,
             None,
         )  # line, column
@@ -511,6 +513,10 @@ class FieldDecl(SourceElement):
 class MethodInfo(SourceElement):
     """
     方法的子节点，存储方法的参数类型、返回值类型等
+
+    :pos_args: 位置参数列表
+    :return_type: 返回值类型列表
+    :modifiers: 参数的修饰符
     """
 
     _fields = ["pos_args", "return_type", "modifiers"]
@@ -1688,6 +1694,7 @@ class NotImplementedItem(SourceElement):
 # ", ".join(["\""+k+'"' for k, v in uast.__dict__.items()
 #               if type(v) == type and issubclass(v, uast.SourceElement)])
 __ALL__ = [
+    "LocationType",
     "SourceElement",
     "CompilationUnit",
     "PackageDecl",

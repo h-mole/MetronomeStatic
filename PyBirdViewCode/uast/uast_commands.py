@@ -53,6 +53,8 @@ def get_file_uast(file: str, extra_args: List[str] = []) -> CompilationUnit:
         raise ValueError(f"Unsupported file extension: {ext}")
     extractor = _ast_extractors[ext](file, extra_args)
     (ast, converter_kwargs), diags = extractor.extract_ast()
+    # from ..clang_utils import beautified_print_ast
+    # beautified_print_ast(ast)
     for item in diags:
         logger.warning(item)
     for ast_type, converter_cls in _uast_converters.items():
@@ -64,12 +66,18 @@ def get_file_uast(file: str, extra_args: List[str] = []) -> CompilationUnit:
     raise TypeError(f"No converter found for AST type: {type(ast)}")
 
 
-def extract_cfg_from_method(method_or_func: MethodDecl) -> CFG:
+def extract_cfg_from_method(
+    method_or_func: MethodDecl,
+    remove_empty_nodes=True,
+    ensure_single_stmt_each_node=True,
+) -> CFG:
     """
     从uast的Method中，抽取控制流图CFG
     """
     cfg_builder = CFGBuilder()
-    cfg = cfg_builder.build(method_or_func)
+    cfg = cfg_builder.build(
+        method_or_func, remove_empty_nodes, ensure_single_stmt_each_node
+    )
     return cfg
 
 

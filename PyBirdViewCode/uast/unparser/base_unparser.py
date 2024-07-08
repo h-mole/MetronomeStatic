@@ -46,6 +46,8 @@ class BaseUASTUnparser:
             nodes.ThrowStmt: self.unparse_throw_stmt,
             nodes.NotImplementedItem: lambda x: "notimplemented-" + x.kind,
             nodes.Conditional: lambda expr: f"{self.unparse(expr.predicate)}?{self.unparse(expr.if_true)}:{self.unparse(expr.if_false)}",
+            nodes.DereferenceExpr: lambda expr: f"*{self.unparse(expr.ref)}",
+            nodes.ReferenceExpr: lambda expr: f"&{self.unparse(expr.value)}",
             # nodes.ArrayType: self.unparse_arr
         }
 

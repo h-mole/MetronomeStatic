@@ -1,8 +1,8 @@
-from typing import List
+from typing import List, Optional
 
 import networkx as nx
 
-from .universal_cfg_extractor import CFG, BasicBlock
+from .universal_cfg_extractor import CFG, BasicBlockData
 from .unparser import BaseUASTUnparser
 from ..uast import universal_ast_nodes as nodes
 from ..algorithms import (
@@ -11,6 +11,8 @@ from ..algorithms import (
     reaching_definition_analysis,
     graph_algorithms,
 )
+
+INTER_PROCEDURAL = True
 
 
 class ReferencedRValueParser:
@@ -44,20 +46,26 @@ class ReferencedRValueParser:
             case nodes.BinaryExpr(lhs=lhs, rhs=rhs):
                 return self.parse_value(lhs) | self.parse_value(rhs)
             case nodes.CallExpr(name=name, arguments=arguments):
-                parsed = set()
-                for arg in arguments:
-                    parsed |= self.parse_value(arg)
-                match name:
-                    # 如果被调用的是对象的方法，那么相应的对象当然也是依赖的
-                    case nodes.FieldAccessExpr(target=target):
-                        parsed.update(self.parse_value(target))
-                    case _:
-                        pass
-                return parsed
+                if not INTER_PROCEDURAL:
+                    parsed = set()
+                    for arg in arguments:
+                        parsed |= self.parse_value(arg)
+                    match name:
+                        # 如果被调用的是对象的方法，那么相应的对象当然也是依赖的
+                        case nodes.FieldAccessExpr(target=target):
+                            parsed.update(self.parse_value(target))
+                        case _:
+                            pass
+                    return parsed
+                else:
+                    return set()
             case nodes.AssertStmt():
                 return self.parse_value(stmt.predicate)
             case nodes.ArrayAccessExpr(index=index, target=target):
                 return self.parse_value(index) | self.parse_value(target)
+            case nodes.UnaryExpr(expression=expr):
+                return self.parse_value(expr)
+            # case nodes.CompoundDecl()
             case _:
                 raise NotImplementedError(stmt)
 
@@ -84,8 +92,48 @@ class ReferencedRValueParser:
                 if stmt.result is not None:
                     for ret in stmt.result:
                         self.parse_referenced_values(ret)
+            case nodes.VarDecl(variable=variable, initializer=initializer):
+                if initializer is not None:
+                    self.parse_referenced_values(initializer)
+            case nodes.CompoundDecl(decls=decls):
+                for decl in decls:
+                    self.parse_referenced_values(decl)
+            case nodes.DereferenceExpr():
+                self.parse_referenced_values(stmt.ref)
+            case nodes.ReferenceExpr():
+                self.parse_referenced_values(stmt.value)
             case _:
                 raise NotImplementedError(stmt)
+
+
+def match_lvalue(
+    unparser: BaseUASTUnparser, stmt: nodes.SourceElement
+) -> List[tuple[str, nodes.LocationType]]:
+    match stmt:
+        case nodes.Assignment(lhs=[lhs_item]):
+            return [
+                (
+                    unparser.unparse(lhs_item),
+                    lhs_item.location,
+                )
+            ]
+
+        case nodes.UnaryExpr(sign="++" | "--"):
+            return [
+                (
+                    unparser.unparse(stmt.expression),
+                    stmt.location,
+                )
+            ]
+        case nodes.CompoundDecl():
+            values = []
+            for var_decl in stmt.decls:
+                values.extend(match_lvalue(unparser, var_decl))
+            return values
+        case nodes.VarDecl():
+            return [(unparser.unparse(stmt.variable), stmt.location)]
+        case _:
+            return []
 
 
 def rda_on_cfg(cfg: CFG, arg_variables: List[str]):
@@ -94,7 +142,6 @@ def rda_on_cfg(cfg: CFG, arg_variables: List[str]):
     注意:
 
     1. 传入的CFG需要保证每个节点上只有一个语句
-    2. 会对外部传入的CFG进行修改
     """
     unparser = BaseUASTUnparser()
     defs: dict[int, RDAOpList] = {}
@@ -103,13 +150,9 @@ def rda_on_cfg(cfg: CFG, arg_variables: List[str]):
     # 为CFG添加一个进入块ENTRY，block_id为-1。
     # 进入块中定义函数的各个参数
     NODE = "ENTRY"
-
-    cfg._block_id_map[NODE] = BasicBlock(
-        id=NODE, statements=[], next_blocks=[cfg.entry_block]
-    )
-
-    cfg._update_topology()
-
+    if NODE not in cfg.topology.nodes:
+        cfg.add_edge(NODE, cfg.entry_block.block_id)
+        cfg.add_block(BasicBlockData(NODE, statements=[]))
     for node in cfg.topology.nodes:
         block = cfg.get_block(node)
         if node != NODE:
@@ -123,36 +166,18 @@ def rda_on_cfg(cfg: CFG, arg_variables: List[str]):
             pass
         elif len(block.statements) == 1:
             stmt = block.statements[0]
-            assigned_variable = None
             parser = ReferencedRValueParser()
             parser.parse_referenced_values(stmt)
 
-            match stmt:
-                case nodes.Assignment(lhs=[lhs_item]):
-                    assigned_variable = (
-                        unparser.unparse(lhs_item),
-                        lhs_item.location,
-                    )
-
-                case nodes.UnaryExpr(sign="++" | "--"):
-                    assigned_variable = (
-                        unparser.unparse(stmt.expression),
-                        stmt.location,
-                    )
-                case _:
-                    pass
-
-            if assigned_variable is not None:
+            for assigned_variable in match_lvalue(unparser, stmt):
                 assigned_var_name_, loc = assigned_variable
                 op = RDAOp(
                     assigned_var_name_,
                     used_var=list(parser.r_values),
                     location=loc,
                 )
-                # )
                 defs[node].ops.append(op)
             var_refs[node] = list(parser.r_values)
-            # defs[node].ops[0].used_var = list(parser.r_values)
         else:
             raise ValueError
 

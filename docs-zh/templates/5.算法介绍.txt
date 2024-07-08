@@ -14,8 +14,19 @@
 
 ## 控制依赖图（CDG）及其构建算法
 
-**转载于**：https://zhuanlan.zhihu.com/p/324696483
-**所属文件**：`PyBirdViewCode\algorithms\domination_analysis.py`
+控制依赖图抽取的步骤如下：
+
+```mermaid
+graph LR
+
+控制流图 --> 前向支配树 --> 支配边界 --> 控制依赖图
+
+```
+
+- **转载于**：https://zhuanlan.zhihu.com/p/324696483
+- **功能函数**：`build_control_dependence_graph`
+- **所属文件**：[domination_analysis.py](../PyBirdViewCode/algorithms/domination_analysis.py#LC101)
+
 
 控制依赖图(Control Dependency Graph, CDG)反应的是各个语句之间在程序控制结构上的依赖关系。它由控制流图（CFG）和前向支配树(Forward Dominance Tree, FDT)直接产生。
 
@@ -44,7 +55,8 @@
 PyBirdViewCode库主要基于NetworkX。NetworkX未提供构建支配树的方法，但是却可以给出每一个节点的直接支配节点。所以，将这些直接支配关系构建成图，就可以还原出支配树。支配树构建的具体实现位于`PyBirdViewCode\algorithms\domination_analysis.py`的`get_forward_dominance_tree`函数，介绍如下：
 MACRO  {"kind": "docs", "module": "PyBirdViewCode.algorithms", "function": "get_forward_dominance_tree"}
 
-### 融合CFG与FDT，得到控制依赖图CDG
+<!--
+### (曾用方法)融合CFG与FDT，得到控制依赖图CDG
 
 得到FDT后，将其与CFG结合，即可得到控制依赖图（CDG）。实现步骤如下：
 
@@ -57,10 +69,24 @@ MACRO  {"kind": "docs", "module": "PyBirdViewCode.algorithms", "function": "get_
     - 以下图中的融合过程为例，会形成{1}，{2->3，2->4}，{5}，{6}这四个子团。因此需要人为添加一个入口节点E，且从E引出四条边分别指向1, 2, 5, 6这四个子团入口节点。
 
 ![](/docs-zh/assets/merge-fdt-and-cfg.png)
+-->
 
 具体实现时，由于nx.DiGraph是一个简单图，亦即多次添加边(u,v)时，最终从u到v也只会有一条边。具体程序为函数`merge_cfg_and_fdt`，介绍如下：
 
 MACRO  {"kind": "docs", "module": "PyBirdViewCode.algorithms", "function": "merge_cfg_and_fdt"}
+
+### 求解支配边界
+
+参考链接：
+
+https://blog.csdn.net/Dong_HFUT/article/details/121492818
+https://blog.csdn.net/Dong_HFUT/article/details/121510224?spm=1001.2014.3001.5501
+
+求解出支配边界后即可得到控制依赖图。
+
+求控制依赖图的函数为：
+
+MACRO  {"kind": "docs", "module": "PyBirdViewCode.algorithms", "function": "build_control_dependence_graph"}
 
 ## 数据依赖图（DDG）及其构建算法
 

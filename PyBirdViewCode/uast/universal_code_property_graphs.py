@@ -1,9 +1,20 @@
 import networkx as nx
 from .universal_ast_nodes import MethodDecl
 from .universal_cfg_extractor import CFG, CFGBuilder
-from ..algorithms import get_forward_dominance_tree, merge_cfg_and_fdt
+from ..algorithms import (
+    get_forward_dominance_tree,
+    merge_cfg_and_fdt,
+    build_control_dependence_graph,
+)
 from .universal_dataflow_analysis import rda_on_cfg
 from .uast_queries import UASTQuery
+
+
+def add_label(cfg_nx: nx.DiGraph, g: nx.DiGraph):
+    for node in g.nodes:
+
+        if node != "ENTRY":
+            g.nodes[node]["label"] = cfg_nx.nodes[node].get("label", f"#{node}")
 
 
 class CodePropertyGraphs:
@@ -20,29 +31,36 @@ class CodePropertyGraphs:
             + self._extra_variables,
         )
         self.pdg_nx = compose_pdg_topology(self.cdg_nx, self.ddg_nx)
-        # self.cfg_nx
-        list(map(self.add_label, [self.cdg_nx, self.ddg_nx, self.pdg_nx]))
+        list(
+            map(
+                lambda g: add_label(self.cfg_nx, g),
+                [self.cdg_nx, self.ddg_nx, self.pdg_nx],
+            )
+        )
 
-    def add_label(self, g: nx.DiGraph):
-        for node in g.nodes:
 
-            if node != "ENTRY":
-                g.nodes[node]["label"] = self.cfg_nx.nodes[node].get(
-                    "label", f"#{node}"
-                )
-
-    @classmethod
-    def create(cls, func_uast: MethodDecl):
-        return cls(func_uast)
+def get_pdg_from_cfg(cfg: CFG, params: list[str], extra_variables: list[str]):
+    """
+    从CFG中抽取PDG
+    """
+    cfg_nx = cfg.to_networkx()
+    cdg_nx = get_cdg_topology(cfg)
+    ddg_nx = get_ddg_topology(
+        cfg,
+        [param for param in params] + extra_variables,
+    )
+    pdg_nx = compose_pdg_topology(cdg_nx, ddg_nx)
+    add_label(cfg_nx, pdg_nx)
+    return pdg_nx
 
 
 def get_cdg_topology(cfg: CFG):
     """
     创建CDG的拓扑结构
     """
-    fdt = get_forward_dominance_tree(cfg.topology)
-    cdg = merge_cfg_and_fdt(cfg.topology, fdt).reverse()
-    return cdg
+    # fdt = get_forward_dominance_tree(cfg.topology)
+    # cdg = merge_cfg_and_fdt(cfg.topology, fdt).reverse()
+    return build_control_dependence_graph(cfg.topology)
 
 
 def get_ddg_topology(cfg: CFG, arg_variables: list[str]):
