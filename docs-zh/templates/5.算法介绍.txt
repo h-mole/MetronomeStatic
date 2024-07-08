@@ -25,7 +25,7 @@ graph LR
 
 - **转载于**：https://zhuanlan.zhihu.com/p/324696483
 - **功能函数**：`build_control_dependence_graph`
-- **所属文件**：[domination_analysis.py](../PyBirdViewCode/algorithms/domination_analysis.py#LC101)
+- **所属文件**：[domination_analysis.py](../PyBirdViewCode/algorithms/domination_analysis.py#L101)
 
 
 控制依赖图(Control Dependency Graph, CDG)反应的是各个语句之间在程序控制结构上的依赖关系。它由控制流图（CFG）和前向支配树(Forward Dominance Tree, FDT)直接产生。
